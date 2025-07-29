@@ -43,7 +43,9 @@ interface HeaderProps {
   } | null;
 }
 
-export function Header({ onMenuToggle, user }: HeaderProps) {
+export function Header({ onMenuToggle, user: userData }: HeaderProps) {
+  const [user, setUser] = useState(userData || JSON.parse(localStorage.getItem("user") || "null"));
+
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -58,6 +60,7 @@ export function Header({ onMenuToggle, user }: HeaderProps) {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("user");
+    setUser(null);
     router.push(FRONTEND_ROUTES.HOME);
   };
 
