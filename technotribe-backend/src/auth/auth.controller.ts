@@ -15,9 +15,11 @@ import {
 } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDto } from '../users/dto/login.dto';
+import { SignupDto } from './dto/signup.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import {
   LoginResponseDto,
+  SignupResponseDto,
   RefreshTokenResponseDto,
   LogoutResponseDto,
 } from './dto/auth-response.dto';
@@ -27,6 +29,27 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Post('signup')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'User registration' })
+  @ApiResponse({
+    status: 201,
+    description: 'User successfully registered',
+    type: SignupResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request - validation error',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'User with this email already exists',
+  })
+  async signup(@Body() signupDto: SignupDto): ReturnType<AuthService['signup']> {
+    const response = await this.authService.signup(signupDto)
+    return response;
+  }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
@@ -40,8 +63,9 @@ export class AuthController {
     status: 401,
     description: 'Invalid credentials',
   })
-  async login(@Body() loginDto: LoginDto): Promise<LoginResponseDto> {
-    return this.authService.login(loginDto);
+  async login(@Body() loginDto: LoginDto): ReturnType<AuthService['login']> {
+    const response = await this.authService.login(loginDto)
+    return response;
   }
 
   @Post('refresh')
@@ -58,8 +82,9 @@ export class AuthController {
   })
   async refresh(
     @Body() body: RefreshTokenDto,
-  ): Promise<RefreshTokenResponseDto> {
-    return this.authService.refreshToken(body.refresh_token);
+  ): ReturnType<AuthService['refreshToken']> {
+    const response = await this.authService.refreshToken(body.refresh_token)
+    return response;
   }
 
   @Post('logout')
@@ -76,7 +101,8 @@ export class AuthController {
     status: 401,
     description: 'Unauthorized',
   })
-  async logout(@Request() req): Promise<LogoutResponseDto> {
-    return this.authService.logout(req.user.userId);
+  async logout(@Request() req): ReturnType<AuthService['logout']> {
+    const response = await this.authService.logout(req.user.userId)
+    return response
   }
 }

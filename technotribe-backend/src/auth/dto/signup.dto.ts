@@ -7,9 +7,9 @@ import {
   MinLength,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { UserRole, AuthProvider } from '../schemas/user.schema';
+import { UserRole } from '../../users/schemas/user.schema';
 
-export class CreateUserDto {
+export class SignupDto {
   @ApiProperty({
     description: 'User email address',
     example: 'john.doe@example.com',
@@ -43,39 +43,20 @@ export class CreateUserDto {
   @IsNotEmpty()
   lastName: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'User role in the system',
     enum: UserRole,
-    default: UserRole.DEVELOPER,
     example: UserRole.DEVELOPER,
   })
   @IsEnum(UserRole)
-  @IsOptional()
-  role?: UserRole;
+  @IsNotEmpty()
+  role: UserRole;
 
   @ApiPropertyOptional({
-    description: 'Authentication provider',
-    enum: AuthProvider,
-    default: AuthProvider.EMAIL,
-    example: AuthProvider.EMAIL,
-  })
-  @IsEnum(AuthProvider)
-  @IsOptional()
-  authProvider?: AuthProvider;
-
-  @ApiPropertyOptional({
-    description: 'Provider ID for OAuth authentication',
-    example: '123456789',
+    description: 'Company name (required for recruiters)',
+    example: 'Tech Corp Inc.',
   })
   @IsString()
   @IsOptional()
-  providerId?: string;
-
-  @ApiPropertyOptional({
-    description: 'User avatar URL',
-    example: 'https://example.com/avatar.jpg',
-  })
-  @IsString()
-  @IsOptional()
-  avatar?: string;
+  company?: string;
 }

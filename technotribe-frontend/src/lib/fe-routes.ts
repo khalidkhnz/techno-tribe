@@ -4,7 +4,7 @@ const FRONTEND_ROUTES = {
     CONTACT: "/contact",
     LOGIN: "/login",
     SIGNUP: "/signup",
-    RECRUITER_SIGNUP: "/recruiter-signup",
+    RECRUITER_SIGNUP: "/complete-recruiter-profile",
     JOBS: "/jobs",
   
     PROFILE_CUSTOM_URL: (customUrl: string) => `/profile/${customUrl}`,

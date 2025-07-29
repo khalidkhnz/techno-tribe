@@ -21,49 +21,11 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
+import Constants from "@/lib/constants";
+import { api } from "@/lib/api";
 
-const employmentTypes = [
-  { value: "full-time", label: "Full Time" },
-  { value: "part-time", label: "Part Time" },
-  { value: "contract", label: "Contract" },
-  { value: "freelance", label: "Freelance" },
-  { value: "internship", label: "Internship" },
-];
 
-const experienceLevels = [
-  { value: "junior", label: "Junior" },
-  { value: "mid-level", label: "Mid Level" },
-  { value: "senior", label: "Senior" },
-  { value: "lead", label: "Lead" },
-  { value: "principal", label: "Principal" },
-];
-
-const availableSkills = [
-  "React",
-  "Vue.js",
-  "Angular",
-  "TypeScript",
-  "JavaScript",
-  "Python",
-  "Java",
-  "Go",
-  "Node.js",
-  "Express",
-  "Django",
-  "Spring",
-  "PostgreSQL",
-  "MongoDB",
-  "AWS",
-  "Docker",
-  "Kubernetes",
-  "GraphQL",
-  "REST API",
-  "Microservices",
-  "Machine Learning",
-  "AI",
-];
 
 export default function RecruiterSignupPage() {
   const [formData, setFormData] = useState({
@@ -112,34 +74,23 @@ export default function RecruiterSignupPage() {
 
     try {
       // First, create the user account
-      const userResponse = await fetch("http://localhost:5000/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const userResponse = await api.auth.register({
           email: formData.email,
           password: formData.password,
           firstName: formData.firstName,
           lastName: formData.lastName,
           role: "recruiter",
-        }),
+          company: formData.company,
       });
 
-      if (!userResponse.ok) {
+      if (userResponse.status !== 201) {
         throw new Error("Failed to create user account");
       }
 
-      const userData = await userResponse.json();
+      const userData = userResponse.data;
 
       // Then, create the job posting
-      const jobResponse = await fetch("http://localhost:5000/jobs", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userData.access_token}`,
-        },
-        body: JSON.stringify({
+      const jobResponse = await api.jobs.create({
           jobTitle: formData.jobTitle,
           company: formData.company,
           employmentType: formData.employmentType,
@@ -151,10 +102,10 @@ export default function RecruiterSignupPage() {
           requiredSkills: formData.requiredSkills,
           jobDescription: formData.jobDescription,
           isUrgent: formData.isUrgent,
-        }),
-      });
+        }
+     );
 
-      if (!jobResponse.ok) {
+      if (jobResponse.status !== 201) {
         throw new Error("Failed to create job posting");
       }
 
@@ -283,7 +234,7 @@ export default function RecruiterSignupPage() {
                       <SelectValue placeholder="Select type" />
                     </SelectTrigger>
                     <SelectContent>
-                      {employmentTypes.map((type) => (
+                      {Constants.employmentTypes.map((type) => (
                         <SelectItem key={type.value} value={type.value}>
                           {type.label}
                         </SelectItem>
@@ -319,7 +270,7 @@ export default function RecruiterSignupPage() {
                       <SelectValue placeholder="Select level" />
                     </SelectTrigger>
                     <SelectContent>
-                      {experienceLevels.map((level) => (
+                      {Constants.experienceLevels.map((level) => (
                         <SelectItem key={level.value} value={level.value}>
                           {level.label}
                         </SelectItem>
@@ -388,7 +339,7 @@ export default function RecruiterSignupPage() {
                   Select all required technologies and skills
                 </p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                  {availableSkills.map((skill) => (
+                  {Constants.availableSkills.map((skill) => (
                     <div key={skill} className="flex items-center space-x-2">
                       <Checkbox
                         id={skill}

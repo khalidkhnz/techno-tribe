@@ -5,106 +5,74 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import * as bcrypt from 'bcryptjs';
 import { User } from './schemas/user.schema';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { UserRole } from './schemas/user.schema';
+import { SignupDto } from 'src/auth/dto/signup.dto';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    const { email, password, ...rest } = createUserDto;
+  async create(payload: SignupDto): Promise<User> {
 
-    // Check if user already exists
-    const existingUser = await this.userModel.findOne({ email });
-    if (existingUser) {
-      throw new ConflictException('User with this email already exists');
-    }
+    const hashedPassword = await bcrypt.hash(payload.password, 10);
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create user
-    const user = new this.userModel({
-      ...rest,
-      email,
+    const user = await this.userModel.create({
+      email: payload.email,
       password: hashedPassword,
+      firstName: payload.firstName,
+      lastName: payload.lastName,
+      role: payload.role,
+      ...(payload.company && { currentCompany: payload.company }),
     });
 
-    return user.save();
+    return user;
   }
 
-  async findByEmail(email: string): Promise<User | null> {
-    return this.userModel.findOne({ email }).exec();
-  }
 
-  async findById(id: string): Promise<User | null> {
-    return this.userModel.findById(id).exec();
-  }
-
-  async findByCustomUrl(customUrl: string): Promise<User | null> {
-    return this.userModel.findOne({ customUrl }).exec();
-  }
-
-  async updateRefreshToken(
-    userId: string,
-    refreshToken: string,
-  ): Promise<void> {
-    await this.userModel.findByIdAndUpdate(userId, { refreshToken });
-  }
-
-  async removeRefreshToken(userId: string): Promise<void> {
-    await this.userModel.findByIdAndUpdate(userId, { refreshToken: null });
-  }
-
-  async updateLastLogin(userId: string): Promise<void> {
-    await this.userModel.findByIdAndUpdate(userId, { lastLoginAt: new Date() });
-  }
-
-  async findAll(): Promise<User[]> {
-    return this.userModel.find().exec();
-  }
-
-  async findByRole(role: UserRole): Promise<User[]> {
-    return this.userModel.find({ role }).exec();
-  }
-
-  async updateUser(id: string, updateData: Partial<User>): Promise<User> {
-    // If password is being updated, hash it
-    if (updateData.password) {
-      updateData.password = await bcrypt.hash(updateData.password, 10);
-    }
-
-    const user = await this.userModel.findByIdAndUpdate(id, updateData, {
-      new: true,
-    });
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.userModel.findOne({ email });
     if (!user) {
       throw new NotFoundException('User not found');
     }
     return user;
   }
 
+  async findByCustomUrl(customUrl: string): Promise<User> {
+    const user = await this.userModel.findOne({ customUrl });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
+  }
+
+
+  async getUserProfile(userId: string): Promise<User> {
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
+  }
+
+
   async updateProfile(userId: string, updateProfileDto: UpdateProfileDto): Promise<User> {
-    // Check if customUrl is being updated and if it's already taken
+    
     if (updateProfileDto.customUrl) {
-      const existingUser = await this.findByCustomUrl(updateProfileDto.customUrl);
+      const existingUser = await this.userModel.findOne({ customUrl: updateProfileDto.customUrl });
       if (existingUser && (existingUser._id as any).toString() !== userId) {
         throw new ConflictException('Custom URL is already taken');
       }
     }
 
-    // Check if email is being updated and if it's already taken
     if (updateProfileDto.email) {
-      const existingUser = await this.findByEmail(updateProfileDto.email);
+      const existingUser = await this.userModel.findOne({ email: updateProfileDto.email });
       if (existingUser && (existingUser._id as any).toString() !== userId) {
         throw new ConflictException('Email is already taken');
       }
     }
 
-    // Determine if profile is complete
     const profileFields = [
       'bio', 'location', 'skills', 'experienceLevel', 'yearsOfExperience',
       'currentCompany', 'currentPosition', 'education', 'certifications'
@@ -138,10 +106,19 @@ export class UsersService {
     );
   }
 
-  async deleteUser(id: string): Promise<void> {
-    const result = await this.userModel.findByIdAndDelete(id);
-    if (!result) {
-      throw new NotFoundException('User not found');
-    }
+  async updateRefreshToken(
+    userId: string,
+    refreshToken: string,
+  ): Promise<void> {
+    await this.userModel.findByIdAndUpdate(userId, { refreshToken });
   }
+
+  async removeRefreshToken(userId: string): Promise<void> {
+    await this.userModel.findByIdAndUpdate(userId, { refreshToken: null });
+  }
+
+  async updateLastLogin(userId: string): Promise<void> {
+    await this.userModel.findByIdAndUpdate(userId, { lastLoginAt: new Date() });
+  }
+
 }
