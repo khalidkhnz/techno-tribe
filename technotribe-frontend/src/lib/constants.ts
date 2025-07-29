@@ -35,7 +35,6 @@ class Constants {
         "Ant Design", "Figma", "Adobe XD", "Sketch", "WordPress", "Shopify", "Magento", "WooCommerce"
       ];
 
-
 }
 
 export default Constants;
