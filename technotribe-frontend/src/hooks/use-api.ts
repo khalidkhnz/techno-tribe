@@ -218,3 +218,14 @@ export const useCloseJob = () => {
     },
   });
 };
+
+// Public Profile hooks
+export const usePublicProfile = (customUrl: string) => {
+  return useQuery({
+    queryKey: ["public-profile", customUrl],
+    queryFn: () => api.users.getPublicProfile(customUrl),
+    enabled: !!customUrl,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 1,
+  });
+};
