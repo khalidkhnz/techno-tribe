@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { loginSchema, type LoginFormData } from "@/lib/schemas";
 import { api } from "@/lib/api";
 import { ArrowLeft, Eye, EyeOff, Lock, Mail } from "lucide-react";
+import FRONTEND_ROUTES from "@/lib/fe-routes";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -53,9 +54,9 @@ export default function LoginPage() {
 
       // Redirect based on user role
       if (user.role === "recruiter") {
-        router.push("/recruiter/dashboard");
+        router.push(FRONTEND_ROUTES.RECRUITER.DASHBOARD);
       } else {
-        router.push("/user/dashboard");
+        router.push(FRONTEND_ROUTES.DEVELOPER.DASHBOARD);
       }
     } catch (error: any) {
       console.error("Login error:", error);
@@ -217,7 +218,7 @@ export default function LoginPage() {
               {/* Sign Up Link */}
               <div className="text-center text-sm">
                 Don't have an account?{" "}
-                <Link href="/signup" className="text-primary hover:underline font-medium">
+                <Link href={FRONTEND_ROUTES.SIGNUP} className="text-primary hover:underline font-medium">
                   Sign up
                 </Link>
               </div>

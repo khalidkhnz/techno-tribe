@@ -33,6 +33,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { config } from "@/lib/config";
+import FRONTEND_ROUTES from "@/lib/fe-routes";
 
 interface GlobalSidebarProps {
   isOpen: boolean;
@@ -58,106 +59,91 @@ interface NavItem {
 
 const generalNavItems: NavItem[] = [
   {
-    title: "Dashboard",
-    href: "/dashboard",
-    icon: Home,
-  },
-  {
     title: "Browse Jobs",
-    href: "/jobs",
+    href: FRONTEND_ROUTES.JOBS,
     icon: Briefcase,
-  },
-  {
-    title: "Saved Jobs",
-    href: "/saved-jobs",
-    icon: Bookmark,
-  },
-  {
-    title: "My Applications",
-    href: "/applications",
-    icon: FileText,
-  },
-  {
-    title: "Messages",
-    href: "/messages",
-    icon: MessageSquare,
-    badge: "3",
-  },
-  {
-    title: "Calendar",
-    href: "/calendar",
-    icon: Calendar,
-  },
-  {
-    title: "Profile",
-    href: "/profile",
-    icon: User,
   },
 ];
 
 const recruiterNavItems: NavItem[] = [
   {
+    title: "Dashboard",
+    href: FRONTEND_ROUTES.RECRUITER.DASHBOARD,
+    icon: Home,
+    role: ["recruiter", "admin"],
+  },
+  {
     title: "My Jobs",
-    href: "/recruiter/jobs",
+    href: FRONTEND_ROUTES.RECRUITER.JOBS,
     icon: FileText,
     role: ["recruiter", "admin"],
   },
   {
-    title: "Post New Job",
-    href: "/recruiter/jobs/new",
-    icon: Plus,
+    title: "Profile",
+    href: FRONTEND_ROUTES.RECRUITER.PROFILE,
+    icon: User,
     role: ["recruiter", "admin"],
   },
+];
+
+const developerNavItems: NavItem[] = [
   {
-    title: "Candidates",
-    href: "/recruiter/candidates",
-    icon: Users,
-    role: ["recruiter", "admin"],
+    title: "Dashboard",
+    href: FRONTEND_ROUTES.DEVELOPER.DASHBOARD,
+    icon: Home,
+    role: ["developer"],
   },
   {
-    title: "Analytics",
-    href: "/recruiter/analytics",
-    icon: BarChart3,
-    role: ["recruiter", "admin"],
+    title: "Applications",
+    href: FRONTEND_ROUTES.DEVELOPER.APPLICATIONS,
+    icon: FileText,
+    role: ["developer"],
+  },
+  {
+    title: "Profile",
+    href: FRONTEND_ROUTES.DEVELOPER.PROFILE,
+    icon: User,
+    role: ["developer"],
   },
 ];
 
 const adminNavItems: NavItem[] = [
   {
+    title: "Dashboard",
+    href: FRONTEND_ROUTES.ADMIN.DASHBOARD,
+    icon: Home,
+    role: ["admin"],
+  },
+  {
     title: "User Management",
-    href: "/admin/users",
+    href: FRONTEND_ROUTES.ADMIN.USERS,
     icon: Users,
     role: ["admin"],
   },
   {
-    title: "System Settings",
-    href: "/admin/settings",
-    icon: Settings,
+    title: "Jobs",
+    href: FRONTEND_ROUTES.ADMIN.JOBS,
+    icon: FileText,
+    role: ["admin"],
+  },
+  {
+    title: "Analytics",
+    href: FRONTEND_ROUTES.ADMIN.ANALYTICS,
+    icon: BarChart3,
     role: ["admin"],
   },
 ];
 
 const helpNavItems: NavItem[] = [
   {
-    title: "Help Center",
-    href: "/help",
-    icon: HelpCircle,
-  },
-  {
     title: "About Us",
-    href: "/about",
+    href: FRONTEND_ROUTES.ABOUT,
     icon: Info,
   },
   {
     title: "Contact",
-    href: "/contact",
+    href: FRONTEND_ROUTES.CONTACT,
     icon: MessageSquare,
-  },
-  {
-    title: "Documentation",
-    href: "/docs",
-    icon: ExternalLink,
-    external: true,
   },
 ];
 
@@ -311,7 +297,7 @@ export function GlobalSidebar({ isOpen, onClose, user }: GlobalSidebarProps) {
             transition={{ delay: 0.1 }}
           >
             {!isCollapsed && (
-              <Link href="/" className="flex items-center gap-2">
+              <Link href={FRONTEND_ROUTES.HOME} className="flex items-center gap-2">
                 <motion.div
                   className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground"
                   whileHover={{ scale: 1.1, rotate: 5 }}
@@ -382,6 +368,27 @@ export function GlobalSidebar({ isOpen, onClose, user }: GlobalSidebarProps) {
                   </div>
                   <div className="space-y-1">
                     {filterNavItems(recruiterNavItems).map(renderNavItem)}
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Developer Navigation */}
+              {user && user.role === "developer" && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <Separator className="my-4" />
+                  <div className="px-2 py-1">
+                    {!isCollapsed && (
+                      <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                        Developer
+                      </h3>
+                    )}
+                  </div>
+                  <div className="space-y-1">
+                    {filterNavItems(developerNavItems).map(renderNavItem)}
                   </div>
                 </motion.div>
               )}

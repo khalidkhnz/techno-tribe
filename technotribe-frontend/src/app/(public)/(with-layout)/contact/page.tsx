@@ -37,6 +37,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Briefcase, Search } from "lucide-react";
+import FRONTEND_ROUTES from "@/lib/fe-routes";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -369,17 +370,17 @@ export default function ContactPage() {
             TechnoTribe to find their perfect match.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/signup">
-              <Button size="lg" variant="secondary" className="px-8 py-3">
-                <Briefcase className="mr-2 h-5 w-5" />
-                Post a Job
-              </Button>
+            <Link
+              href={FRONTEND_ROUTES.SIGNUP}
+              className="inline-flex items-center justify-center rounded-md bg-primary px-8 py-3 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+            >
+              Get Started
             </Link>
-            <Link href="/jobs">
-              <Button size="lg" variant="outline" className="px-8 py-3 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-                <Search className="mr-2 h-5 w-5" />
-                Browse Jobs
-              </Button>
+            <Link
+              href={FRONTEND_ROUTES.JOBS}
+              className="inline-flex items-center justify-center rounded-md border border-input bg-background px-8 py-3 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+            >
+              Browse Jobs
             </Link>
           </div>
         </div>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { DashboardHeader } from "./dashboard-header";
 import { DashboardSidebar } from "./dashboard-sidebar";
+import FRONTEND_ROUTES from "@/lib/fe-routes";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -20,7 +21,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       const userData = localStorage.getItem("user");
 
       if (!token || !userData) {
-        router.push("/login");
+        router.push(FRONTEND_ROUTES.LOGIN);
         return;
       }
 
@@ -33,7 +34,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         localStorage.removeItem("refresh_token");
         localStorage.removeItem("user");
         localStorage.removeItem("user_id");
-        router.push("/login");
+        router.push(FRONTEND_ROUTES.LOGIN);
       } finally {
         setLoading(false);
       }

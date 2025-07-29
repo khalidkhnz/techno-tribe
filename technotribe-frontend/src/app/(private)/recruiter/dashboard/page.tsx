@@ -24,9 +24,11 @@ import {
   Target,
   CheckCircle,
   AlertCircle,
-  XCircle
+  XCircle,
+  Edit
 } from "lucide-react";
 import Link from "next/link";
+import FRONTEND_ROUTES from "@/lib/fe-routes";
 
 interface Job {
   _id: string;
@@ -191,12 +193,6 @@ export default function RecruiterDashboard() {
               Manage your job postings and track applications
             </p>
           </div>
-          <Link href="/recruiter/jobs/new">
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Post New Job
-            </Button>
-          </Link>
         </div>
 
         {/* Stats Cards */}
@@ -326,12 +322,6 @@ export default function RecruiterDashboard() {
                     <p className="text-muted-foreground mb-4">
                       Start by creating your first job posting
                     </p>
-                    <Link href="/recruiter/jobs/new">
-                      <Button>
-                        <Plus className="h-4 w-4 mr-2" />
-                        Post Your First Job
-                      </Button>
-                    </Link>
                   </div>
                 ) : (
                   <div className="overflow-x-auto">
@@ -380,16 +370,14 @@ export default function RecruiterDashboard() {
                             <TableCell>{getStatusBadge(job.status)}</TableCell>
                             <TableCell>
                               <div className="flex gap-2">
-                                <Link href={`/recruiter/jobs/${job._id}/applications`}>
-                                  <Button size="sm" variant="outline">
-                                    View Applications
-                                  </Button>
-                                </Link>
-                                <Link href={`/recruiter/jobs/${job._id}/edit`}>
-                                  <Button size="sm" variant="outline">
-                                    Edit
-                                  </Button>
-                                </Link>
+                                <Button variant="outline" size="sm" disabled>
+                                  <Users className="mr-2 h-4 w-4" />
+                                  View Applications
+                                </Button>
+                                <Button variant="outline" size="sm" disabled>
+                                  <Edit className="mr-2 h-4 w-4" />
+                                  Edit Job
+                                </Button>
                               </div>
                             </TableCell>
                           </TableRow>

@@ -38,6 +38,8 @@ import {
   User,
 } from "lucide-react";
 
+import FRONTEND_ROUTES from "@/lib/fe-routes";
+
 const features = [
   {
     icon: Zap,
@@ -303,7 +305,7 @@ export default function HomePage() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Link href="/signup">
+                <Link href={FRONTEND_ROUTES.SIGNUP}>
                   <Button
                     size="lg"
                     className="bg-background text-primary hover:bg-background/90 px-8 py-3 shadow-lg"
@@ -318,7 +320,7 @@ export default function HomePage() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Link href="/jobs">
+                <Link href={FRONTEND_ROUTES.JOBS}>
                   <Button
                     size="lg"
                     variant="outline"
@@ -558,7 +560,7 @@ export default function HomePage() {
             viewport={{ once: true }}
           >
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link href="/jobs">
+              <Link href={FRONTEND_ROUTES.JOBS}>
                 <Button size="lg" className="bg-primary hover:bg-primary/90">
                   View All Jobs
                   <ArrowRight className="ml-2 h-5 w-5" />
@@ -697,7 +699,7 @@ export default function HomePage() {
             viewport={{ once: true }}
           >
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link href="/signup">
+              <Link href={FRONTEND_ROUTES.SIGNUP}>
                 <Button
                   size="lg"
                   className="bg-background text-primary hover:bg-background/90 px-8 py-3 shadow-lg"
@@ -708,7 +710,7 @@ export default function HomePage() {
               </Link>
             </motion.div>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link href="/signup">
+              <Link href={FRONTEND_ROUTES.SIGNUP}>
                 <Button
                   size="lg"
                   variant="outline"
@@ -759,7 +761,7 @@ export default function HomePage() {
               <ul className="space-y-2 text-muted-foreground">
                 <li>
                   <Link
-                    href="/jobs"
+                    href={FRONTEND_ROUTES.JOBS}
                     className="hover:text-foreground transition-colors"
                   >
                     Browse Jobs
@@ -767,18 +769,10 @@ export default function HomePage() {
                 </li>
                 <li>
                   <Link
-                    href="/signup"
+                    href={FRONTEND_ROUTES.SIGNUP}
                     className="hover:text-foreground transition-colors"
                   >
                     Create Profile
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/dashboard"
-                    className="hover:text-foreground transition-colors"
-                  >
-                    Dashboard
                   </Link>
                 </li>
               </ul>
@@ -791,7 +785,7 @@ export default function HomePage() {
               <ul className="space-y-2 text-muted-foreground">
                 <li>
                   <Link
-                    href="/signup"
+                    href={FRONTEND_ROUTES.SIGNUP}
                     className="hover:text-foreground transition-colors"
                   >
                     Post Jobs
@@ -799,18 +793,10 @@ export default function HomePage() {
                 </li>
                 <li>
                   <Link
-                    href="/recruiter/jobs"
+                    href={FRONTEND_ROUTES.RECRUITER.JOBS}
                     className="hover:text-foreground transition-colors"
                   >
                     Manage Jobs
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/dashboard"
-                    className="hover:text-foreground transition-colors"
-                  >
-                    Analytics
                   </Link>
                 </li>
               </ul>
@@ -821,34 +807,18 @@ export default function HomePage() {
               <ul className="space-y-2 text-muted-foreground">
                 <li>
                   <Link
-                    href="/about"
+                    href={FRONTEND_ROUTES.ABOUT}
                     className="hover:text-foreground transition-colors"
                   >
-                    About Us
+                    About
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/contact"
+                    href={FRONTEND_ROUTES.CONTACT}
                     className="hover:text-foreground transition-colors"
                   >
                     Contact
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/privacy"
-                    className="hover:text-foreground transition-colors"
-                  >
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/terms"
-                    className="hover:text-foreground transition-colors"
-                  >
-                    Terms of Service
                   </Link>
                 </li>
               </ul>

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { config } from "./config";
+import FRONTEND_ROUTES from "./fe-routes";
 
 // Create axios instance
 const apiClient = axios.create({
@@ -53,7 +54,7 @@ apiClient.interceptors.response.use(
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
         localStorage.removeItem("user");
-        window.location.href = "/login";
+        window.location.href = FRONTEND_ROUTES.LOGIN;
       }
     }
 

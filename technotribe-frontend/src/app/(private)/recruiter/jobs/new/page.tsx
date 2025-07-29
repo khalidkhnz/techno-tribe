@@ -29,41 +29,10 @@ import {
   ArrowLeft
 } from "lucide-react";
 import Link from "next/link";
+import FRONTEND_ROUTES from "@/lib/fe-routes";
+import Constants from "@/lib/constants";
 
-const employmentTypes = [
-  { value: "full-time", label: "Full Time" },
-  { value: "part-time", label: "Part Time" },
-  { value: "contract", label: "Contract" },
-  { value: "freelance", label: "Freelance" },
-  { value: "internship", label: "Internship" },
-];
 
-const experienceLevels = [
-  { value: "junior", label: "Junior (0-2 years)" },
-  { value: "mid-level", label: "Mid Level (2-5 years)" },
-  { value: "senior", label: "Senior (5-8 years)" },
-  { value: "lead", label: "Lead (8-12 years)" },
-  { value: "principal", label: "Principal (12+ years)" },
-];
-
-const currencies = [
-  { value: "USD", label: "USD ($)" },
-  { value: "EUR", label: "EUR (€)" },
-  { value: "GBP", label: "GBP (£)" },
-  { value: "CAD", label: "CAD (C$)" },
-  { value: "AUD", label: "AUD (A$)" },
-  { value: "INR", label: "INR (₹)" },
-];
-
-const availableSkills = [
-  "JavaScript", "TypeScript", "React", "Vue.js", "Angular", "Node.js", "Python", "Java", "C#", "C++",
-  "Go", "Rust", "PHP", "Ruby", "Swift", "Kotlin", "Dart", "Flutter", "React Native", "Next.js",
-  "Nuxt.js", "Express.js", "Django", "Flask", "Spring Boot", "ASP.NET", "Laravel", "Ruby on Rails",
-  "MongoDB", "PostgreSQL", "MySQL", "Redis", "GraphQL", "REST API", "Docker", "Kubernetes",
-  "AWS", "Azure", "Google Cloud", "Firebase", "Git", "GitHub", "GitLab", "CI/CD", "Jenkins",
-  "Jest", "Cypress", "Selenium", "Webpack", "Vite", "Tailwind CSS", "Bootstrap", "Material-UI",
-  "Ant Design", "Figma", "Adobe XD", "Sketch", "WordPress", "Shopify", "Magento", "WooCommerce"
-];
 
 export default function CreateJobPage() {
   const router = useRouter();
@@ -110,7 +79,7 @@ export default function CreateJobPage() {
 
       await api.jobs.create(jobData);
       toast.success("Job posted successfully!");
-      router.push("/recruiter/dashboard");
+      router.push(FRONTEND_ROUTES.RECRUITER.DASHBOARD);
     } catch (error: any) {
       console.error("Error creating job:", error);
       toast.error(error.response?.data?.message || "Failed to create job");
@@ -125,7 +94,7 @@ export default function CreateJobPage() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-4">
-            <Link href="/recruiter/dashboard">
+            <Link href={FRONTEND_ROUTES.RECRUITER.DASHBOARD}>
               <Button variant="outline" size="sm">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Dashboard
@@ -182,13 +151,13 @@ export default function CreateJobPage() {
                   <Label htmlFor="employmentType">Employment Type *</Label>
                   <Select
                     value={watch("employmentType")}
-                    onValueChange={(value) => setValue("employmentType", value)}
+                    onValueChange={(value) => setValue("employmentType", value as "full-time" | "part-time" | "contract" | "freelance" | "internship")}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select employment type" />
                     </SelectTrigger>
                     <SelectContent>
-                      {employmentTypes.map((type) => (
+                      {Constants.employmentTypes.map((type) => (
                         <SelectItem key={type.value} value={type.value}>
                           {type.label}
                         </SelectItem>
@@ -204,13 +173,13 @@ export default function CreateJobPage() {
                   <Label htmlFor="experienceLevel">Experience Level *</Label>
                   <Select
                     value={watch("experienceLevel")}
-                    onValueChange={(value) => setValue("experienceLevel", value)}
+                    onValueChange={(value) => setValue("experienceLevel", value as "junior" | "mid-level" | "senior" | "lead" | "principal")}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select experience level" />
                     </SelectTrigger>
                     <SelectContent>
-                      {experienceLevels.map((level) => (
+                      {Constants.experienceLevels.map((level) => (
                         <SelectItem key={level.value} value={level.value}>
                           {level.label}
                         </SelectItem>
@@ -292,7 +261,7 @@ export default function CreateJobPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {currencies.map((currency) => (
+                      {Constants.currencies.map((currency) => (
                         <SelectItem key={currency.value} value={currency.value}>
                           {currency.label}
                         </SelectItem>
@@ -322,7 +291,7 @@ export default function CreateJobPage() {
               <div className="space-y-2">
                 <Label>Skills *</Label>
                 <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto border rounded-lg p-4">
-                  {availableSkills.map((skill) => (
+                  {Constants.availableSkills.map((skill) => (
                     <Badge
                       key={skill}
                       variant={selectedSkills.includes(skill) ? "default" : "outline"}
@@ -386,7 +355,7 @@ export default function CreateJobPage() {
 
           {/* Submit Button */}
           <div className="flex justify-end gap-4">
-            <Link href="/recruiter/dashboard">
+            <Link href={FRONTEND_ROUTES.RECRUITER.DASHBOARD}>
               <Button variant="outline" type="button">
                 Cancel
               </Button>

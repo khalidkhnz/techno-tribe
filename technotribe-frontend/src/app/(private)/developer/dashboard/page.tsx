@@ -11,8 +11,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { motion } from "framer-motion";
-import { Briefcase, Users, TrendingUp, Calendar, FileText, Eye } from "lucide-react";
+import { Briefcase, Users, TrendingUp, Calendar, FileText, Eye, Search, User } from "lucide-react";
 import Link from "next/link";
+import FRONTEND_ROUTES from "@/lib/fe-routes";
 
 export default function DashboardPage() {
   return (
@@ -157,21 +158,21 @@ export default function DashboardPage() {
               <CardDescription>Get started with common tasks</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Link href="/jobs">
+              <Link href={FRONTEND_ROUTES.JOBS}>
                 <Button className="w-full justify-start">
                   <Briefcase className="mr-2 h-4 w-4" />
                   Browse Jobs
                 </Button>
               </Link>
-              <Link href="/developer/applications">
+              <Link href={FRONTEND_ROUTES.DEVELOPER.APPLICATIONS}>
                 <Button variant="outline" className="w-full justify-start">
                   <FileText className="mr-2 h-4 w-4" />
-                  View Applications
+                  My Applications
                 </Button>
               </Link>
-              <Link href="/developer/profile">
+              <Link href={FRONTEND_ROUTES.DEVELOPER.PROFILE}>
                 <Button variant="outline" className="w-full justify-start">
-                  <Users className="mr-2 h-4 w-4" />
+                  <User className="mr-2 h-4 w-4" />
                   Update Profile
                 </Button>
               </Link>

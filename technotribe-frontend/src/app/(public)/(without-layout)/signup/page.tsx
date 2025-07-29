@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { registerSchema, type RegisterFormData } from "@/lib/schemas";
 import { useRegister } from "@/hooks/use-api";
 import { Code, Building2, ArrowLeft, Check } from "lucide-react";
+import FRONTEND_ROUTES from "@/lib/fe-routes";
 
 const developerFeatures = [
   "Browse curated job opportunities",
@@ -75,9 +76,9 @@ export default function SignupPage() {
       await registerMutation.mutateAsync(data);
       // Redirect based on user role
       if (data.role === "recruiter") {
-        router.push("/recruiter/dashboard");
+        router.push(FRONTEND_ROUTES.RECRUITER.DASHBOARD);
       } else {
-        router.push("/user/dashboard");
+        router.push(FRONTEND_ROUTES.DEVELOPER.DASHBOARD);
       }
     } catch (error) {
       // Error is handled by the mutation

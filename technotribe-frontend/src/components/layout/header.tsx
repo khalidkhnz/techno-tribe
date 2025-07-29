@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -23,11 +24,12 @@ import {
   User,
   Settings,
   LogOut,
-  Briefcase,
   Plus,
   Menu,
+  Briefcase,
 } from "lucide-react";
 import { config } from "@/lib/config";
+import FRONTEND_ROUTES from "@/lib/fe-routes";
 
 interface HeaderProps {
   onMenuToggle?: () => void;
@@ -48,7 +50,7 @@ export function Header({ onMenuToggle, user }: HeaderProps) {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      router.push(`/jobs?search=${encodeURIComponent(searchQuery.trim())}`);
+      router.push(`${FRONTEND_ROUTES.JOBS}?search=${encodeURIComponent(searchQuery.trim())}`);
     }
   };
 
@@ -56,7 +58,7 @@ export function Header({ onMenuToggle, user }: HeaderProps) {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("user");
-    router.push("/");
+    router.push(FRONTEND_ROUTES.HOME);
   };
 
   const getUserInitials = () => {
@@ -135,23 +137,23 @@ export function Header({ onMenuToggle, user }: HeaderProps) {
         <div className="flex items-center gap-4">
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center gap-6">
-            <Link href="/jobs">
+            <Link href={FRONTEND_ROUTES.JOBS}>
               <Button variant="ghost" size="sm" className="hover:bg-white/10">
                 Browse Jobs
               </Button>
             </Link>
-            <Link href="/about">
+            <Link href={FRONTEND_ROUTES.ABOUT}>
               <Button variant="ghost" size="sm" className="hover:bg-white/10">
                 About
               </Button>
             </Link>
-            <Link href="/contact">
+            <Link href={FRONTEND_ROUTES.CONTACT}>
               <Button variant="ghost" size="sm" className="hover:bg-white/10">
                 Contact
               </Button>
             </Link>
             {user?.role === "recruiter" && (
-              <Link href="/recruiter/jobs">
+              <Link href={FRONTEND_ROUTES.RECRUITER.JOBS}>
                 <Button variant="ghost" size="sm" className="hover:bg-white/10">
                   My Jobs
                 </Button>
@@ -199,30 +201,6 @@ export function Header({ onMenuToggle, user }: HeaderProps) {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/profile" className="flex items-center">
-                    <User className="mr-2 h-4 w-4" />
-                    Profile
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/settings" className="flex items-center">
-                    <Settings className="mr-2 h-4 w-4" />
-                    Settings
-                  </Link>
-                </DropdownMenuItem>
-                {user.role === "recruiter" && (
-                  <DropdownMenuItem asChild>
-                    <Link
-                      href="/recruiter/jobs/new"
-                      className="flex items-center"
-                    >
-                      <Plus className="mr-2 h-4 w-4" />
-                      Post New Job
-                    </Link>
-                  </DropdownMenuItem>
-                )}
-                <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={handleLogout}
                   className="text-red-600"
@@ -234,12 +212,12 @@ export function Header({ onMenuToggle, user }: HeaderProps) {
             </DropdownMenu>
           ) : (
             <div className="flex items-center gap-2">
-              <Link href="/login">
+              <Link href={FRONTEND_ROUTES.LOGIN}>
                 <Button variant="ghost" size="sm">
                   Sign In
                 </Button>
               </Link>
-              <Link href="/signup">
+              <Link href={FRONTEND_ROUTES.SIGNUP}>
                 <Button size="sm">Sign Up</Button>
               </Link>
             </div>

@@ -1,7 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,12 +16,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Bell, Search, Settings, LogOut, User, Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
-import { useRouter } from "next/navigation";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import {
+  Bell,
+  User,
+  Settings,
+  LogOut,
+  Search,
+  Sun,
+  Moon,
+} from "lucide-react";
 import { toast } from "sonner";
+import FRONTEND_ROUTES from "@/lib/fe-routes";
 
 interface DashboardHeaderProps {
   user: {
@@ -54,7 +66,7 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
     localStorage.removeItem("user");
     localStorage.removeItem("user_id");
     toast.success("Logged out successfully");
-    router.push("/login");
+    router.push(FRONTEND_ROUTES.LOGIN);
   };
 
   const getRoleBadgeColor = (role: string) => {
@@ -191,13 +203,9 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => router.push(`/${user?.role}/profile`)}>
+              <DropdownMenuItem onClick={() => router.push((FRONTEND_ROUTES[user?.role?.toUpperCase() as keyof typeof FRONTEND_ROUTES] as any)?.PROFILE)}>
                 <User className="mr-2 h-4 w-4" />
                 <span>Profile</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => router.push(`/${user?.role}/settings`)}>
-                <Settings className="mr-2 h-4 w-4" />
-                <span>Settings</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout}>

@@ -26,6 +26,7 @@ import {
   User,
 } from "lucide-react";
 import { config } from "@/lib/config";
+import FRONTEND_ROUTES from "@/lib/fe-routes";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -50,81 +51,77 @@ interface NavItem {
 
 const generalNavItems: NavItem[] = [
   {
-    title: "Dashboard",
-    href: "/dashboard",
-    icon: Home,
-  },
-  {
     title: "Browse Jobs",
-    href: "/jobs",
+    href: FRONTEND_ROUTES.JOBS,
     icon: Briefcase,
-  },
-  {
-    title: "Saved Jobs",
-    href: "/saved-jobs",
-    icon: Bookmark,
-  },
-  {
-    title: "My Applications",
-    href: "/applications",
-    icon: FileText,
-  },
-  {
-    title: "Messages",
-    href: "/messages",
-    icon: MessageSquare,
-    badge: "3",
-  },
-  {
-    title: "Calendar",
-    href: "/calendar",
-    icon: Calendar,
-  },
-  {
-    title: "Profile",
-    href: "/profile",
-    icon: User,
   },
 ];
 
 const recruiterNavItems: NavItem[] = [
   {
+    title: "Dashboard",
+    href: FRONTEND_ROUTES.RECRUITER.DASHBOARD,
+    icon: Home,
+    role: ["recruiter", "admin"],
+  },
+  {
     title: "My Jobs",
-    href: "/recruiter/jobs",
+    href: FRONTEND_ROUTES.RECRUITER.JOBS,
     icon: FileText,
     role: ["recruiter", "admin"],
   },
   {
-    title: "Post New Job",
-    href: "/recruiter/jobs/new",
-    icon: Plus,
+    title: "Profile",
+    href: FRONTEND_ROUTES.RECRUITER.PROFILE,
+    icon: User,
     role: ["recruiter", "admin"],
   },
+];
+
+const developerNavItems: NavItem[] = [
   {
-    title: "Candidates",
-    href: "/recruiter/candidates",
-    icon: Users,
-    role: ["recruiter", "admin"],
+    title: "Dashboard",
+    href: FRONTEND_ROUTES.DEVELOPER.DASHBOARD,
+    icon: Home,
+    role: ["developer"],
   },
   {
-    title: "Analytics",
-    href: "/recruiter/analytics",
-    icon: BarChart3,
-    role: ["recruiter", "admin"],
+    title: "Applications",
+    href: FRONTEND_ROUTES.DEVELOPER.APPLICATIONS,
+    icon: FileText,
+    role: ["developer"],
+  },
+  {
+    title: "Profile",
+    href: FRONTEND_ROUTES.DEVELOPER.PROFILE,
+    icon: User,
+    role: ["developer"],
   },
 ];
 
 const adminNavItems: NavItem[] = [
   {
+    title: "Dashboard",
+    href: FRONTEND_ROUTES.ADMIN.DASHBOARD,
+    icon: Home,
+    role: ["admin"],
+  },
+  {
     title: "User Management",
-    href: "/admin/users",
+    href: FRONTEND_ROUTES.ADMIN.USERS,
     icon: Users,
     role: ["admin"],
   },
   {
-    title: "System Settings",
-    href: "/admin/settings",
-    icon: Settings,
+    title: "Jobs",
+    href: FRONTEND_ROUTES.ADMIN.JOBS,
+    icon: FileText,
+    role: ["admin"],
+  },
+  {
+    title: "Analytics",
+    href: FRONTEND_ROUTES.ADMIN.ANALYTICS,
+    icon: BarChart3,
     role: ["admin"],
   },
 ];
@@ -215,7 +212,7 @@ export function Sidebar({ isOpen, onClose, user }: SidebarProps) {
           {/* Header */}
           <div className="flex h-16 items-center justify-between border-b px-4">
             {!isCollapsed && (
-              <Link href="/" className="flex items-center gap-2">
+              <Link href={FRONTEND_ROUTES.HOME} className="flex items-center gap-2">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                   <Briefcase className="h-4 w-4" />
                 </div>
@@ -268,6 +265,23 @@ export function Sidebar({ isOpen, onClose, user }: SidebarProps) {
                   </div>
                   <div className="space-y-1">
                     {filterNavItems(recruiterNavItems).map(renderNavItem)}
+                  </div>
+                </>
+              )}
+
+              {/* Developer Navigation */}
+              {user && user.role === "developer" && (
+                <>
+                  <Separator className="my-4" />
+                  <div className="px-2 py-1">
+                    {!isCollapsed && (
+                      <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                        Developer
+                      </h3>
+                    )}
+                  </div>
+                  <div className="space-y-1">
+                    {filterNavItems(developerNavItems).map(renderNavItem)}
                   </div>
                 </>
               )}

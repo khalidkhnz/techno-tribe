@@ -20,6 +20,7 @@ import {
   X,
   User,
 } from "lucide-react";
+import FRONTEND_ROUTES from "@/lib/fe-routes";
 
 interface DashboardSidebarProps {
   user: {
@@ -40,18 +41,13 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
     const baseItems = [
       {
         title: "Dashboard",
-        href: `/${role}/dashboard`,
+        href: FRONTEND_ROUTES[role.toUpperCase() as keyof typeof FRONTEND_ROUTES]?.DASHBOARD || `/${role}/dashboard`,
         icon: LayoutDashboard,
       },
       {
         title: "Profile",
-        href: `/${role}/profile`,
+        href: FRONTEND_ROUTES[role.toUpperCase() as keyof typeof FRONTEND_ROUTES]?.PROFILE || `/${role}/profile`,
         icon: Users,
-      },
-      {
-        title: "Settings",
-        href: `/${role}/settings`,
-        icon: Settings,
       },
     ];
 
@@ -61,13 +57,8 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
           ...baseItems,
           {
             title: "Applications",
-            href: "/developer/applications",
+            href: FRONTEND_ROUTES.DEVELOPER.APPLICATIONS,
             icon: FileText,
-          },
-          {
-            title: "Saved Jobs",
-            href: "/developer/saved-jobs",
-            icon: Briefcase,
           },
         ];
       case "recruiter":
@@ -75,18 +66,8 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
           ...baseItems,
           {
             title: "Jobs",
-            href: "/recruiter/jobs",
+            href: FRONTEND_ROUTES.RECRUITER.JOBS,
             icon: Briefcase,
-          },
-          {
-            title: "Applications",
-            href: "/recruiter/applications",
-            icon: FileText,
-          },
-          {
-            title: "Analytics",
-            href: "/recruiter/analytics",
-            icon: BarChart3,
           },
         ];
       case "admin":
@@ -94,23 +75,18 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
           ...baseItems,
           {
             title: "Users",
-            href: "/admin/users",
+            href: FRONTEND_ROUTES.ADMIN.USERS,
             icon: Users,
           },
           {
             title: "Jobs",
-            href: "/admin/jobs",
+            href: FRONTEND_ROUTES.ADMIN.JOBS,
             icon: Briefcase,
           },
           {
             title: "Analytics",
-            href: "/admin/analytics",
+            href: FRONTEND_ROUTES.ADMIN.ANALYTICS,
             icon: BarChart3,
-          },
-          {
-            title: "System",
-            href: "/admin/system",
-            icon: Shield,
           },
         ];
       default:

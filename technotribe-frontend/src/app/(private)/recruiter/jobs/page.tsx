@@ -21,6 +21,8 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import Link from "next/link";
+import FRONTEND_ROUTES from "@/lib/fe-routes";
+import { Plus } from "lucide-react";
 
 interface Job {
   _id: string;
@@ -254,8 +256,11 @@ export default function RecruiterJobsPage() {
               Manage your job opportunities and track performance
             </p>
           </div>
-          <Link href="/recruiter-signup">
-            <Button>Create New Job</Button>
+          <Link href={FRONTEND_ROUTES.RECRUITER_SIGNUP}>
+            <Button variant="outline" size="sm">
+              <Plus className="mr-2 h-4 w-4" />
+              Post New Job
+            </Button>
           </Link>
         </div>
 
