@@ -69,6 +69,8 @@ export const api = {
     login: (data: { email: string; password: string }) =>
       apiClient.post("/auth/login", data),
     register: (data: any) => apiClient.post("/auth/signup", data),
+    completeRecruiterProfile: (data: any) => 
+      apiClient.put("/auth/complete-recruiter-profile", data),
     refresh: (data: { refresh_token: string }) =>
       apiClient.post("/auth/refresh", data),
     logout: () => apiClient.post("/auth/logout"),

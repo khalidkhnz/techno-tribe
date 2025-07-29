@@ -6,29 +6,22 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { DashboardLayout } from "@/components/layout/dashboard-layout";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { 
   Briefcase, 
   Users, 
   TrendingUp, 
   Eye, 
-  Plus, 
-  Calendar,
   MapPin,
-  DollarSign,
   Clock,
   Building2,
   BarChart3,
-  Target,
   CheckCircle,
   AlertCircle,
   XCircle,
   Edit
 } from "lucide-react";
-import Link from "next/link";
-import FRONTEND_ROUTES from "@/lib/fe-routes";
 
 interface Job {
   _id: string;
@@ -174,16 +167,13 @@ export default function RecruiterDashboard() {
 
   if (loading) {
     return (
-      <DashboardLayout>
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
         </div>
-      </DashboardLayout>
     );
   }
 
   return (
-    <DashboardLayout>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -441,6 +431,5 @@ export default function RecruiterDashboard() {
           </TabsContent>
         </Tabs>
       </div>
-    </DashboardLayout>
   );
 } 

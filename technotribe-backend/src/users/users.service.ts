@@ -8,6 +8,7 @@ import { Model } from 'mongoose';
 import { User } from './schemas/user.schema';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { SignupDto } from 'src/auth/dto/signup.dto';
+import { CompleteRecruiterProfileDto } from 'src/auth/dto/complete-recruiter-profile.dto';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
@@ -121,4 +122,46 @@ export class UsersService {
     await this.userModel.findByIdAndUpdate(userId, { lastLoginAt: new Date() });
   }
 
+  async updateRecruiterProfile(userId: string, profileData: CompleteRecruiterProfileDto): Promise<User> {
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.role !== 'recruiter') {
+      throw new ConflictException('User is not a recruiter');
+    }
+
+    const updateData = {
+      currentCompany: profileData.company,
+      companyWebsite: profileData.companyWebsite,
+      companyDescription: profileData.companyDescription,
+      companySize: profileData.companySize,
+      industry: profileData.industry,
+      currentPosition: profileData.jobTitle,
+      phone: profileData.phone,
+      linkedin: profileData.linkedin,
+      preferredEmploymentTypes: profileData.preferredEmploymentTypes,
+      preferredExperienceLevels: profileData.preferredExperienceLevels,
+      preferredLocations: profileData.preferredLocations,
+      preferredSalaryMin: profileData.preferredSalaryMin,
+      preferredSalaryMax: profileData.preferredSalaryMax,
+      preferredSkills: profileData.preferredSkills,
+      isUrgent: profileData.isUrgent,
+      notes: profileData.notes,
+      isProfileComplete: true,
+    };
+
+    const updatedUser = await this.userModel.findByIdAndUpdate(
+      userId,
+      updateData,
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      throw new NotFoundException('User not found');
+    }
+
+    return updatedUser;
+  }
 }

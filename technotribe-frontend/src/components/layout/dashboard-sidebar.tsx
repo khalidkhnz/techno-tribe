@@ -11,7 +11,6 @@ import {
   Users,
   Briefcase,
   FileText,
-  Settings,
   BarChart3,
   Building2,
   Code,
@@ -21,6 +20,7 @@ import {
   User,
 } from "lucide-react";
 import FRONTEND_ROUTES from "@/lib/fe-routes";
+import { UserRole } from "@/types/enums";
 
 interface DashboardSidebarProps {
   user: {
@@ -31,27 +31,28 @@ interface DashboardSidebarProps {
     role: string;
     avatar?: string;
   } | null;
+  type: UserRole
 }
 
-export function DashboardSidebar({ user }: DashboardSidebarProps) {
+export function DashboardSidebar({ user, type }: DashboardSidebarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
-  const getNavigationItems = (role: string) => {
+  const getNavigationItems = () => {
     const baseItems = [
       {
         title: "Dashboard",
-        href: (FRONTEND_ROUTES[role.toUpperCase() as keyof typeof FRONTEND_ROUTES] as any)?.DASHBOARD,
+        href: (FRONTEND_ROUTES[type?.toUpperCase() as keyof typeof FRONTEND_ROUTES] as any)?.DASHBOARD,
         icon: LayoutDashboard,
       },
       {
         title: "Profile",
-        href: (FRONTEND_ROUTES[role.toUpperCase() as keyof typeof FRONTEND_ROUTES] as any)?.PROFILE,
+        href: (FRONTEND_ROUTES[type?.toUpperCase() as keyof typeof FRONTEND_ROUTES] as any)?.PROFILE,
         icon: Users,
       },
     ];
 
-    switch (role) {
+    switch (type) {
       case "developer":
         return [
           ...baseItems,
@@ -94,8 +95,8 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
     }
   };
 
-  const getRoleIcon = (role: string) => {
-    switch (role) {
+  const getRoleIcon = () => {
+    switch (type) {
       case "developer":
         return Code;
       case "recruiter":
@@ -107,8 +108,8 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
     }
   };
 
-  const getRoleLabel = (role: string) => {
-    switch (role) {
+  const getRoleLabel = () => {
+    switch (type) {
       case "developer":
         return "Developer";
       case "recruiter":
@@ -116,11 +117,11 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
       case "admin":
         return "Admin";
       default:
-        return role;
+        return type;
     }
   };
 
-  const navigationItems = getNavigationItems(user?.role || "");
+  const navigationItems = getNavigationItems();
 
   return (
     <>
@@ -148,7 +149,7 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
                 {(()=>{
-                    const RoleIcon = getRoleIcon(user?.role || "");
+                    const RoleIcon = getRoleIcon();
                     if(RoleIcon){
                         return <RoleIcon className="h-5 w-5 text-primary" />
                     }
@@ -160,7 +161,7 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
                   {user?.firstName} {user?.lastName}
                 </p>
                 <p className="text-xs text-muted-foreground truncate">
-                  {getRoleLabel(user?.role || "")}
+                  {getRoleLabel()}
                 </p>
               </div>
             </div>

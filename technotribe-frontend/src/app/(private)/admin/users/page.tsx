@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import {
   Card,
   CardContent,
@@ -247,16 +246,13 @@ export default function AdminUsersPage() {
 
   if (loading) {
     return (
-      <DashboardLayout>
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
         </div>
-      </DashboardLayout>
     );
   }
 
   return (
-    <DashboardLayout>
       <div className="space-y-6">
         {/* Header */}
         <div>
@@ -481,6 +477,5 @@ export default function AdminUsersPage() {
           </CardContent>
         </Card>
       </div>
-    </DashboardLayout>
   );
 } 

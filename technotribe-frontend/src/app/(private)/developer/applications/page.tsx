@@ -187,8 +187,8 @@ export default function DeveloperApplicationsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen w-full bg-background">
+      <div className="w-full mr-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">My Applications</h1>
           <p className="text-gray-600 mt-2">

@@ -187,8 +187,8 @@ export default function DeveloperProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 p-8">
-        <div className="max-w-4xl mx-auto">
+      <div className="min-h-screen w-full bg-background">
+        <div className="w-full max-w-7xl mr-auto">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-1/4 mb-8"></div>
             <div className="space-y-6">
@@ -203,8 +203,8 @@ export default function DeveloperProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen w-full bg-background">
+      <div className="w-full mr-auto">
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>

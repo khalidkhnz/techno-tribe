@@ -4,6 +4,7 @@ import * as bcrypt from 'bcryptjs';
 import { UsersService } from '../users/users.service';
 import { LoginDto } from '../users/dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
+import { CompleteRecruiterProfileDto } from './dto/complete-recruiter-profile.dto';
 import { User } from '../users/schemas/user.schema';
 
 @Injectable()
@@ -146,5 +147,23 @@ export class AuthService {
   async logout(userId: string) {
     await this.usersService.removeRefreshToken(userId);
     return { message: 'Logged out successfully' };
+  }
+
+  async completeRecruiterProfile(userId: string, profileData: CompleteRecruiterProfileDto) {
+    // Update user profile with recruiter-specific information
+    const updatedUser = await this.usersService.updateRecruiterProfile(userId, profileData);
+    
+    return {
+      message: 'Recruiter profile completed successfully',
+      user: {
+        id: (updatedUser._id as any).toString(),
+        email: updatedUser.email,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+        role: updatedUser.role,
+        company: updatedUser.currentCompany,
+        profileCompleted: true,
+      }
+    };
   }
 }

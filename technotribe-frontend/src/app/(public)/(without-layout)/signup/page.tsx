@@ -76,7 +76,7 @@ export default function SignupPage() {
       await registerMutation.mutateAsync(data);
       // Redirect based on user role
       if (data.role === "recruiter") {
-        router.push(FRONTEND_ROUTES.RECRUITER.DASHBOARD);
+        router.push(FRONTEND_ROUTES.COMPLETE_RECRUITER_PROFILE);
       } else {
         router.push(FRONTEND_ROUTES.DEVELOPER.DASHBOARD);
       }

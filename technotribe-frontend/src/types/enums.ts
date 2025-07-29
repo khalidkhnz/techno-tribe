@@ -36,13 +36,6 @@ export enum UserRole {
     INTERNSHIP = 'internship',
   }
   
-  export enum ExperienceLevel {
-    JUNIOR = 'junior',
-    MID_LEVEL = 'mid-level',
-    SENIOR = 'senior',
-    LEAD = 'lead',
-    PRINCIPAL = 'principal',
-  }
   
   export enum JobStatus {
     DRAFT = 'draft',

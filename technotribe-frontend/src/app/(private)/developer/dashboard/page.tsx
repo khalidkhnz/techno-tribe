@@ -9,16 +9,14 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { motion } from "framer-motion";
-import { Briefcase, Users, TrendingUp, Calendar, FileText, Eye, Search, User } from "lucide-react";
+import { Briefcase, Calendar, FileText, Eye, User } from "lucide-react";
 import Link from "next/link";
 import FRONTEND_ROUTES from "@/lib/fe-routes";
 
 export default function DashboardPage() {
   return (
-    <DashboardLayout>
-      <div className="space-y-6">
+      <div className="w-full space-y-6 bg-background">
         {/* Welcome Section */}
         <motion.div
           className="flex items-center justify-between"
@@ -212,6 +210,5 @@ export default function DashboardPage() {
           </Card>
         </div>
       </div>
-    </DashboardLayout>
   );
 }

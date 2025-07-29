@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
-import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -16,11 +14,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
 import {
   Bell,
   User,
-  Settings,
   LogOut,
   Search,
   Sun,
@@ -28,6 +24,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import FRONTEND_ROUTES from "@/lib/fe-routes";
+import { UserRole } from "@/types/enums";
 
 interface DashboardHeaderProps {
   user: {
@@ -38,9 +35,10 @@ interface DashboardHeaderProps {
     role: string;
     avatar?: string;
   } | null;
+  type?: UserRole
 }
 
-export function DashboardHeader({ user }: DashboardHeaderProps) {
+export function DashboardHeader({ user, type }: DashboardHeaderProps) {
   const { theme, setTheme } = useTheme();
   const router = useRouter();
   const [notifications] = useState([
@@ -69,8 +67,8 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
     router.push(FRONTEND_ROUTES.LOGIN);
   };
 
-  const getRoleBadgeColor = (role: string) => {
-    switch (role) {
+  const getRoleBadgeColor = () => {
+    switch (type) {
       case "admin":
         return "bg-red-500";
       case "recruiter":
@@ -82,8 +80,8 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
     }
   };
 
-  const getRoleLabel = (role: string) => {
-    switch (role) {
+  const getRoleLabel = () => {
+    switch (type) {
       case "admin":
         return "Admin";
       case "recruiter":
@@ -91,7 +89,7 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
       case "developer":
         return "Developer";
       default:
-        return role;
+        return type;
     }
   };
 
@@ -196,9 +194,9 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
                   </p>
                   <Badge 
                     variant="secondary" 
-                    className={`w-fit text-xs ${getRoleBadgeColor(user?.role || '')}`}
+                    className={`w-fit text-xs ${getRoleBadgeColor()}`}
                   >
-                    {getRoleLabel(user?.role || '')}
+                    {getRoleLabel()}
                   </Badge>
                 </div>
               </DropdownMenuLabel>

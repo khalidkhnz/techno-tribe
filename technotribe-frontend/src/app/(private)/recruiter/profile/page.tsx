@@ -22,7 +22,8 @@ import {
   Linkedin,
   Twitter,
   Facebook,
-  Instagram
+  Instagram,
+  Edit
 } from "lucide-react";
 
 export default function RecruiterProfilePage() {
@@ -94,8 +95,8 @@ export default function RecruiterProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen w-full bg-background">
+      <div className="w-full mr-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -125,6 +126,7 @@ export default function RecruiterProfilePage() {
                 </>
               ) : (
                 <Button onClick={() => setIsEditing(true)}>
+                  <Edit className="w-4 h-4 mr-2" />
                   Edit Profile
                 </Button>
               )}

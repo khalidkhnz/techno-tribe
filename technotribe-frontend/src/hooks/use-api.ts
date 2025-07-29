@@ -39,6 +39,21 @@ export const useRegister = () => {
   });
 };
 
+export const useCompleteRecruiterProfile = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: api.auth.completeRecruiterProfile,
+    onSuccess: (data) => {
+      queryClient.setQueryData(["user"], data.data.user);
+      toast.success("Recruiter profile completed successfully!");
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to complete recruiter profile");
+    },
+  });
+};
+
 export const useLogout = () => {
   const queryClient = useQueryClient();
 

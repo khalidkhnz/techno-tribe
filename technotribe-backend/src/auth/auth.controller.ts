@@ -6,6 +6,7 @@ import {
   Request,
   HttpCode,
   HttpStatus,
+  Put,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -16,6 +17,7 @@ import {
 import { AuthService } from './auth.service';
 import { LoginDto } from '../users/dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
+import { CompleteRecruiterProfileDto } from './dto/complete-recruiter-profile.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import {
   LoginResponseDto,
@@ -104,5 +106,37 @@ export class AuthController {
   async logout(@Request() req): ReturnType<AuthService['logout']> {
     const response = await this.authService.logout(req.user.userId)
     return response
+  }
+
+  @Put('complete-recruiter-profile')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Complete recruiter profile' })
+  @ApiResponse({
+    status: 200,
+    description: 'Recruiter profile completed successfully',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request - validation error',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'User is not a recruiter',
+  })
+  async completeRecruiterProfile(
+    @Request() req,
+    @Body() profileData: CompleteRecruiterProfileDto,
+  ) {
+    const response = await this.authService.completeRecruiterProfile(
+      req.user.userId,
+      profileData,
+    );
+    return response;
   }
 }
