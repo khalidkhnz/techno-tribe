@@ -15,6 +15,12 @@ import * as bcrypt from 'bcryptjs';
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
+
+  generateCustomUrl(firstName: string, lastName: string): string {
+    return `${firstName.toLowerCase()}-${lastName.toLowerCase()}-${Date.now()}`;
+  }
+
+
   async create(payload: SignupDto): Promise<User> {
 
     const hashedPassword = await bcrypt.hash(payload.password, 10);
@@ -25,6 +31,7 @@ export class UsersService {
       firstName: payload.firstName,
       lastName: payload.lastName,
       role: payload.role,
+      customUrl: this.generateCustomUrl(payload.firstName, payload.lastName),
       ...(payload.company && { currentCompany: payload.company }),
     });
 
@@ -138,14 +145,6 @@ export class UsersService {
       currentPosition: profileData.jobTitle,
       phone: profileData.phone,
       linkedin: profileData.linkedin,
-      preferredEmploymentTypes: profileData.preferredEmploymentTypes,
-      preferredExperienceLevels: profileData.preferredExperienceLevels,
-      preferredLocations: profileData.preferredLocations,
-      preferredSalaryMin: profileData.preferredSalaryMin,
-      preferredSalaryMax: profileData.preferredSalaryMax,
-      preferredSkills: profileData.preferredSkills,
-      isUrgent: profileData.isUrgent,
-      notes: profileData.notes,
       isProfileComplete: true,
     };
 

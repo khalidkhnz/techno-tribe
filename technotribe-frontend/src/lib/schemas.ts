@@ -133,34 +133,6 @@ export const completeRecruiterProfileSchema = z.object({
   jobTitle: z.string().optional(),
   phone: z.string().optional(),
   linkedin: z.string().url("Invalid LinkedIn URL").optional().or(z.literal("")),
-  preferredEmploymentTypes: z.array(z.enum([
-    "full-time",
-    "part-time", 
-    "contract",
-    "freelance",
-    "internship",
-  ])).optional(),
-  preferredExperienceLevels: z.array(z.enum([
-    "junior",
-    "mid-level",
-    "senior",
-    "lead",
-    "principal",
-  ])).optional(),
-  preferredLocations: z.array(z.string()).optional(),
-  preferredSalaryMin: z.number().min(0, "Minimum salary must be positive").optional(),
-  preferredSalaryMax: z.number().min(0, "Maximum salary must be positive").optional(),
-  preferredSkills: z.array(z.string()).optional(),
-  isUrgent: z.boolean().optional(),
-  notes: z.string().optional(),
-}).refine((data) => {
-  if (data.preferredSalaryMin && data.preferredSalaryMax) {
-    return data.preferredSalaryMax >= data.preferredSalaryMin;
-  }
-  return true;
-}, {
-  message: "Maximum salary must be greater than or equal to minimum salary",
-  path: ["preferredSalaryMax"],
 });
 
 export type CompleteRecruiterProfileFormData = z.infer<typeof completeRecruiterProfileSchema>;

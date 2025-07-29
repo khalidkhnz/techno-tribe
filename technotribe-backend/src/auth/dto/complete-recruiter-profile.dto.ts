@@ -12,22 +12,6 @@ import {
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export enum EmploymentType {
-  FULL_TIME = 'full-time',
-  PART_TIME = 'part-time',
-  CONTRACT = 'contract',
-  FREELANCE = 'freelance',
-  INTERNSHIP = 'internship',
-}
-
-export enum ExperienceLevel {
-  JUNIOR = 'junior',
-  MID_LEVEL = 'mid-level',
-  SENIOR = 'senior',
-  LEAD = 'lead',
-  PRINCIPAL = 'principal',
-}
-
 export class CompleteRecruiterProfileDto {
   @ApiProperty({
     description: 'Company name',
@@ -92,74 +76,4 @@ export class CompleteRecruiterProfileDto {
   @IsString()
   @IsOptional()
   linkedin?: string;
-
-  @ApiPropertyOptional({
-    description: 'Preferred employment types',
-    example: ['full-time', 'contract'],
-  })
-  @IsArray()
-  @IsEnum(EmploymentType, { each: true })
-  @IsOptional()
-  preferredEmploymentTypes?: EmploymentType[];
-
-  @ApiPropertyOptional({
-    description: 'Preferred experience levels',
-    example: ['senior', 'lead'],
-  })
-  @IsArray()
-  @IsEnum(ExperienceLevel, { each: true })
-  @IsOptional()
-  preferredExperienceLevels?: ExperienceLevel[];
-
-  @ApiPropertyOptional({
-    description: 'Preferred locations',
-    example: ['Remote', 'San Francisco', 'New York'],
-  })
-  @IsArray()
-  @IsString({ each: true })
-  @IsOptional()
-  preferredLocations?: string[];
-
-  @ApiPropertyOptional({
-    description: 'Preferred salary range minimum',
-    example: 80000,
-  })
-  @IsNumber()
-  @Min(0)
-  @IsOptional()
-  preferredSalaryMin?: number;
-
-  @ApiPropertyOptional({
-    description: 'Preferred salary range maximum',
-    example: 150000,
-  })
-  @IsNumber()
-  @Min(0)
-  @IsOptional()
-  preferredSalaryMax?: number;
-
-  @ApiPropertyOptional({
-    description: 'Preferred skills',
-    example: ['React', 'Node.js', 'TypeScript'],
-  })
-  @IsArray()
-  @IsString({ each: true })
-  @IsOptional()
-  preferredSkills?: string[];
-
-  @ApiPropertyOptional({
-    description: 'Hiring urgency',
-    example: true,
-  })
-  @IsBoolean()
-  @IsOptional()
-  isUrgent?: boolean;
-
-  @ApiPropertyOptional({
-    description: 'Additional notes',
-    example: 'Looking for experienced developers to join our growing team...',
-  })
-  @IsString()
-  @IsOptional()
-  notes?: string;
 } 

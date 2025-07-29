@@ -22,9 +22,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { useCompleteRecruiterProfile } from "@/hooks/use-api";
 import { 
@@ -33,16 +30,10 @@ import {
 } from "@/lib/schemas";
 import Constants from "@/lib/constants";
 import FRONTEND_ROUTES from "@/lib/fe-routes";
-import { Building2, Check, ArrowRight } from "lucide-react";
-
-
+import { Building2, ArrowRight } from "lucide-react";
 
 export default function CompleteRecruiterProfilePage() {
   const router = useRouter();
-  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-  const [selectedEmploymentTypes, setSelectedEmploymentTypes] = useState<("full-time" | "part-time" | "contract" | "freelance" | "internship")[]>([]);
-  const [selectedExperienceLevels, setSelectedExperienceLevels] = useState<("junior" | "mid-level" | "senior" | "lead" | "principal")[]>([]);
-  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
 
   const completeProfileMutation = useCompleteRecruiterProfile();
 
@@ -51,7 +42,6 @@ export default function CompleteRecruiterProfilePage() {
     handleSubmit,
     formState: { errors, isSubmitting },
     setValue,
-    watch,
   } = useForm<CompleteRecruiterProfileFormData>({
     resolver: zodResolver(completeRecruiterProfileSchema),
     defaultValues: {
@@ -63,56 +53,8 @@ export default function CompleteRecruiterProfilePage() {
       jobTitle: "",
       phone: "",
       linkedin: "",
-      preferredEmploymentTypes: [],
-      preferredExperienceLevels: [],
-      preferredLocations: [],
-      preferredSalaryMin: undefined,
-      preferredSalaryMax: undefined,
-      preferredSkills: [],
-      isUrgent: false,
-      notes: "",
     },
   });
-
-  const watchedIsUrgent = watch("isUrgent");
-
-  const handleSkillToggle = (skill: string) => {
-    const newSkills = selectedSkills.includes(skill)
-      ? selectedSkills.filter((s) => s !== skill)
-      : [...selectedSkills, skill];
-    setSelectedSkills(newSkills);
-    setValue("preferredSkills", newSkills);
-  };
-
-  const handleEmploymentTypeToggle = (type: "full-time" | "part-time" | "contract" | "freelance" | "internship") => {
-    const newTypes = selectedEmploymentTypes.includes(type)
-      ? selectedEmploymentTypes.filter((t) => t !== type)
-      : [...selectedEmploymentTypes, type];
-    setSelectedEmploymentTypes(newTypes);
-    setValue("preferredEmploymentTypes", newTypes);
-  };
-
-  const handleExperienceLevelToggle = (level: "junior" | "mid-level" | "senior" | "lead" | "principal") => {
-    const newLevels = selectedExperienceLevels.includes(level)
-      ? selectedExperienceLevels.filter((l) => l !== level)
-      : [...selectedExperienceLevels, level];
-    setSelectedExperienceLevels(newLevels);
-    setValue("preferredExperienceLevels", newLevels);
-  };
-
-  const handleLocationAdd = (location: string) => {
-    if (location && !selectedLocations.includes(location)) {
-      const newLocations = [...selectedLocations, location];
-      setSelectedLocations(newLocations);
-      setValue("preferredLocations", newLocations);
-    }
-  };
-
-  const handleLocationRemove = (location: string) => {
-    const newLocations = selectedLocations.filter((l) => l !== location);
-    setSelectedLocations(newLocations);
-    setValue("preferredLocations", newLocations);
-  };
 
   const onSubmit = async (data: CompleteRecruiterProfileFormData) => {
     try {
@@ -135,7 +77,7 @@ export default function CompleteRecruiterProfilePage() {
             </h1>
           </div>
           <p className="text-lg text-muted-foreground">
-            Tell us about your company and hiring preferences to get better matches
+            Tell us about your company to get started
           </p>
         </div>
 
@@ -267,192 +209,6 @@ export default function CompleteRecruiterProfilePage() {
                   )}
                 </div>
               </div>
-            </CardContent>
-          </Card>
-
-          {/* Hiring Preferences */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Hiring Preferences</CardTitle>
-              <CardDescription>
-                Define your ideal candidate profile and hiring requirements
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <Label>Preferred Employment Types</Label>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Select the employment types you typically hire for
-                </p>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {Constants.employmentTypes.map((type) => (
-                    <div key={type.value} className="flex items-center space-x-2">
-                      <Checkbox
-                         id={type.value}
-                         checked={selectedEmploymentTypes.includes(type.value as "full-time" | "part-time" | "contract" | "freelance" | "internship")}
-                         onCheckedChange={() => handleEmploymentTypeToggle(type.value as "full-time" | "part-time" | "contract" | "freelance" | "internship")}
-                       />
-                      <Label htmlFor={type.value} className="text-sm font-normal">
-                        {type.label}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <Label>Preferred Experience Levels</Label>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Select the experience levels you typically hire for
-                </p>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {Constants.experienceLevels.map((level) => (
-                    <div key={level.value} className="flex items-center space-x-2">
-                                             <Checkbox
-                         id={level.value}
-                         checked={selectedExperienceLevels.includes(level.value as "junior" | "mid-level" | "senior" | "lead" | "principal")}
-                         onCheckedChange={() => handleExperienceLevelToggle(level.value as "junior" | "mid-level" | "senior" | "lead" | "principal")}
-                       />
-                      <Label htmlFor={level.value} className="text-sm font-normal">
-                        {level.label}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <Label>Preferred Locations</Label>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Add locations where you typically hire from
-                </p>
-                <div className="flex gap-2 mb-3">
-                  <Input
-                    placeholder="Add location (e.g., Remote, San Francisco)"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        const input = e.target as HTMLInputElement;
-                        handleLocationAdd(input.value);
-                        input.value = '';
-                      }
-                    }}
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      const input = document.querySelector('input[placeholder*="location"]') as HTMLInputElement;
-                      if (input && input.value) {
-                        handleLocationAdd(input.value);
-                        input.value = '';
-                      }
-                    }}
-                  >
-                    Add
-                  </Button>
-                </div>
-                {selectedLocations.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {selectedLocations.map((location) => (
-                      <Badge key={location} variant="secondary" className="cursor-pointer" onClick={() => handleLocationRemove(location)}>
-                        {location} ×
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="preferredSalaryMin">Preferred Salary Range (Min)</Label>
-                  <Input
-                    id="preferredSalaryMin"
-                    type="number"
-                    {...register("preferredSalaryMin", { valueAsNumber: true })}
-                    placeholder="80000"
-                  />
-                  {errors.preferredSalaryMin && (
-                    <p className="text-sm text-destructive mt-1">
-                      {errors.preferredSalaryMin.message}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <Label htmlFor="preferredSalaryMax">Preferred Salary Range (Max)</Label>
-                  <Input
-                    id="preferredSalaryMax"
-                    type="number"
-                    {...register("preferredSalaryMax", { valueAsNumber: true })}
-                    placeholder="150000"
-                  />
-                  {errors.preferredSalaryMax && (
-                    <p className="text-sm text-destructive mt-1">
-                      {errors.preferredSalaryMax.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div>
-                <Label>Preferred Skills</Label>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Select the skills you typically look for in candidates
-                </p>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                  {Constants.availableSkills.map((skill) => (
-                    <div key={skill} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={skill}
-                        checked={selectedSkills.includes(skill)}
-                        onCheckedChange={() => handleSkillToggle(skill)}
-                      />
-                      <Label htmlFor={skill} className="text-sm font-normal">
-                        {skill}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-                {selectedSkills.length > 0 && (
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {selectedSkills.map((skill) => (
-                      <Badge key={skill} variant="secondary">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="isUrgent"
-                  {...register("isUrgent")}
-                />
-                <Label htmlFor="isUrgent" className="text-sm font-normal">
-                  Mark as Urgent Hiring
-                </Label>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Get priority in AI matching and candidate alerts
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Additional Notes */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Additional Notes</CardTitle>
-              <CardDescription>
-                Any additional information about your hiring needs or preferences
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Textarea
-                {...register("notes")}
-                placeholder="Tell us about your hiring timeline, specific requirements, or any other details that would help us find the right candidates..."
-                rows={4}
-              />
             </CardContent>
           </Card>
 

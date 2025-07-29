@@ -124,30 +124,6 @@ export class User extends Document {
 
   @Prop()
   linkedin?: string;
-
-  @Prop({ type: [String], default: [] })
-  preferredEmploymentTypes: string[];
-
-  @Prop({ type: [String], default: [] })
-  preferredExperienceLevels: string[];
-
-  @Prop({ type: [String], default: [] })
-  preferredLocations: string[];
-
-  @Prop()
-  preferredSalaryMin?: number;
-
-  @Prop()
-  preferredSalaryMax?: number;
-
-  @Prop({ type: [String], default: [] })
-  preferredSkills: string[];
-
-  @Prop({ default: false })
-  isUrgent?: boolean;
-
-  @Prop()
-  notes?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

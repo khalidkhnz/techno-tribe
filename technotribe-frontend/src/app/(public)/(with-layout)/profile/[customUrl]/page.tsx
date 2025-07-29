@@ -14,7 +14,8 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
-import { api } from "@/lib/schemas";
+
+
 import { 
   MapPin, 
   Globe, 
@@ -364,6 +365,6 @@ export default function PublicProfilePage() {
           </div>
         </div>
       </div>
-    );
-  }
-} 
+    </div>
+  );
+}
