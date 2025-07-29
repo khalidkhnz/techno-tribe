@@ -52,12 +52,20 @@ export default function LoginPage() {
 
       toast.success("Login successful! Welcome back!");
 
-      // Redirect based on user role
-      if (user.role === "recruiter") {
-        router.push(FRONTEND_ROUTES.RECRUITER.DASHBOARD);
+      if (user.isProfileComplete) {
+        if (user.role === "recruiter") {
+          router.push(FRONTEND_ROUTES.RECRUITER.DASHBOARD);
+        } else {
+          router.push(FRONTEND_ROUTES.DEVELOPER.DASHBOARD);
+        }
       } else {
-        router.push(FRONTEND_ROUTES.DEVELOPER.DASHBOARD);
+        if (user.role === "recruiter") {
+          router.push(FRONTEND_ROUTES.COMPLETE_RECRUITER_PROFILE);
+        } else {
+          router.push(FRONTEND_ROUTES.COMPLETE_DEVELOPER_PROFILE);
+        }
       }
+      
     } catch (error: any) {
       console.error("Login error:", error);
       toast.error(error.response?.data?.message || "Login failed. Please try again.");

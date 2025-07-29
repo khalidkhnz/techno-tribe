@@ -105,6 +105,7 @@ export class AuthService {
         lastName: user.lastName,
         role: user.role,
         avatar: user.avatar,
+        isProfileComplete: user.isProfileComplete,
       },
     };
   }
