@@ -71,6 +71,8 @@ export const api = {
     register: (data: any) => apiClient.post("/auth/signup", data),
     completeRecruiterProfile: (data: any) => 
       apiClient.put("/auth/complete-recruiter-profile", data),
+    completeDeveloperProfile: (data: any) => 
+      apiClient.put("/auth/complete-developer-profile", data),
     refresh: (data: { refresh_token: string }) =>
       apiClient.post("/auth/refresh", data),
     logout: () => apiClient.post("/auth/logout"),

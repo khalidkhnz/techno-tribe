@@ -5,6 +5,7 @@ import { UsersService } from '../users/users.service';
 import { LoginDto } from '../users/dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
 import { CompleteRecruiterProfileDto } from './dto/complete-recruiter-profile.dto';
+import { CompleteDeveloperProfileDto } from './dto/complete-developer-profile.dto';
 import { User } from '../users/schemas/user.schema';
 
 @Injectable()
@@ -162,6 +163,24 @@ export class AuthService {
         lastName: updatedUser.lastName,
         role: updatedUser.role,
         company: updatedUser.currentCompany,
+        profileCompleted: true,
+      }
+    };
+  }
+
+  async completeDeveloperProfile(userId: string, profileData: CompleteDeveloperProfileDto) {
+    // Update user profile with developer-specific information
+    const updatedUser = await this.usersService.updateDeveloperProfile(userId, profileData);
+    
+    return {
+      message: 'Developer profile completed successfully',
+      user: {
+        id: (updatedUser._id as any).toString(),
+        email: updatedUser.email,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+        role: updatedUser.role,
+        customUrl: updatedUser.customUrl,
         profileCompleted: true,
       }
     };

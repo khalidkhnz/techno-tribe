@@ -54,6 +54,21 @@ export const useCompleteRecruiterProfile = () => {
   });
 };
 
+export const useCompleteDeveloperProfile = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: api.auth.completeDeveloperProfile,
+    onSuccess: (data) => {
+      queryClient.setQueryData(["user"], data.data.user);
+      toast.success("Developer profile completed successfully!");
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to complete developer profile");
+    },
+  });
+};
+
 export const useLogout = () => {
   const queryClient = useQueryClient();
 

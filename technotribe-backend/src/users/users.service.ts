@@ -9,6 +9,7 @@ import { User } from './schemas/user.schema';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { SignupDto } from 'src/auth/dto/signup.dto';
 import { CompleteRecruiterProfileDto } from 'src/auth/dto/complete-recruiter-profile.dto';
+import { CompleteDeveloperProfileDto } from 'src/auth/dto/complete-developer-profile.dto';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
@@ -145,6 +146,54 @@ export class UsersService {
       currentPosition: profileData.jobTitle,
       phone: profileData.phone,
       linkedin: profileData.linkedin,
+      isProfileComplete: true,
+    };
+
+    const updatedUser = await this.userModel.findByIdAndUpdate(
+      userId,
+      updateData,
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      throw new NotFoundException('User not found');
+    }
+
+    return updatedUser;
+  }
+
+  async updateDeveloperProfile(userId: string, profileData: CompleteDeveloperProfileDto): Promise<User> {
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.role !== 'developer') {
+      throw new ConflictException('User is not a developer');
+    }
+
+    // Check if custom URL is already taken by another user
+    if (profileData.customUrl) {
+      const existingUser = await this.userModel.findOne({ customUrl: profileData.customUrl });
+      if (existingUser && (existingUser._id as any).toString() !== userId) {
+        throw new ConflictException('Custom URL is already taken');
+      }
+    }
+
+    const updateData = {
+      customUrl: profileData.customUrl,
+      bio: profileData.bio,
+      location: profileData.location,
+      website: profileData.website,
+      skills: profileData.skills || [],
+      experienceLevel: profileData.experienceLevel,
+      yearsOfExperience: profileData.yearsOfExperience,
+      currentCompany: profileData.currentCompany,
+      currentPosition: profileData.currentPosition,
+      education: profileData.education || [],
+      certifications: profileData.certifications || [],
+      portfolioLinks: profileData.portfolioLinks || [],
+      socialLinks: profileData.socialLinks || [],
       isProfileComplete: true,
     };
 

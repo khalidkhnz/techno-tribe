@@ -136,3 +136,28 @@ export const completeRecruiterProfileSchema = z.object({
 });
 
 export type CompleteRecruiterProfileFormData = z.infer<typeof completeRecruiterProfileSchema>;
+
+// Complete developer profile schema
+export const completeDeveloperProfileSchema = z.object({
+  customUrl: z.string().min(3, "Custom URL must be at least 3 characters").optional(),
+  bio: z.string().max(500, "Bio must be less than 500 characters").optional(),
+  location: z.string().optional(),
+  website: z.string().url("Invalid website URL").optional().or(z.literal("")),
+  skills: z.array(z.string()).min(1, "At least one skill is required"),
+  experienceLevel: z.enum([
+    "junior",
+    "mid-level",
+    "senior",
+    "lead",
+    "principal",
+  ]).optional(),
+  yearsOfExperience: z.number().min(0).max(50).optional(),
+  currentCompany: z.string().optional(),
+  currentPosition: z.string().optional(),
+  education: z.array(z.string()).optional(),
+  certifications: z.array(z.string()).optional(),
+  portfolioLinks: z.array(z.string().url("Invalid URL")).optional(),
+  socialLinks: z.array(z.string().url("Invalid URL")).optional(),
+});
+
+export type CompleteDeveloperProfileFormData = z.infer<typeof completeDeveloperProfileSchema>;

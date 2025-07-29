@@ -5,6 +5,7 @@ const FRONTEND_ROUTES = {
     LOGIN: "/login",
     SIGNUP: "/signup",
     COMPLETE_RECRUITER_PROFILE: "/complete-recruiter-profile",
+    COMPLETE_DEVELOPER_PROFILE: "/complete-developer-profile",
     JOBS: "/jobs",
   
     PROFILE_CUSTOM_URL: (customUrl: string) => `/profile/${customUrl}`,

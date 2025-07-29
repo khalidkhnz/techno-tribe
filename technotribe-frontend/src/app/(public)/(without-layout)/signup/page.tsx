@@ -75,7 +75,7 @@ export default function SignupPage() {
       if (selectedRole === "recruiter") {
         router.push(FRONTEND_ROUTES.COMPLETE_RECRUITER_PROFILE);
       } else {
-        router.push(FRONTEND_ROUTES.DEVELOPER.DASHBOARD);
+        router.push(FRONTEND_ROUTES.COMPLETE_DEVELOPER_PROFILE);
       }
     } catch (error: any) {
       // Error is handled by the mutation

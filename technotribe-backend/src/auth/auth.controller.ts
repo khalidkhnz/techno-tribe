@@ -18,6 +18,7 @@ import { AuthService } from './auth.service';
 import { LoginDto } from '../users/dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
 import { CompleteRecruiterProfileDto } from './dto/complete-recruiter-profile.dto';
+import { CompleteDeveloperProfileDto } from './dto/complete-developer-profile.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import {
   LoginResponseDto,
@@ -134,6 +135,38 @@ export class AuthController {
     @Body() profileData: CompleteRecruiterProfileDto,
   ) {
     const response = await this.authService.completeRecruiterProfile(
+      req.user.userId,
+      profileData,
+    );
+    return response;
+  }
+
+  @Put('complete-developer-profile')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Complete developer profile' })
+  @ApiResponse({
+    status: 200,
+    description: 'Developer profile completed successfully',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request - validation error',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'User is not a developer',
+  })
+  async completeDeveloperProfile(
+    @Request() req,
+    @Body() profileData: CompleteDeveloperProfileDto,
+  ) {
+    const response = await this.authService.completeDeveloperProfile(
       req.user.userId,
       profileData,
     );
