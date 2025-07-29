@@ -79,17 +79,36 @@ export class UsersService {
       }
     }
 
-    const profileFields = [
-      'bio', 'location', 'skills', 'experienceLevel', 'yearsOfExperience',
-      'currentCompany', 'currentPosition', 'education', 'certifications'
-    ];
-    
-    const isProfileComplete = profileFields.every(field => 
-      updateProfileDto[field] && 
-      (Array.isArray(updateProfileDto[field]) ? updateProfileDto[field].length > 0 : true)
-    );
+    // Get user to determine role for profile completion check
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
 
-    const user = await this.userModel.findByIdAndUpdate(
+    let isProfileComplete = false;
+
+    if (user.role === 'developer') {
+      const developerProfileFields = [
+        'bio', 'location', 'skills', 'experienceLevel', 'yearsOfExperience',
+        'currentCompany', 'currentPosition', 'education', 'certifications'
+      ];
+      
+      isProfileComplete = developerProfileFields.every(field => 
+        updateProfileDto[field] && 
+        (Array.isArray(updateProfileDto[field]) ? updateProfileDto[field].length > 0 : true)
+      );
+    } else if (user.role === 'recruiter') {
+      const recruiterProfileFields = [
+        'company', 'industry', 'jobTitle', 'phone', 'linkedin'
+      ];
+      
+      isProfileComplete = recruiterProfileFields.every(field => 
+        updateProfileDto[field] && 
+        (Array.isArray(updateProfileDto[field]) ? updateProfileDto[field].length > 0 : true)
+      );
+    }
+
+    const updatedUser = await this.userModel.findByIdAndUpdate(
       userId,
       { 
         ...updateProfileDto,
@@ -98,11 +117,11 @@ export class UsersService {
       { new: true }
     );
 
-    if (!user) {
+    if (!updatedUser) {
       throw new NotFoundException('User not found');
     }
 
-    return user;
+    return updatedUser;
   }
 
   async incrementProfileViews(userId: string): Promise<void> {

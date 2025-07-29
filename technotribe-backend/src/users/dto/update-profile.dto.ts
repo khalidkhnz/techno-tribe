@@ -155,4 +155,117 @@ export class UpdateProfileDto {
   @IsUrl({}, { each: true })
   @IsOptional()
   socialLinks?: string[];
+
+  // Recruiter-specific fields
+  @ApiPropertyOptional({
+    description: 'Company name',
+    example: 'Tech Corp Inc.',
+  })
+  @IsString()
+  @IsOptional()
+  company?: string;
+
+  @ApiPropertyOptional({
+    description: 'Company website',
+    example: 'https://techcorp.com',
+  })
+  @IsUrl()
+  @IsOptional()
+  companyWebsite?: string;
+
+  @ApiPropertyOptional({
+    description: 'Company description',
+    example: 'Leading technology company focused on innovation...',
+  })
+  @IsString()
+  @IsOptional()
+  companyDescription?: string;
+
+  @ApiPropertyOptional({
+    description: 'Company size',
+    example: '51-200 employees',
+  })
+  @IsString()
+  @IsOptional()
+  companySize?: string;
+
+  @ApiPropertyOptional({
+    description: 'Industry',
+    example: 'Technology',
+  })
+  @IsString()
+  @IsOptional()
+  industry?: string;
+
+  @ApiPropertyOptional({
+    description: 'Job title',
+    example: 'Senior Recruiter',
+  })
+  @IsString()
+  @IsOptional()
+  jobTitle?: string;
+
+  @ApiPropertyOptional({
+    description: 'Phone number',
+    example: '+1-555-123-4567',
+  })
+  @IsString()
+  @IsOptional()
+  phone?: string;
+
+  @ApiPropertyOptional({
+    description: 'LinkedIn profile',
+    example: 'https://linkedin.com/in/johndoe',
+  })
+  @IsUrl()
+  @IsOptional()
+  linkedin?: string;
+
+  @ApiPropertyOptional({
+    description: 'Twitter profile',
+    example: 'https://twitter.com/johndoe',
+  })
+  @IsUrl()
+  @IsOptional()
+  twitter?: string;
+
+  @ApiPropertyOptional({
+    description: 'Facebook profile',
+    example: 'https://facebook.com/johndoe',
+  })
+  @IsUrl()
+  @IsOptional()
+  facebook?: string;
+
+  @ApiPropertyOptional({
+    description: 'Instagram profile',
+    example: 'https://instagram.com/johndoe',
+  })
+  @IsUrl()
+  @IsOptional()
+  instagram?: string;
+
+  @ApiPropertyOptional({
+    description: 'Recruitment focus',
+    example: 'Focus on hiring senior developers and tech leads',
+  })
+  @IsString()
+  @IsOptional()
+  recruitmentFocus?: string;
+
+  @ApiPropertyOptional({
+    description: 'Primary industry focus',
+    example: 'Technology',
+  })
+  @IsString()
+  @IsOptional()
+  primaryIndustry?: string;
+
+  @ApiPropertyOptional({
+    description: 'Experience level focus',
+    example: 'Mid to Senior Level',
+  })
+  @IsString()
+  @IsOptional()
+  experienceLevelFocus?: string;
 } 

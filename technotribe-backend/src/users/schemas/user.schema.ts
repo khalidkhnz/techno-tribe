@@ -108,6 +108,9 @@ export class User extends Document {
 
   // Recruiter Profile Fields
   @Prop()
+  company?: string;
+
+  @Prop()
   companyWebsite?: string;
 
   @Prop()
@@ -120,10 +123,31 @@ export class User extends Document {
   industry?: string;
 
   @Prop()
+  jobTitle?: string;
+
+  @Prop()
   phone?: string;
 
   @Prop()
   linkedin?: string;
+
+  @Prop()
+  twitter?: string;
+
+  @Prop()
+  facebook?: string;
+
+  @Prop()
+  instagram?: string;
+
+  @Prop()
+  recruitmentFocus?: string;
+
+  @Prop()
+  primaryIndustry?: string;
+
+  @Prop()
+  experienceLevelFocus?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

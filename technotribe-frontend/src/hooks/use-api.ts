@@ -1,6 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
+import { ProfileFormData, CompleteRecruiterProfileFormData, CompleteDeveloperProfileFormData, RegisterFormData, JobFormData, ApplicationFormData, ApplicationStatusFormData } from "@/lib/schemas";
+import { AxiosError } from "axios";
 
 // Auth hooks
 export const useLogin = () => {
@@ -15,8 +17,8 @@ export const useLogin = () => {
       queryClient.setQueryData(["user"], data.data.user);
       toast.success("Login successful!");
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Login failed");
+    onError: (error: AxiosError) => {
+      toast.error((error.response?.data as { message?: string })?.message || "Login failed");
     },
   });
 };
@@ -33,8 +35,8 @@ export const useRegister = () => {
       queryClient.setQueryData(["user"], data.data.user);
       toast.success("Registration successful!");
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Registration failed");
+    onError: (error: AxiosError) => {
+      toast.error((error.response?.data as { message?: string })?.message || "Registration failed");
     },
   });
 };
@@ -48,8 +50,8 @@ export const useCompleteRecruiterProfile = () => {
       queryClient.setQueryData(["user"], data.data.user);
       toast.success("Recruiter profile completed successfully!");
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to complete recruiter profile");
+    onError: (error: AxiosError) => {
+      toast.error((error.response?.data as { message?: string })?.message || "Failed to complete recruiter profile");
     },
   });
 };
@@ -63,8 +65,8 @@ export const useCompleteDeveloperProfile = () => {
       queryClient.setQueryData(["user"], data.data.user);
       toast.success("Developer profile completed successfully!");
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to complete developer profile");
+    onError: (error: AxiosError) => {
+      toast.error((error.response?.data as { message?: string })?.message || "Failed to complete developer profile");
     },
   });
 };
@@ -105,19 +107,19 @@ export const useUpdateProfile = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ data }: { data: any }) => api.users.updateProfile(data),
+    mutationFn: ({ data }: { data: ProfileFormData }) => api.users.updateProfile(data),
     onSuccess: (data) => {
       queryClient.setQueryData(["user"], data.data);
       toast.success("Profile updated successfully!");
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to update profile");
+    onError: (error: AxiosError) => {
+      toast.error((error.response?.data as { message?: string })?.message || "Failed to update profile");
     },
   });
 };
 
 // Job hooks
-export const useJobs = (filters?: any) => {
+export const useJobs = (filters?: Record<string, unknown>) => {
   return useQuery({
     queryKey: ["jobs", filters],
     queryFn: () => api.jobs.getAll(filters),
@@ -162,8 +164,8 @@ export const useCreateJob = () => {
       queryClient.invalidateQueries({ queryKey: ["job-stats"] });
       toast.success("Job created successfully!");
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to create job");
+    onError: (error: AxiosError) => {
+      toast.error((error.response?.data as { message?: string })?.message || "Failed to create job");
     },
   });
 };
@@ -172,7 +174,7 @@ export const useUpdateJob = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: any }) =>
+    mutationFn: ({ id, data }: { id: string; data: JobFormData }) =>
       api.jobs.update(id, data),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["my-jobs"] });
@@ -180,8 +182,8 @@ export const useUpdateJob = () => {
       queryClient.invalidateQueries({ queryKey: ["job-stats"] });
       toast.success("Job updated successfully!");
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to update job");
+    onError: (error: AxiosError) => {
+      toast.error((error.response?.data as { message?: string })?.message || "Failed to update job");
     },
   });
 };
@@ -196,8 +198,8 @@ export const useDeleteJob = () => {
       queryClient.invalidateQueries({ queryKey: ["job-stats"] });
       toast.success("Job deleted successfully!");
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to delete job");
+    onError: (error: AxiosError) => {
+      toast.error((error.response?.data as { message?: string })?.message || "Failed to delete job");
     },
   });
 };
@@ -212,8 +214,8 @@ export const usePublishJob = () => {
       queryClient.invalidateQueries({ queryKey: ["job-stats"] });
       toast.success("Job published successfully!");
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to publish job");
+    onError: (error: AxiosError) => {
+      toast.error((error.response?.data as { message?: string })?.message || "Failed to publish job");
     },
   });
 };
@@ -228,8 +230,8 @@ export const useCloseJob = () => {
       queryClient.invalidateQueries({ queryKey: ["job-stats"] });
       toast.success("Job closed successfully!");
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to close job");
+    onError: (error: AxiosError) => {
+      toast.error((error.response?.data as { message?: string })?.message || "Failed to close job");
     },
   });
 };

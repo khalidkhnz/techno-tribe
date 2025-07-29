@@ -98,6 +98,21 @@ export const profileSchema = z.object({
   certifications: z.array(z.string()).optional(),
   portfolioLinks: z.array(z.string().url("Invalid URL")).optional(),
   socialLinks: z.array(z.string().url("Invalid URL")).optional(),
+  // Recruiter-specific fields
+  company: z.string().optional(),
+  companyWebsite: z.string().url("Invalid website URL").optional().or(z.literal("")),
+  companyDescription: z.string().optional(),
+  companySize: z.string().optional(),
+  industry: z.string().optional(),
+  jobTitle: z.string().optional(),
+  phone: z.string().optional(),
+  linkedin: z.string().url("Invalid LinkedIn URL").optional().or(z.literal("")),
+  twitter: z.string().url("Invalid Twitter URL").optional().or(z.literal("")),
+  facebook: z.string().url("Invalid Facebook URL").optional().or(z.literal("")),
+  instagram: z.string().url("Invalid Instagram URL").optional().or(z.literal("")),
+  recruitmentFocus: z.string().optional(),
+  primaryIndustry: z.string().optional(),
+  experienceLevelFocus: z.string().optional(),
 });
 
 export type ProfileFormData = z.infer<typeof profileSchema>;

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { config } from "./config";
 import FRONTEND_ROUTES from "./fe-routes";
+import { RegisterFormData, ProfileFormData, CompleteRecruiterProfileFormData, CompleteDeveloperProfileFormData, JobFormData, ApplicationFormData, ApplicationStatusFormData } from "./schemas";
 
 // Create axios instance
 const apiClient = axios.create({
@@ -68,10 +69,10 @@ export const api = {
   auth: {
     login: (data: { email: string; password: string }) =>
       apiClient.post("/auth/login", data),
-    register: (data: any) => apiClient.post("/auth/signup", data),
-    completeRecruiterProfile: (data: any) => 
+    register: (data: RegisterFormData) => apiClient.post("/auth/signup", data),
+    completeRecruiterProfile: (data: CompleteRecruiterProfileFormData) => 
       apiClient.put("/auth/complete-recruiter-profile", data),
-    completeDeveloperProfile: (data: any) => 
+    completeDeveloperProfile: (data: CompleteDeveloperProfileFormData) => 
       apiClient.put("/auth/complete-developer-profile", data),
     refresh: (data: { refresh_token: string }) =>
       apiClient.post("/auth/refresh", data),
@@ -81,7 +82,7 @@ export const api = {
   // User endpoints
   users: {
     getProfile: () => apiClient.get("/users/profile"),
-    updateProfile: (data: any) => apiClient.put("/users/profile", data),
+    updateProfile: (data: ProfileFormData) => apiClient.put("/users/profile", data),
     getPublicProfile: (customUrl: string) => apiClient.get(`/users/profile/${customUrl}`),
     getAll: () => apiClient.get("/users"),
     getById: (id: string) => apiClient.get(`/users/${id}`),
@@ -89,10 +90,10 @@ export const api = {
 
   // Job endpoints
   jobs: {
-    getAll: (params?: any) => apiClient.get("/jobs", { params }),
+    getAll: (params?: Record<string, unknown>) => apiClient.get("/jobs", { params }),
     getById: (id: string) => apiClient.get(`/jobs/${id}`),
-    create: (data: any) => apiClient.post("/jobs", data),
-    update: (id: string, data: any) => apiClient.put(`/jobs/${id}`, data),
+    create: (data: JobFormData) => apiClient.post("/jobs", data),
+    update: (id: string, data: JobFormData) => apiClient.put(`/jobs/${id}`, data),
     delete: (id: string) => apiClient.delete(`/jobs/${id}`),
     publish: (id: string) => apiClient.put(`/jobs/${id}/publish`),
     close: (id: string) => apiClient.put(`/jobs/${id}/close`),
@@ -102,10 +103,10 @@ export const api = {
 
   // Application endpoints
   applications: {
-    apply: (data: { jobId: string }) => apiClient.post("/applications", data),
+    apply: (data: ApplicationFormData) => apiClient.post("/applications", data),
     getMyApplications: () => apiClient.get("/applications/my-applications"),
     getJobApplications: (jobId: string) => apiClient.get(`/applications/job/${jobId}`),
-    updateStatus: (id: string, data: { status: string }) => 
+    updateStatus: (id: string, data: ApplicationStatusFormData) => 
       apiClient.put(`/applications/${id}/status`, data),
     markAsViewed: (id: string) => apiClient.put(`/applications/${id}/view`),
     withdraw: (id: string) => apiClient.put(`/applications/${id}/withdraw`),

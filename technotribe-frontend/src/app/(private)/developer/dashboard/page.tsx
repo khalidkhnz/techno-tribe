@@ -39,7 +39,7 @@ export default function DashboardPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
             >
-              Here's what's happening with your account today.
+              Here&apos;s what&apos;s happening with your account today.
             </motion.p>
           </div>
           <motion.div

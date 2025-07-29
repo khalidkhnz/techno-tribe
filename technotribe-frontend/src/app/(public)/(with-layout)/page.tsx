@@ -388,7 +388,7 @@ export default function HomePage() {
               Why Choose TechnoTribe?
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              We've built the most advanced developer recruitment platform with
+              We&apos;ve built the most advanced developer recruitment platform with
               cutting-edge technology and a focus on user experience.
             </p>
           </motion.div>

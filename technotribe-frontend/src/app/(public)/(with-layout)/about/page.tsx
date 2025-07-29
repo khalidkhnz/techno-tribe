@@ -130,7 +130,7 @@ export default function AboutPage() {
               <span className="block text-primary-foreground/80">Recruitment</span>
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90 max-w-3xl mx-auto">
-              We're on a mission to connect exceptional developers with
+              We&apos;re on a mission to connect exceptional developers with
               innovative companies through intelligent, AI-powered matching that
               benefits everyone.
             </p>
@@ -252,7 +252,7 @@ export default function AboutPage() {
               Meet Our Team
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              The passionate individuals behind TechnoTribe's mission
+              The passionate individuals behind TechnoTribe&apos;s mission
             </p>
           </div>
 

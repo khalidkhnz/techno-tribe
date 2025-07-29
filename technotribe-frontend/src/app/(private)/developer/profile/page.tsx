@@ -22,30 +22,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { toast } from "sonner";
 import { profileSchema, type ProfileFormData } from "@/lib/schemas";
-import { api } from "@/lib/api";
-import { Plus, X, Save, Edit, Eye, Link as LinkIcon } from "lucide-react";
-
-const experienceLevels = [
-  { value: "junior", label: "Junior" },
-  { value: "mid-level", label: "Mid Level" },
-  { value: "senior", label: "Senior" },
-  { value: "lead", label: "Lead" },
-  { value: "principal", label: "Principal" },
-];
-
-const availableSkills = [
-  "React", "Vue.js", "Angular", "TypeScript", "JavaScript", "Python", "Java",
-  "Go", "Node.js", "Express", "Django", "Spring", "PostgreSQL", "MongoDB",
-  "AWS", "Docker", "Kubernetes", "GraphQL", "REST API", "Microservices",
-  "Machine Learning", "AI", "Next.js", "Vue", "Svelte", "PHP", "Ruby",
-  "C#", "Swift", "Kotlin", "Rust", "Flutter", "React Native", "Vue Native",
-  "Electron", "Webpack", "Vite", "Jest", "Cypress", "Selenium", "Git",
-  "GitHub", "GitLab", "Bitbucket", "CI/CD", "Jenkins", "GitHub Actions",
-  "GitLab CI", "Terraform", "Ansible", "Puppet", "Chef",
-];
+import { useUser, useUpdateProfile } from "@/hooks/use-api";
+import Constants from "@/lib/constants";
+import { Plus, X, Save, Edit, Code } from "lucide-react";
 
 interface User {
   id: string;
@@ -71,129 +51,143 @@ interface User {
 }
 
 export default function DeveloperProfilePage() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [newEducation, setNewEducation] = useState("");
   const [newCertification, setNewCertification] = useState("");
   const [newPortfolioLink, setNewPortfolioLink] = useState("");
   const [newSocialLink, setNewSocialLink] = useState("");
+  const [newSkill, setNewSkill] = useState("");
+
+  const { data: user, isLoading, error } = useUser();
+  const updateProfileMutation = useUpdateProfile();
 
   const {
     register,
     handleSubmit,
     setValue,
     watch,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
   });
 
+  // Reset form when user data changes
   useEffect(() => {
-    fetchProfile();
-  }, []);
-
-  const fetchProfile = async () => {
-    try {
-      const response = await api.users.getProfile();
-      const userData = response.data;
-      setUser(userData);
-      
-      // Set form values
-      Object.keys(userData).forEach((key) => {
-        if (userData[key] !== undefined) {
-          setValue(key as keyof ProfileFormData, userData[key]);
-        }
+    if (user?.data) {
+      reset({
+        firstName: user.data.firstName || "",
+        lastName: user.data.lastName || "",
+        email: user.data.email || "",
+        customUrl: user.data.customUrl || "",
+        bio: user.data.bio || "",
+        location: user.data.location || "",
+        website: user.data.website || "",
+        skills: user.data.skills || [],
+        experienceLevel: user.data.experienceLevel as any,
+        yearsOfExperience: user.data.yearsOfExperience,
+        currentCompany: user.data.currentCompany || "",
+        currentPosition: user.data.currentPosition || "",
+        education: user.data.education || [],
+        certifications: user.data.certifications || [],
+        portfolioLinks: user.data.portfolioLinks || [],
+        socialLinks: user.data.socialLinks || [],
       });
-    } catch (error) {
-      console.error("Error fetching profile:", error);
-      toast.error("Failed to fetch profile");
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [user, reset]);
 
   const onSubmit = async (data: ProfileFormData) => {
     try {
-      const response = await api.users.updateProfile(data);
-      setUser(response.data);
+      await updateProfileMutation.mutateAsync({ data });
       setIsEditing(false);
-      toast.success("Profile updated successfully!");
-    } catch (error: any) {
-      console.error("Error updating profile:", error);
-      toast.error(error.response?.data?.message || "Failed to update profile");
+    } catch (error) {
+      // Error is handled by the mutation
     }
   };
 
   const handleSkillToggle = (skill: string) => {
     const currentSkills = watch("skills") || [];
-    const newSkills = currentSkills.includes(skill)
-      ? currentSkills.filter((s) => s !== skill)
-      : [...currentSkills, skill];
-    setValue("skills", newSkills);
+    if (currentSkills.includes(skill)) {
+      setValue("skills", currentSkills.filter(s => s !== skill));
+    } else {
+      setValue("skills", [...currentSkills, skill]);
+    }
+  };
+
+  const addSkill = () => {
+    if (newSkill.trim() && !watch("skills")?.includes(newSkill.trim())) {
+      const currentSkills = watch("skills") || [];
+      setValue("skills", [...currentSkills, newSkill.trim()]);
+      setNewSkill("");
+    }
+  };
+
+  const removeSkill = (skillToRemove: string) => {
+    const currentSkills = watch("skills") || [];
+    setValue("skills", currentSkills.filter(skill => skill !== skillToRemove));
   };
 
   const addEducation = () => {
-    if (newEducation.trim()) {
+    if (newEducation.trim() && !watch("education")?.includes(newEducation.trim())) {
       const currentEducation = watch("education") || [];
       setValue("education", [...currentEducation, newEducation.trim()]);
       setNewEducation("");
     }
   };
 
-  const removeEducation = (index: number) => {
+  const removeEducation = (educationToRemove: string) => {
     const currentEducation = watch("education") || [];
-    setValue("education", currentEducation.filter((_, i) => i !== index));
+    setValue("education", currentEducation.filter(edu => edu !== educationToRemove));
   };
 
   const addCertification = () => {
-    if (newCertification.trim()) {
+    if (newCertification.trim() && !watch("certifications")?.includes(newCertification.trim())) {
       const currentCertifications = watch("certifications") || [];
       setValue("certifications", [...currentCertifications, newCertification.trim()]);
       setNewCertification("");
     }
   };
 
-  const removeCertification = (index: number) => {
+  const removeCertification = (certificationToRemove: string) => {
     const currentCertifications = watch("certifications") || [];
-    setValue("certifications", currentCertifications.filter((_, i) => i !== index));
+    setValue("certifications", currentCertifications.filter(cert => cert !== certificationToRemove));
   };
 
   const addPortfolioLink = () => {
-    if (newPortfolioLink.trim()) {
-      const currentLinks = watch("portfolioLinks") || [];
-      setValue("portfolioLinks", [...currentLinks, newPortfolioLink.trim()]);
+    if (newPortfolioLink.trim() && !watch("portfolioLinks")?.includes(newPortfolioLink.trim())) {
+      const currentPortfolioLinks = watch("portfolioLinks") || [];
+      setValue("portfolioLinks", [...currentPortfolioLinks, newPortfolioLink.trim()]);
       setNewPortfolioLink("");
     }
   };
 
-  const removePortfolioLink = (index: number) => {
-    const currentLinks = watch("portfolioLinks") || [];
-    setValue("portfolioLinks", currentLinks.filter((_, i) => i !== index));
+  const removePortfolioLink = (linkToRemove: string) => {
+    const currentPortfolioLinks = watch("portfolioLinks") || [];
+    setValue("portfolioLinks", currentPortfolioLinks.filter(link => link !== linkToRemove));
   };
 
   const addSocialLink = () => {
-    if (newSocialLink.trim()) {
-      const currentLinks = watch("socialLinks") || [];
-      setValue("socialLinks", [...currentLinks, newSocialLink.trim()]);
+    if (newSocialLink.trim() && !watch("socialLinks")?.includes(newSocialLink.trim())) {
+      const currentSocialLinks = watch("socialLinks") || [];
+      setValue("socialLinks", [...currentSocialLinks, newSocialLink.trim()]);
       setNewSocialLink("");
     }
   };
 
-  const removeSocialLink = (index: number) => {
-    const currentLinks = watch("socialLinks") || [];
-    setValue("socialLinks", currentLinks.filter((_, i) => i !== index));
+  const removeSocialLink = (linkToRemove: string) => {
+    const currentSocialLinks = watch("socialLinks") || [];
+    setValue("socialLinks", currentSocialLinks.filter(link => link !== linkToRemove));
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen w-full bg-background">
-        <div className="w-full max-w-7xl mr-auto">
+        <div className="w-full max-w-7xl mx-auto p-6">
           <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 rounded w-1/4 mb-8"></div>
+            <div className="h-8 bg-muted rounded w-1/4 mb-8"></div>
             <div className="space-y-6">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="h-32 bg-gray-200 rounded"></div>
+                <div key={i} className="h-32 bg-muted rounded"></div>
               ))}
             </div>
           </div>
@@ -202,13 +196,30 @@ export default function DeveloperProfilePage() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="min-h-screen w-full bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Error Loading Profile</h2>
+          <p className="text-gray-600">Failed to load your profile. Please try again.</p>
+          <Button onClick={() => window.location.reload()} className="mt-4">
+            Retry
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen w-full bg-background">
-      <div className="w-full mr-auto">
+      <div className="w-full max-w-7xl mx-auto p-6">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
-            <p className="text-gray-600 mt-2">
+            <div className="flex items-center gap-2 mb-2">
+              <Code className="h-6 w-6 text-primary" />
+              <h1 className="text-3xl font-bold text-gray-900">Developer Profile</h1>
+            </div>
+            <p className="text-gray-600">
               Build your professional profile to attract recruiters
             </p>
           </div>
@@ -277,7 +288,7 @@ export default function DeveloperProfilePage() {
                   id="email"
                   type="email"
                   {...register("email")}
-                  disabled={!isEditing}
+                  disabled={true}
                 />
                 {errors.email && (
                   <p className="text-red-500 text-sm mt-1">
@@ -289,7 +300,7 @@ export default function DeveloperProfilePage() {
               <div>
                 <Label htmlFor="customUrl">Custom URL</Label>
                 <div className="flex items-center gap-2">
-                  <span className="text-gray-500">technotribe.com/</span>
+                  <span className="text-gray-500">technotribe.com/profile/</span>
                   <Input
                     id="customUrl"
                     {...register("customUrl")}
@@ -310,7 +321,7 @@ export default function DeveloperProfilePage() {
                   id="bio"
                   {...register("bio")}
                   disabled={!isEditing}
-                  placeholder="Tell us about yourself..."
+                  placeholder="Tell us about yourself, your passion for coding, and what drives you as a developer..."
                   rows={4}
                 />
                 {errors.bio && (
@@ -374,7 +385,7 @@ export default function DeveloperProfilePage() {
                       <SelectValue placeholder="Select level" />
                     </SelectTrigger>
                     <SelectContent>
-                      {experienceLevels.map((level) => (
+                      {Constants.experienceLevels.map((level) => (
                         <SelectItem key={level.value} value={level.value}>
                           {level.label}
                         </SelectItem>
@@ -424,7 +435,7 @@ export default function DeveloperProfilePage() {
                   id="currentPosition"
                   {...register("currentPosition")}
                   disabled={!isEditing}
-                  placeholder="e.g., Senior Developer"
+                  placeholder="e.g., Senior Software Engineer"
                 />
                 {errors.currentPosition && (
                   <p className="text-red-500 text-sm mt-1">
@@ -438,31 +449,45 @@ export default function DeveloperProfilePage() {
           {/* Skills */}
           <Card>
             <CardHeader>
-              <CardTitle>Skills</CardTitle>
+              <CardTitle>Technical Skills</CardTitle>
               <CardDescription>
                 Select your technical skills and technologies
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 max-h-60 overflow-y-auto">
-                {availableSkills.map((skill) => (
-                  <div key={skill} className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      id={skill}
-                      checked={watch("skills")?.includes(skill) || false}
-                      onChange={() => handleSkillToggle(skill)}
-                      disabled={!isEditing}
-                      className="rounded"
-                    />
-                    <Label htmlFor={skill} className="text-sm font-normal">
-                      {skill}
-                    </Label>
-                  </div>
+            <CardContent className="space-y-4">
+              {isEditing && (
+                <div className="flex gap-2">
+                  <Input
+                    value={newSkill}
+                    onChange={(e) => setNewSkill(e.target.value)}
+                    placeholder="Add a skill (e.g., React, Node.js)"
+                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill())}
+                  />
+                  <Button type="button" onClick={addSkill} size="sm">
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
+              
+              <div className="flex flex-wrap gap-2">
+                {watch("skills")?.map((skill) => (
+                  <Badge key={skill} variant="secondary" className="flex items-center gap-1">
+                    {skill}
+                    {isEditing && (
+                      <button
+                        type="button"
+                        onClick={() => removeSkill(skill)}
+                        className="ml-1 hover:text-destructive"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    )}
+                  </Badge>
                 ))}
               </div>
+              
               {errors.skills && (
-                <p className="text-red-500 text-sm mt-2">
+                <p className="text-sm text-destructive">
                   {errors.skills.message}
                 </p>
               )}
@@ -478,21 +503,6 @@ export default function DeveloperProfilePage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {watch("education")?.map((edu, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <Input value={edu} disabled />
-                  {isEditing && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => removeEducation(index)}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  )}
-                </div>
-              ))}
               {isEditing && (
                 <div className="flex gap-2">
                   <Input
@@ -501,10 +511,33 @@ export default function DeveloperProfilePage() {
                     placeholder="Add education (e.g., Bachelor in Computer Science - Stanford)"
                     onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addEducation())}
                   />
-                  <Button type="button" onClick={addEducation}>
-                    <Plus className="w-4 h-4" />
+                  <Button type="button" onClick={addEducation} size="sm">
+                    <Plus className="h-4 w-4" />
                   </Button>
                 </div>
+              )}
+              
+              <div className="flex flex-wrap gap-2">
+                {watch("education")?.map((edu) => (
+                  <Badge key={edu} variant="secondary" className="flex items-center gap-1">
+                    {edu}
+                    {isEditing && (
+                      <button
+                        type="button"
+                        onClick={() => removeEducation(edu)}
+                        className="ml-1 hover:text-destructive"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    )}
+                  </Badge>
+                ))}
+              </div>
+              
+              {errors.education && (
+                <p className="text-sm text-destructive">
+                  {errors.education.message}
+                </p>
               )}
             </CardContent>
           </Card>
@@ -518,21 +551,6 @@ export default function DeveloperProfilePage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {watch("certifications")?.map((cert, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <Input value={cert} disabled />
-                  {isEditing && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => removeCertification(index)}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  )}
-                </div>
-              ))}
               {isEditing && (
                 <div className="flex gap-2">
                   <Input
@@ -541,10 +559,33 @@ export default function DeveloperProfilePage() {
                     placeholder="Add certification (e.g., AWS Certified Developer)"
                     onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addCertification())}
                   />
-                  <Button type="button" onClick={addCertification}>
-                    <Plus className="w-4 h-4" />
+                  <Button type="button" onClick={addCertification} size="sm">
+                    <Plus className="h-4 w-4" />
                   </Button>
                 </div>
+              )}
+              
+              <div className="flex flex-wrap gap-2">
+                {watch("certifications")?.map((cert) => (
+                  <Badge key={cert} variant="secondary" className="flex items-center gap-1">
+                    {cert}
+                    {isEditing && (
+                      <button
+                        type="button"
+                        onClick={() => removeCertification(cert)}
+                        className="ml-1 hover:text-destructive"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    )}
+                  </Badge>
+                ))}
+              </div>
+              
+              {errors.certifications && (
+                <p className="text-sm text-destructive">
+                  {errors.certifications.message}
+                </p>
               )}
             </CardContent>
           </Card>
@@ -558,21 +599,6 @@ export default function DeveloperProfilePage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {watch("portfolioLinks")?.map((link, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <Input value={link} disabled />
-                  {isEditing && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => removePortfolioLink(index)}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  )}
-                </div>
-              ))}
               {isEditing && (
                 <div className="flex gap-2">
                   <Input
@@ -581,10 +607,33 @@ export default function DeveloperProfilePage() {
                     placeholder="Add portfolio link (e.g., https://github.com/username)"
                     onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addPortfolioLink())}
                   />
-                  <Button type="button" onClick={addPortfolioLink}>
-                    <Plus className="w-4 h-4" />
+                  <Button type="button" onClick={addPortfolioLink} size="sm">
+                    <Plus className="h-4 w-4" />
                   </Button>
                 </div>
+              )}
+              
+              <div className="flex flex-wrap gap-2">
+                {watch("portfolioLinks")?.map((link) => (
+                  <Badge key={link} variant="secondary" className="flex items-center gap-1">
+                    {link}
+                    {isEditing && (
+                      <button
+                        type="button"
+                        onClick={() => removePortfolioLink(link)}
+                        className="ml-1 hover:text-destructive"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    )}
+                  </Badge>
+                ))}
+              </div>
+              
+              {errors.portfolioLinks && (
+                <p className="text-sm text-destructive">
+                  {errors.portfolioLinks.message}
+                </p>
               )}
             </CardContent>
           </Card>
@@ -598,21 +647,6 @@ export default function DeveloperProfilePage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {watch("socialLinks")?.map((link, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <Input value={link} disabled />
-                  {isEditing && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => removeSocialLink(index)}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  )}
-                </div>
-              ))}
               {isEditing && (
                 <div className="flex gap-2">
                   <Input
@@ -621,17 +655,40 @@ export default function DeveloperProfilePage() {
                     placeholder="Add social link (e.g., https://linkedin.com/in/username)"
                     onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addSocialLink())}
                   />
-                  <Button type="button" onClick={addSocialLink}>
-                    <Plus className="w-4 h-4" />
+                  <Button type="button" onClick={addSocialLink} size="sm">
+                    <Plus className="h-4 w-4" />
                   </Button>
                 </div>
+              )}
+              
+              <div className="flex flex-wrap gap-2">
+                {watch("socialLinks")?.map((link) => (
+                  <Badge key={link} variant="secondary" className="flex items-center gap-1">
+                    {link}
+                    {isEditing && (
+                      <button
+                        type="button"
+                        onClick={() => removeSocialLink(link)}
+                        className="ml-1 hover:text-destructive"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    )}
+                  </Badge>
+                ))}
+              </div>
+              
+              {errors.socialLinks && (
+                <p className="text-sm text-destructive">
+                  {errors.socialLinks.message}
+                </p>
               )}
             </CardContent>
           </Card>
         </form>
 
         {/* Profile Stats */}
-        {user && (
+        {user?.data && (
           <Card className="mt-6">
             <CardHeader>
               <CardTitle>Profile Statistics</CardTitle>
@@ -640,25 +697,25 @@ export default function DeveloperProfilePage() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-blue-600">
-                    {user.profileViews}
+                    {user.data.profileViews || 0}
                   </div>
                   <div className="text-sm text-gray-600">Profile Views</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-green-600">
-                    {user.skills?.length || 0}
+                    {user.data.skills?.length || 0}
                   </div>
                   <div className="text-sm text-gray-600">Skills</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-purple-600">
-                    {user.education?.length || 0}
+                    {user.data.education?.length || 0}
                   </div>
                   <div className="text-sm text-gray-600">Education</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-orange-600">
-                    {user.certifications?.length || 0}
+                    {user.data.certifications?.length || 0}
                   </div>
                   <div className="text-sm text-gray-600">Certifications</div>
                 </div>

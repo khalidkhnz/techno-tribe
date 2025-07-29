@@ -8,9 +8,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { profileSchema, type ProfileFormData } from "@/lib/schemas";
-import { api } from "@/lib/api";
+import { useUser, useUpdateProfile } from "@/hooks/use-api";
+import Constants from "@/lib/constants";
 import { 
   User, 
   MapPin, 
@@ -23,72 +30,111 @@ import {
   Twitter,
   Facebook,
   Instagram,
-  Edit
+  Edit,
+  Briefcase
 } from "lucide-react";
 
+interface RecruiterProfileData extends ProfileFormData {
+  company?: string;
+  companyWebsite?: string;
+  companyDescription?: string;
+  companySize?: string;
+  industry?: string;
+  jobTitle?: string;
+  phone?: string;
+  linkedin?: string;
+  twitter?: string;
+  facebook?: string;
+  instagram?: string;
+  recruitmentFocus?: string;
+  primaryIndustry?: string;
+  experienceLevelFocus?: string;
+}
+
 export default function RecruiterProfilePage() {
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
+
+  const { data: user, isLoading, error } = useUser();
+  const updateProfileMutation = useUpdateProfile();
 
   const {
     register,
     handleSubmit,
     setValue,
     watch,
+    reset,
     formState: { errors, isSubmitting },
-  } = useForm<ProfileFormData>({
+  } = useForm<RecruiterProfileData>({
     resolver: zodResolver(profileSchema),
   });
 
+  // Reset form when user data changes
   useEffect(() => {
-    fetchProfile();
-  }, []);
-
-  const fetchProfile = async () => {
-    try {
-      const response = await api.users.getProfile();
-      const userData = response.data;
-      setUser(userData);
-
-      // Set form values
-      setValue("firstName", userData.firstName);
-      setValue("lastName", userData.lastName);
-      setValue("email", userData.email);
-      setValue("customUrl", userData.customUrl);
-      setValue("bio", userData.bio);
-      setValue("location", userData.location);
-      setValue("website", userData.website);
-      setValue("currentCompany", userData.currentCompany);
-      setValue("currentPosition", userData.currentPosition);
-    } catch (error) {
-      console.error("Error fetching profile:", error);
-      toast.error("Failed to load profile");
-    } finally {
-      setLoading(false);
+    if (user?.data) {
+      reset({
+        firstName: user.data.firstName || "",
+        lastName: user.data.lastName || "",
+        email: user.data.email || "",
+        customUrl: user.data.customUrl || "",
+        bio: user.data.bio || "",
+        location: user.data.location || "",
+        website: user.data.website || "",
+        currentCompany: user.data.currentCompany || "",
+        currentPosition: user.data.currentPosition || "",
+        // Recruiter-specific fields
+        company: user.data.company || "",
+        companyWebsite: user.data.companyWebsite || "",
+        companyDescription: user.data.companyDescription || "",
+        companySize: user.data.companySize || "",
+        industry: user.data.industry || "",
+        jobTitle: user.data.jobTitle || "",
+        phone: user.data.phone || "",
+        linkedin: user.data.linkedin || "",
+        twitter: user.data.twitter || "",
+        facebook: user.data.facebook || "",
+        instagram: user.data.instagram || "",
+        recruitmentFocus: user.data.recruitmentFocus || "",
+        primaryIndustry: user.data.primaryIndustry || "",
+        experienceLevelFocus: user.data.experienceLevelFocus || "",
+      });
     }
-  };
+  }, [user, reset]);
 
-  const onSubmit = async (data: ProfileFormData) => {
+  const onSubmit = async (data: RecruiterProfileData) => {
     try {
-      await api.users.updateProfile(data);
-      toast.success("Profile updated successfully!");
+      await updateProfileMutation.mutateAsync({ data });
       setIsEditing(false);
-      fetchProfile(); // Refresh profile data
-    } catch (error: any) {
-      console.error("Error updating profile:", error);
-      toast.error(error.response?.data?.message || "Failed to update profile");
+    } catch (error) {
+      // Error is handled by the mutation
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-        <div className="max-w-4xl mx-auto">
+      <div className="min-h-screen w-full bg-background">
+        <div className="w-full max-w-7xl mx-auto p-6">
           <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 rounded w-1/4 mb-8"></div>
-            <div className="h-96 bg-gray-200 rounded"></div>
+            <div className="h-8 bg-muted rounded w-1/4 mb-8"></div>
+            <div className="space-y-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="h-32 bg-muted rounded"></div>
+              ))}
+            </div>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen w-full bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Error Loading Profile</h2>
+          <p className="text-gray-600">Failed to load your profile. Please try again.</p>
+          <Button onClick={() => window.location.reload()} className="mt-4">
+            Retry
+          </Button>
         </div>
       </div>
     );
@@ -96,14 +142,17 @@ export default function RecruiterProfilePage() {
 
   return (
     <div className="min-h-screen w-full bg-background">
-      <div className="w-full mr-auto">
+      <div className="w-full max-w-7xl mx-auto p-6">
         {/* Header */}
         <div className="mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Recruiter Profile</h1>
-              <p className="text-gray-600 mt-2">
-                Manage your company profile and preferences
+              <div className="flex items-center gap-2 mb-2">
+                <Briefcase className="h-6 w-6 text-primary" />
+                <h1 className="text-3xl font-bold text-gray-900">Recruiter Profile</h1>
+              </div>
+              <p className="text-gray-600">
+                Manage your company profile and recruitment preferences
               </p>
             </div>
             <div className="flex gap-2">
@@ -181,7 +230,7 @@ export default function RecruiterProfilePage() {
                     type="email"
                     className="pl-10"
                     {...register("email")}
-                    disabled={!isEditing}
+                    disabled={true}
                   />
                 </div>
                 {errors.email && (
@@ -221,13 +270,13 @@ export default function RecruiterProfilePage() {
                   )}
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="website">Website</Label>
+                  <Label htmlFor="website">Personal Website</Label>
                   <div className="relative">
                     <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="website"
                       type="url"
-                      placeholder="https://yourcompany.com"
+                      placeholder="https://yourwebsite.com"
                       className="pl-10"
                       {...register("website")}
                       disabled={!isEditing}
@@ -255,28 +304,86 @@ export default function RecruiterProfilePage() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="currentCompany">Company Name</Label>
+                  <Label htmlFor="company">Company Name</Label>
                   <Input
-                    id="currentCompany"
-                    {...register("currentCompany")}
+                    id="company"
+                    {...register("company")}
                     disabled={!isEditing}
+                    placeholder="Your Company Inc."
                   />
-                  {errors.currentCompany && (
-                    <p className="text-sm text-red-500">{errors.currentCompany.message}</p>
-                  )}
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="currentPosition">Position</Label>
+                  <Label htmlFor="jobTitle">Your Position</Label>
                   <Input
-                    id="currentPosition"
+                    id="jobTitle"
                     placeholder="e.g., Senior Recruiter, HR Manager"
-                    {...register("currentPosition")}
+                    {...register("jobTitle")}
                     disabled={!isEditing}
                   />
-                  {errors.currentPosition && (
-                    <p className="text-sm text-red-500">{errors.currentPosition.message}</p>
-                  )}
                 </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="companyWebsite">Company Website</Label>
+                  <Input
+                    id="companyWebsite"
+                    type="url"
+                    placeholder="https://yourcompany.com"
+                    {...register("companyWebsite")}
+                    disabled={!isEditing}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="companySize">Company Size</Label>
+                  <Select 
+                    value={watch("companySize")} 
+                    onValueChange={(value) => setValue("companySize", value)}
+                    disabled={!isEditing}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select company size" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Constants.companySizes.map((size) => (
+                        <SelectItem key={size} value={size}>
+                          {size}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="industry">Industry</Label>
+                <Select 
+                  value={watch("industry")} 
+                  onValueChange={(value) => setValue("industry", value)}
+                  disabled={!isEditing}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select industry" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Constants.industries.map((industry) => (
+                      <SelectItem key={industry} value={industry}>
+                        {industry}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="companyDescription">Company Description</Label>
+                <Textarea
+                  id="companyDescription"
+                  placeholder="Tell us about your company culture, mission, and what makes it a great place to work..."
+                  {...register("companyDescription")}
+                  disabled={!isEditing}
+                  rows={4}
+                />
               </div>
 
               <div className="space-y-2">
@@ -316,6 +423,7 @@ export default function RecruiterProfilePage() {
                       type="tel"
                       placeholder="+1 (555) 123-4567"
                       className="pl-10"
+                      {...register("phone")}
                       disabled={!isEditing}
                     />
                   </div>
@@ -329,6 +437,7 @@ export default function RecruiterProfilePage() {
                       type="url"
                       placeholder="https://linkedin.com/in/yourprofile"
                       className="pl-10"
+                      {...register("linkedin")}
                       disabled={!isEditing}
                     />
                   </div>
@@ -345,6 +454,7 @@ export default function RecruiterProfilePage() {
                       type="url"
                       placeholder="https://twitter.com/yourhandle"
                       className="pl-10"
+                      {...register("twitter")}
                       disabled={!isEditing}
                     />
                   </div>
@@ -358,6 +468,7 @@ export default function RecruiterProfilePage() {
                       type="url"
                       placeholder="https://facebook.com/yourpage"
                       className="pl-10"
+                      {...register("facebook")}
                       disabled={!isEditing}
                     />
                   </div>
@@ -371,6 +482,7 @@ export default function RecruiterProfilePage() {
                       type="url"
                       placeholder="https://instagram.com/yourhandle"
                       className="pl-10"
+                      {...register("instagram")}
                       disabled={!isEditing}
                     />
                   </div>
@@ -389,10 +501,11 @@ export default function RecruiterProfilePage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="preferences">Recruitment Focus</Label>
+                <Label htmlFor="recruitmentFocus">Recruitment Focus</Label>
                 <Textarea
-                  id="preferences"
+                  id="recruitmentFocus"
                   placeholder="Describe your recruitment focus, preferred candidate types, or any specific requirements..."
+                  {...register("recruitmentFocus")}
                   disabled={!isEditing}
                   rows={3}
                 />
@@ -400,18 +513,20 @@ export default function RecruiterProfilePage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="industry">Primary Industry</Label>
+                  <Label htmlFor="primaryIndustry">Primary Industry</Label>
                   <Input
-                    id="industry"
+                    id="primaryIndustry"
                     placeholder="e.g., Technology, Healthcare, Finance"
+                    {...register("primaryIndustry")}
                     disabled={!isEditing}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="experience">Experience Level Focus</Label>
+                  <Label htmlFor="experienceLevelFocus">Experience Level Focus</Label>
                   <Input
-                    id="experience"
+                    id="experienceLevelFocus"
                     placeholder="e.g., Mid to Senior Level"
+                    {...register("experienceLevelFocus")}
                     disabled={!isEditing}
                   />
                 </div>
@@ -419,6 +534,43 @@ export default function RecruiterProfilePage() {
             </CardContent>
           </Card>
         </form>
+
+        {/* Profile Stats */}
+        {user?.data && (
+          <Card className="mt-6">
+            <CardHeader>
+              <CardTitle>Profile Statistics</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-600">
+                    {user.data.profileViews || 0}
+                  </div>
+                  <div className="text-sm text-gray-600">Profile Views</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600">
+                    {user.data.jobsPosted || 0}
+                  </div>
+                  <div className="text-sm text-gray-600">Jobs Posted</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-600">
+                    {user.data.activeJobs || 0}
+                  </div>
+                  <div className="text-sm text-gray-600">Active Jobs</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-orange-600">
+                    {user.data.totalApplications || 0}
+                  </div>
+                  <div className="text-sm text-gray-600">Total Applications</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
