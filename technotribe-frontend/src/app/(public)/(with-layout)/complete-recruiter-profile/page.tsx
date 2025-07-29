@@ -35,42 +35,7 @@ import Constants from "@/lib/constants";
 import FRONTEND_ROUTES from "@/lib/fe-routes";
 import { Building2, Check, ArrowRight } from "lucide-react";
 
-const employmentTypes = [
-  { value: "full-time" as const, label: "Full Time" },
-  { value: "part-time" as const, label: "Part Time" },
-  { value: "contract" as const, label: "Contract" },
-  { value: "freelance" as const, label: "Freelance" },
-  { value: "internship" as const, label: "Internship" },
-];
 
-const experienceLevels = [
-  { value: "junior" as const, label: "Junior" },
-  { value: "mid-level" as const, label: "Mid Level" },
-  { value: "senior" as const, label: "Senior" },
-  { value: "lead" as const, label: "Lead" },
-  { value: "principal" as const, label: "Principal" },
-];
-
-const companySizes = [
-  "1-10 employees",
-  "11-50 employees", 
-  "51-200 employees",
-  "201-500 employees",
-  "500+ employees",
-];
-
-const industries = [
-  "Technology",
-  "Healthcare",
-  "Finance",
-  "Education",
-  "E-commerce",
-  "Manufacturing",
-  "Consulting",
-  "Media & Entertainment",
-  "Real Estate",
-  "Other",
-];
 
 export default function CompleteRecruiterProfilePage() {
   const router = useRouter();
@@ -220,7 +185,7 @@ export default function CompleteRecruiterProfilePage() {
                       <SelectValue placeholder="Select industry" />
                     </SelectTrigger>
                     <SelectContent>
-                      {industries.map((industry) => (
+                      {Constants.industries.map((industry) => (
                         <SelectItem key={industry} value={industry}>
                           {industry}
                         </SelectItem>
@@ -238,7 +203,7 @@ export default function CompleteRecruiterProfilePage() {
                       <SelectValue placeholder="Select company size" />
                     </SelectTrigger>
                     <SelectContent>
-                      {companySizes.map((size) => (
+                      {Constants.companySizes.map((size) => (
                         <SelectItem key={size} value={size}>
                           {size}
                         </SelectItem>
@@ -320,12 +285,12 @@ export default function CompleteRecruiterProfilePage() {
                   Select the employment types you typically hire for
                 </p>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {employmentTypes.map((type) => (
+                  {Constants.employmentTypes.map((type) => (
                     <div key={type.value} className="flex items-center space-x-2">
-                                             <Checkbox
+                      <Checkbox
                          id={type.value}
-                         checked={selectedEmploymentTypes.includes(type.value)}
-                         onCheckedChange={() => handleEmploymentTypeToggle(type.value)}
+                         checked={selectedEmploymentTypes.includes(type.value as "full-time" | "part-time" | "contract" | "freelance" | "internship")}
+                         onCheckedChange={() => handleEmploymentTypeToggle(type.value as "full-time" | "part-time" | "contract" | "freelance" | "internship")}
                        />
                       <Label htmlFor={type.value} className="text-sm font-normal">
                         {type.label}
@@ -341,12 +306,12 @@ export default function CompleteRecruiterProfilePage() {
                   Select the experience levels you typically hire for
                 </p>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {experienceLevels.map((level) => (
+                  {Constants.experienceLevels.map((level) => (
                     <div key={level.value} className="flex items-center space-x-2">
                                              <Checkbox
                          id={level.value}
-                         checked={selectedExperienceLevels.includes(level.value)}
-                         onCheckedChange={() => handleExperienceLevelToggle(level.value)}
+                         checked={selectedExperienceLevels.includes(level.value as "junior" | "mid-level" | "senior" | "lead" | "principal")}
+                         onCheckedChange={() => handleExperienceLevelToggle(level.value as "junior" | "mid-level" | "senior" | "lead" | "principal")}
                        />
                       <Label htmlFor={level.value} className="text-sm font-normal">
                         {level.label}

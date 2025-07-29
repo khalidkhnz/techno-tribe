@@ -19,9 +19,9 @@ export class AuthService {
 
     // Check if user already exists
     const existingUser = await this.usersService.findByEmail(email);
-    if (existingUser) {
-      throw new ConflictException('User with this email already exists');
-    }
+    
+    if (existingUser) throw new ConflictException('User with this email already exists');
+   
 
     // Create user
     const user = await this.usersService.create({

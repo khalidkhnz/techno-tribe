@@ -16,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
@@ -64,8 +63,6 @@ export default function SignupPage() {
     },
   });
 
-  const watchedRole = watch("role");
-
   const onSubmit = async (data: RegisterFormData) => {
     if (!agreeToTerms) {
       toast.error("Please agree to the terms and conditions");
@@ -73,14 +70,14 @@ export default function SignupPage() {
     }
 
     try {
-      await registerMutation.mutateAsync(data);
+      await registerMutation.mutateAsync({...data, role: selectedRole});
       // Redirect based on user role
-      if (data.role === "recruiter") {
+      if (selectedRole === "recruiter") {
         router.push(FRONTEND_ROUTES.COMPLETE_RECRUITER_PROFILE);
       } else {
         router.push(FRONTEND_ROUTES.DEVELOPER.DASHBOARD);
       }
-    } catch (error) {
+    } catch (error: any) {
       // Error is handled by the mutation
     }
   };
@@ -126,6 +123,7 @@ export default function SignupPage() {
                   <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger
                       value="developer"
+                      onClick={() => setSelectedRole("developer")}
                       className="flex items-center gap-2"
                     >
                       <Code className="h-4 w-4" />
@@ -133,6 +131,7 @@ export default function SignupPage() {
                     </TabsTrigger>
                     <TabsTrigger
                       value="recruiter"
+                      onClick={() => setSelectedRole("recruiter")}
                       className="flex items-center gap-2"
                     >
                       <Building2 className="h-4 w-4" />

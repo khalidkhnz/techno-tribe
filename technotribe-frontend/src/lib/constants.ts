@@ -35,6 +35,27 @@ class Constants {
         "Ant Design", "Figma", "Adobe XD", "Sketch", "WordPress", "Shopify", "Magento", "WooCommerce"
       ];
 
+      public static companySizes = [
+        "1-10 employees",
+        "11-50 employees", 
+        "51-200 employees",
+        "201-500 employees",
+        "500+ employees",
+      ];
+      
+      public static industries = [
+        "Technology",
+        "Healthcare",
+        "Finance",
+        "Education",
+        "E-commerce",
+        "Manufacturing",
+        "Consulting",
+        "Media & Entertainment",
+        "Real Estate",
+        "Other",
+      ];
+
 }
 
 export default Constants;
