@@ -66,7 +66,7 @@ const recruiterNavItems: NavItem[] = [
   },
   {
     title: "My Jobs",
-    href: FRONTEND_ROUTES.RECRUITER.JOBS,
+    href: FRONTEND_ROUTES.RECRUITER.JOBS.BASE,
     icon: FileText,
     role: ["recruiter", "admin"],
   },

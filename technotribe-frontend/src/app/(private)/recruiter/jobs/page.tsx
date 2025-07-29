@@ -256,7 +256,7 @@ export default function RecruiterJobsPage() {
               Manage your job opportunities and track performance
             </p>
           </div>
-          <Link href={FRONTEND_ROUTES.RECRUITER_SIGNUP}>
+          <Link href={FRONTEND_ROUTES.RECRUITER.JOBS.POST_JOB}>
             <Button variant="outline" size="sm">
               <Plus className="mr-2 h-4 w-4" />
               Post New Job

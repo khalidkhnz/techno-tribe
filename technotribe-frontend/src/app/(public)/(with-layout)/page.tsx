@@ -793,7 +793,7 @@ export default function HomePage() {
                 </li>
                 <li>
                   <Link
-                    href={FRONTEND_ROUTES.RECRUITER.JOBS}
+                    href={FRONTEND_ROUTES.RECRUITER.JOBS.BASE}
                     className="hover:text-foreground transition-colors"
                   >
                     Manage Jobs

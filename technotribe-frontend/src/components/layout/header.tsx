@@ -153,7 +153,7 @@ export function Header({ onMenuToggle, user }: HeaderProps) {
               </Button>
             </Link>
             {user?.role === "recruiter" && (
-              <Link href={FRONTEND_ROUTES.RECRUITER.JOBS}>
+              <Link href={FRONTEND_ROUTES.RECRUITER.JOBS.BASE}>
                 <Button variant="ghost" size="sm" className="hover:bg-white/10">
                   My Jobs
                 </Button>

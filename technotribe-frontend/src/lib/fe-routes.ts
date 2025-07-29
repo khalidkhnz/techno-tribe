@@ -4,7 +4,7 @@ const FRONTEND_ROUTES = {
     CONTACT: "/contact",
     LOGIN: "/login",
     SIGNUP: "/signup",
-    RECRUITER_SIGNUP: "/complete-recruiter-profile",
+    COMPLETE_RECRUITER_PROFILE: "/complete-recruiter-profile",
     JOBS: "/jobs",
   
     PROFILE_CUSTOM_URL: (customUrl: string) => `/profile/${customUrl}`,
@@ -28,7 +28,10 @@ const FRONTEND_ROUTES = {
     RECRUITER: {
       BASE: "/recruiter",
       DASHBOARD: "/recruiter/dashboard",
-      JOBS: "/recruiter/jobs",
+      JOBS: {
+        BASE: "/recruiter/jobs",
+        POST_JOB: "#",
+      },
       PROFILE: "/recruiter/profile",
     },
   };

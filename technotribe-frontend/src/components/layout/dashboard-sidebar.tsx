@@ -41,12 +41,12 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
     const baseItems = [
       {
         title: "Dashboard",
-        href: FRONTEND_ROUTES[role.toUpperCase() as keyof typeof FRONTEND_ROUTES]?.DASHBOARD || `/${role}/dashboard`,
+        href: (FRONTEND_ROUTES[role.toUpperCase() as keyof typeof FRONTEND_ROUTES] as any)?.DASHBOARD,
         icon: LayoutDashboard,
       },
       {
         title: "Profile",
-        href: FRONTEND_ROUTES[role.toUpperCase() as keyof typeof FRONTEND_ROUTES]?.PROFILE || `/${role}/profile`,
+        href: (FRONTEND_ROUTES[role.toUpperCase() as keyof typeof FRONTEND_ROUTES] as any)?.PROFILE,
         icon: Users,
       },
     ];
@@ -66,7 +66,7 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
           ...baseItems,
           {
             title: "Jobs",
-            href: FRONTEND_ROUTES.RECRUITER.JOBS,
+            href: FRONTEND_ROUTES.RECRUITER.JOBS.BASE,
             icon: Briefcase,
           },
         ];
