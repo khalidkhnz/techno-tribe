@@ -20,6 +20,9 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
+import Link from "next/link";
+import FRONTEND_ROUTES from "@/lib/fe-routes";
+import { api } from "@/lib/api";
 
 interface Job {
   _id: string;
@@ -103,25 +106,17 @@ export default function JobsPage() {
 
   const fetchJobs = async () => {
     try {
-      const params = new URLSearchParams();
+      const params: Record<string, unknown> = {};
       if (filters.employmentType && filters.employmentType !== "")
-        params.append("employmentType", filters.employmentType);
+        params.employmentType = filters.employmentType;
       if (filters.experienceLevel && filters.experienceLevel !== "")
-        params.append("experienceLevel", filters.experienceLevel);
+        params.experienceLevel = filters.experienceLevel;
       if (filters.skills.length > 0) {
-        filters.skills.forEach((skill) => params.append("skills", skill));
+        params.skills = filters.skills;
       }
 
-      const response = await fetch(
-        `http://localhost:5000/jobs?${params.toString()}`
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        setJobs(data);
-      } else {
-        toast.error("Failed to fetch jobs");
-      }
+      const response = await api.jobs.getAll(params);
+      setJobs(response.data);
     } catch (error) {
       console.error("Error fetching jobs:", error);
       toast.error("Failed to fetch jobs");
@@ -139,36 +134,7 @@ export default function JobsPage() {
     }));
   };
 
-  const handleApply = async (jobId: string) => {
-    try {
-      const token = localStorage.getItem("access_token");
-      if (!token) {
-        toast.error("Please login to apply for jobs");
-        return;
-      }
 
-      const response = await fetch("http://localhost:5000/applications", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ jobId }),
-      });
-
-      if (response.ok) {
-        toast.success("Application submitted successfully!");
-        // Refresh jobs to update application status
-        fetchJobs();
-      } else {
-        const error = await response.json();
-        toast.error(error.message || "Failed to apply for job");
-      }
-    } catch (error) {
-      console.error("Error applying for job:", error);
-      toast.error("Failed to apply for job");
-    }
-  };
 
   const getEmploymentTypeLabel = (type: string) => {
     const typeMap: Record<string, string> = {
@@ -409,12 +375,11 @@ export default function JobsPage() {
                           </span>
                         </div>
                       </div>
-                                             <Button
-                         onClick={() => handleApply(job._id)}
-                         className="ml-4"
-                       >
-                         Apply
-                       </Button>
+                      <Link href={FRONTEND_ROUTES.JOB_DETAIL(job._id)}>
+                        <Button variant="outline" className="ml-4">
+                          View Details
+                        </Button>
+                      </Link>
                     </div>
 
                     <p className="text-muted-foreground line-clamp-3 mb-4">

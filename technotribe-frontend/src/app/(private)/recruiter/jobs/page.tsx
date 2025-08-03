@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import FRONTEND_ROUTES from "@/lib/fe-routes";
 import { Plus } from "lucide-react";
+import { api } from "@/lib/api";
 
 interface Job {
   _id: string;
@@ -67,19 +68,8 @@ export default function RecruiterJobsPage() {
 
   const fetchJobs = async () => {
     try {
-      const token = localStorage.getItem("access_token");
-      const response = await fetch("http://localhost:5000/jobs/my-jobs", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setJobs(data);
-      } else {
-        toast.error("Failed to fetch jobs");
-      }
+      const response = await api.jobs.getMyJobs();
+      setJobs(response.data);
     } catch (error) {
       console.error("Error fetching jobs:", error);
       toast.error("Failed to fetch jobs");
@@ -90,17 +80,8 @@ export default function RecruiterJobsPage() {
 
   const fetchStats = async () => {
     try {
-      const token = localStorage.getItem("access_token");
-      const response = await fetch("http://localhost:5000/jobs/stats", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setStats(data);
-      }
+      const response = await api.jobs.getStats();
+      setStats(response.data);
     } catch (error) {
       console.error("Error fetching stats:", error);
     }
@@ -108,24 +89,10 @@ export default function RecruiterJobsPage() {
 
   const handlePublishJob = async (jobId: string) => {
     try {
-      const token = localStorage.getItem("access_token");
-      const response = await fetch(
-        `http://localhost:5000/jobs/${jobId}/publish`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        toast.success("Job published successfully!");
-        fetchJobs();
-        fetchStats();
-      } else {
-        toast.error("Failed to publish job");
-      }
+      await api.jobs.publish(jobId);
+      toast.success("Job published successfully!");
+      fetchJobs();
+      fetchStats();
     } catch (error) {
       console.error("Error publishing job:", error);
       toast.error("Failed to publish job");
@@ -134,24 +101,10 @@ export default function RecruiterJobsPage() {
 
   const handleCloseJob = async (jobId: string) => {
     try {
-      const token = localStorage.getItem("access_token");
-      const response = await fetch(
-        `http://localhost:5000/jobs/${jobId}/close`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        toast.success("Job closed successfully!");
-        fetchJobs();
-        fetchStats();
-      } else {
-        toast.error("Failed to close job");
-      }
+      await api.jobs.close(jobId);
+      toast.success("Job closed successfully!");
+      fetchJobs();
+      fetchStats();
     } catch (error) {
       console.error("Error closing job:", error);
       toast.error("Failed to close job");
@@ -162,21 +115,10 @@ export default function RecruiterJobsPage() {
     if (!confirm("Are you sure you want to delete this job?")) return;
 
     try {
-      const token = localStorage.getItem("access_token");
-      const response = await fetch(`http://localhost:5000/jobs/${jobId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        toast.success("Job deleted successfully!");
-        fetchJobs();
-        fetchStats();
-      } else {
-        toast.error("Failed to delete job");
-      }
+      await api.jobs.delete(jobId);
+      toast.success("Job deleted successfully!");
+      fetchJobs();
+      fetchStats();
     } catch (error) {
       console.error("Error deleting job:", error);
       toast.error("Failed to delete job");

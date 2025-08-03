@@ -7,6 +7,7 @@ const FRONTEND_ROUTES = {
     COMPLETE_RECRUITER_PROFILE: "/complete-recruiter-profile",
     COMPLETE_DEVELOPER_PROFILE: "/complete-developer-profile",
     JOBS: "/jobs",
+    JOB_DETAIL: (id: string) => `/jobs/${id}`,
   
     PROFILE_CUSTOM_URL: (customUrl: string) => `/profile/${customUrl}`,
   
@@ -31,7 +32,7 @@ const FRONTEND_ROUTES = {
       DASHBOARD: "/recruiter/dashboard",
       JOBS: {
         BASE: "/recruiter/jobs",
-        POST_JOB: "#",
+        POST_JOB: "/recruiter/jobs/new",
       },
       PROFILE: "/recruiter/profile",
     },

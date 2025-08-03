@@ -44,7 +44,7 @@ export class JobsService {
 
     return this.jobModel
       .find(filter)
-      .populate('recruiterId', 'firstName lastName email company')
+      .populate('recruiterId', 'firstName lastName email company customUrl jobTitle phone linkedin companyDescription companyWebsite')
       .sort({ createdAt: -1 })
       .exec();
   }
@@ -52,7 +52,7 @@ export class JobsService {
   async findByRecruiter(recruiterId: string): Promise<Job[]> {
     return this.jobModel
       .find({ recruiterId: new Types.ObjectId(recruiterId) })
-      .populate('recruiterId', 'firstName lastName email company')
+      .populate('recruiterId', 'firstName lastName email company customUrl jobTitle phone linkedin companyDescription companyWebsite')
       .sort({ createdAt: -1 })
       .exec();
   }
@@ -60,7 +60,7 @@ export class JobsService {
   async findOne(id: string): Promise<Job> {
     const job = await this.jobModel
       .findById(id)
-      .populate('recruiterId', 'firstName lastName email company')
+      .populate('recruiterId', 'firstName lastName email company customUrl jobTitle phone linkedin companyDescription companyWebsite')
       .exec();
 
     if (!job) {
@@ -96,7 +96,7 @@ export class JobsService {
 
     const updatedJob = await this.jobModel
       .findByIdAndUpdate(id, updateData, { new: true })
-      .populate('recruiterId', 'firstName lastName email company');
+      .populate('recruiterId', 'firstName lastName email company customUrl jobTitle phone linkedin companyDescription companyWebsite');
 
     if (!updatedJob) {
       throw new NotFoundException('Job not found');
@@ -139,7 +139,7 @@ export class JobsService {
         },
         { new: true },
       )
-      .populate('recruiterId', 'firstName lastName email company');
+      .populate('recruiterId', 'firstName lastName email company customUrl jobTitle phone linkedin companyDescription companyWebsite');
 
     if (!updatedJob) {
       throw new NotFoundException('Job not found');
@@ -168,7 +168,7 @@ export class JobsService {
         },
         { new: true },
       )
-      .populate('recruiterId', 'firstName lastName email company');
+      .populate('recruiterId', 'firstName lastName email company customUrl jobTitle phone linkedin companyDescription companyWebsite');
 
     if (!updatedJob) {
       throw new NotFoundException('Job not found');
