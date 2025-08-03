@@ -153,9 +153,7 @@ export function GlobalSidebar({ isOpen, onClose, user }: GlobalSidebarProps) {
 
   const getUserInitials = () => {
     if (!user) return "U";
-    return `${user.firstName.charAt(0)}${user.lastName.charAt(
-      0
-    )}`.toUpperCase();
+    return `${user?.firstName?.charAt(0)}${user?.lastName?.charAt(0)}`.toUpperCase();
   };
 
   const getRoleBadge = () => {
