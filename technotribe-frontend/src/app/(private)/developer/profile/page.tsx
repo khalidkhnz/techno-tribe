@@ -254,7 +254,7 @@ export default function DeveloperProfilePage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="firstName">First Name</Label>
                   <Input
                     id="firstName"
@@ -267,7 +267,7 @@ export default function DeveloperProfilePage() {
                     </p>
                   )}
                 </div>
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="lastName">Last Name</Label>
                   <Input
                     id="lastName"
@@ -282,7 +282,7 @@ export default function DeveloperProfilePage() {
                 </div>
               </div>
 
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
@@ -297,7 +297,7 @@ export default function DeveloperProfilePage() {
                 )}
               </div>
 
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="customUrl">Custom URL</Label>
                 <div className="flex items-center gap-2">
                   <span className="text-gray-500">technotribe.com/profile/</span>
@@ -315,7 +315,7 @@ export default function DeveloperProfilePage() {
                 )}
               </div>
 
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="bio">Bio</Label>
                 <Textarea
                   id="bio"
@@ -332,7 +332,7 @@ export default function DeveloperProfilePage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="location">Location</Label>
                   <Input
                     id="location"
@@ -346,7 +346,7 @@ export default function DeveloperProfilePage() {
                     </p>
                   )}
                 </div>
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="website">Website</Label>
                   <Input
                     id="website"
@@ -374,7 +374,7 @@ export default function DeveloperProfilePage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="experienceLevel">Experience Level</Label>
                   <Select
                     value={watch("experienceLevel")}
@@ -398,7 +398,7 @@ export default function DeveloperProfilePage() {
                     </p>
                   )}
                 </div>
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="yearsOfExperience">Years of Experience</Label>
                   <Input
                     id="yearsOfExperience"
@@ -414,7 +414,7 @@ export default function DeveloperProfilePage() {
                     </p>
                   )}
                 </div>
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="currentCompany">Current Company</Label>
                   <Input
                     id="currentCompany"
@@ -429,7 +429,7 @@ export default function DeveloperProfilePage() {
                 </div>
               </div>
 
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="currentPosition">Current Position</Label>
                 <Input
                   id="currentPosition"
