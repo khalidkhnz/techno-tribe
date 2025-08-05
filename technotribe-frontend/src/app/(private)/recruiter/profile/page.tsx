@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,9 +15,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { profileSchema, type ProfileFormData } from "@/lib/schemas";
 import { useUser, useUpdateProfile } from "@/hooks/use-api";
+import { api } from "@/lib/api";
 import Constants from "@/lib/constants";
+import { useUploadThing } from "@/lib/uploadthing";
+import { toast } from "sonner";
 import { 
   User, 
   MapPin, 
@@ -31,7 +35,8 @@ import {
   Facebook,
   Instagram,
   Edit,
-  Briefcase
+  Briefcase,
+  Upload
 } from "lucide-react";
 
 interface RecruiterProfileData extends ProfileFormData {
@@ -56,6 +61,9 @@ export default function RecruiterProfilePage() {
 
   const { data: user, isLoading, error } = useUser();
   const updateProfileMutation = useUpdateProfile();
+  
+  const profileImageRef = useRef<HTMLInputElement>(null);
+  const coverImageRef = useRef<HTMLInputElement>(null);
 
   const {
     register,
@@ -67,6 +75,66 @@ export default function RecruiterProfilePage() {
   } = useForm<RecruiterProfileData>({
     resolver: zodResolver(profileSchema),
   });
+
+  // UploadThing hooks for different file types
+  const { startUpload: startProfileUpload, isUploading: isProfileUploading } = useUploadThing("profileImage", {
+    onClientUploadComplete: async (res) => {
+      if (res && res[0]) {
+        try {
+          await api.users.updateProfileImage(res[0].url);
+          toast.success('Profile image updated successfully');
+          window.location.reload();
+        } catch (error) {
+          toast.error('Failed to save profile image');
+          console.error('Save error:', error);
+        }
+      }
+    },
+    onUploadError: (error) => {
+      toast.error('Failed to upload profile image');
+      console.error('Upload error:', error);
+    },
+  });
+
+  const { startUpload: startCoverUpload, isUploading: isCoverUploading } = useUploadThing("coverImage", {
+    onClientUploadComplete: async (res) => {
+      if (res && res[0]) {
+        try {
+          await api.users.updateCoverImage(res[0].url);
+          toast.success('Cover image updated successfully');
+          window.location.reload();
+        } catch (error) {
+          toast.error('Failed to save cover image');
+          console.error('Save error:', error);
+        }
+      }
+    },
+    onUploadError: (error) => {
+      toast.error('Failed to upload cover image');
+      console.error('Upload error:', error);
+    },
+  });
+
+  const handleFileUpload = async (file: File, type: 'profile' | 'cover') => {
+    if (!file) return;
+
+    const userId = user?.data?._id;
+    if (!userId) {
+      toast.error('User not found');
+      return;
+    }
+
+    try {
+      if (type === 'profile') {
+        await startProfileUpload([file], { userId });
+      } else if (type === 'cover') {
+        await startCoverUpload([file], { userId });
+      }
+    } catch (error) {
+      toast.error('Failed to start upload');
+      console.error('Upload error:', error);
+    }
+  };
 
   // Reset form when user data changes
   useEffect(() => {
@@ -285,6 +353,117 @@ export default function RecruiterProfilePage() {
                   {errors.website && (
                     <p className="text-sm text-red-500">{errors.website.message}</p>
                   )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Profile Images */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Profile Images</CardTitle>
+              <CardDescription>
+                Upload your profile and cover images
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Profile Image */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                    {user?.data?.profileImage ? (
+                      <img 
+                        src={user.data.profileImage} 
+                        alt="Profile" 
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-xl">
+                        {user?.data?.firstName?.charAt(0)}{user?.data?.lastName?.charAt(0)}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <Label htmlFor="profile-image">Profile Image</Label>
+                    <p className="text-sm text-gray-600 mb-2">
+                      Upload a professional headshot (JPG, PNG, WebP, max 4MB)
+                    </p>
+                    <div className="flex gap-2">
+                      <input
+                        ref={profileImageRef}
+                        type="file"
+                        id="profile-image"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            handleFileUpload(file, 'profile');
+                          }
+                        }}
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => profileImageRef.current?.click()}
+                        disabled={isProfileUploading}
+                      >
+                        <Upload className="h-4 w-4 mr-2" />
+                        {isProfileUploading ? "Uploading..." : "Upload Profile Image"}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Cover Image */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-32 h-20 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+                    {user?.data?.coverImage ? (
+                      <img 
+                        src={user.data.coverImage} 
+                        alt="Cover" 
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="text-gray-400">
+                        <Upload className="h-8 w-8" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <Label htmlFor="cover-image">Cover Image</Label>
+                    <p className="text-sm text-gray-600 mb-2">
+                      Upload a cover image for your profile (JPG, PNG, WebP, max 4MB)
+                    </p>
+                    <div className="flex gap-2">
+                      <input
+                        ref={coverImageRef}
+                        type="file"
+                        id="cover-image"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            handleFileUpload(file, 'cover');
+                          }
+                        }}
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => coverImageRef.current?.click()}
+                        disabled={isCoverUploading}
+                      >
+                        <Upload className="h-4 w-4 mr-2" />
+                        {isCoverUploading ? "Uploading..." : "Upload Cover Image"}
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </CardContent>
