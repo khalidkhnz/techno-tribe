@@ -80,12 +80,14 @@ export class ApplicationsService {
 
     // Check if the recruiter owns the job
     if (application.recruiterId.toString() !== recruiterId) {
-      throw new BadRequestException('You can only update applications for your own jobs');
+      throw new BadRequestException(
+        'You can only update applications for your own jobs',
+      );
     }
 
     // Update status and set appropriate timestamp
     const updateData: any = { status };
-    
+
     switch (status) {
       case ApplicationStatus.REVIEWING:
         updateData.reviewedAt = new Date();
@@ -117,7 +119,10 @@ export class ApplicationsService {
     return updatedApplication;
   }
 
-  async getApplicationsByJob(jobId: string, recruiterId: string): Promise<Application[]> {
+  async getApplicationsByJob(
+    jobId: string,
+    recruiterId: string,
+  ): Promise<Application[]> {
     // Verify the recruiter owns the job
     const job = await this.jobModel.findOne({
       _id: jobId,
@@ -125,20 +130,30 @@ export class ApplicationsService {
     });
 
     if (!job) {
-      throw new NotFoundException('Job not found or you do not have permission to view applications');
+      throw new NotFoundException(
+        'Job not found or you do not have permission to view applications',
+      );
     }
 
     return this.applicationModel
       .find({ jobId: new Types.ObjectId(jobId) })
-      .populate('applicantId', 'firstName lastName email avatar skills experienceLevel currentCompany currentPosition')
+      .populate(
+        'applicantId',
+        'firstName lastName email avatar skills experienceLevel currentCompany currentPosition',
+      )
       .sort({ createdAt: -1 })
       .exec();
   }
 
-  async getApplicationsByApplicant(applicantId: string): Promise<Application[]> {
+  async getApplicationsByApplicant(
+    applicantId: string,
+  ): Promise<Application[]> {
     return this.applicationModel
       .find({ applicantId: new Types.ObjectId(applicantId) })
-      .populate('jobId', 'jobTitle company location employmentType experienceLevel minimumSalary maximumSalary currency')
+      .populate(
+        'jobId',
+        'jobTitle company location employmentType experienceLevel minimumSalary maximumSalary currency',
+      )
       .populate('recruiterId', 'firstName lastName company')
       .sort({ createdAt: -1 })
       .exec();
@@ -159,7 +174,10 @@ export class ApplicationsService {
     return application;
   }
 
-  async markApplicationAsViewed(applicationId: string, recruiterId: string): Promise<void> {
+  async markApplicationAsViewed(
+    applicationId: string,
+    recruiterId: string,
+  ): Promise<void> {
     const application = await this.applicationModel.findById(applicationId);
     if (!application) {
       throw new NotFoundException('Application not found');
@@ -167,7 +185,9 @@ export class ApplicationsService {
 
     // Check if the recruiter owns the job
     if (application.recruiterId.toString() !== recruiterId) {
-      throw new BadRequestException('You can only view applications for your own jobs');
+      throw new BadRequestException(
+        'You can only view applications for your own jobs',
+      );
     }
 
     await this.applicationModel.findByIdAndUpdate(applicationId, {
@@ -176,7 +196,10 @@ export class ApplicationsService {
     });
   }
 
-  async withdrawApplication(applicationId: string, applicantId: string): Promise<Application> {
+  async withdrawApplication(
+    applicationId: string,
+    applicantId: string,
+  ): Promise<Application> {
     const application = await this.applicationModel.findById(applicationId);
     if (!application) {
       throw new NotFoundException('Application not found');
@@ -184,7 +207,9 @@ export class ApplicationsService {
 
     // Check if the applicant owns the application
     if (application.applicantId.toString() !== applicantId) {
-      throw new BadRequestException('You can only withdraw your own applications');
+      throw new BadRequestException(
+        'You can only withdraw your own applications',
+      );
     }
 
     // Check if application can be withdrawn
@@ -193,7 +218,9 @@ export class ApplicationsService {
     }
 
     if (application.status === ApplicationStatus.OFFERED) {
-      throw new BadRequestException('Cannot withdraw an application that has been offered');
+      throw new BadRequestException(
+        'Cannot withdraw an application that has been offered',
+      );
     }
 
     const updatedApplication = await this.applicationModel.findByIdAndUpdate(
@@ -211,4 +238,4 @@ export class ApplicationsService {
 
     return updatedApplication;
   }
-} 
+}

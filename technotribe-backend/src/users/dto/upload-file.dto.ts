@@ -60,4 +60,4 @@ export class UpdateProfileImagesDto {
   @IsOptional()
   @IsString()
   coverImage?: string;
-} 
+}

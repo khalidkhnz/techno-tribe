@@ -30,7 +30,7 @@ import { Resume } from './schemas/resume.schema';
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly uploadService: UploadService
+    private readonly uploadService: UploadService,
   ) {}
 
   @Get('profile')
@@ -76,7 +76,10 @@ export class UsersController {
     @Request() req,
     @Body() updateProfileDto: UpdateProfileDto,
   ): ReturnType<UsersService['updateProfile']> {
-    const user = await this.usersService.updateProfile(req.user.userId, updateProfileDto);
+    const user = await this.usersService.updateProfile(
+      req.user.userId,
+      updateProfileDto,
+    );
     return user;
   }
 
@@ -96,7 +99,9 @@ export class UsersController {
     status: 404,
     description: 'Profile not found',
   })
-  async getPublicProfile(@Param('customUrl') customUrl: string): ReturnType<UsersService['findByCustomUrl']> {
+  async getPublicProfile(
+    @Param('customUrl') customUrl: string,
+  ): ReturnType<UsersService['findByCustomUrl']> {
     const user = await this.usersService.findByCustomUrl(customUrl);
     if (!user) {
       throw new NotFoundException('Profile not found');
@@ -117,12 +122,9 @@ export class UsersController {
     status: 401,
     description: 'Unauthorized',
   })
-  async updateProfileImage(
-    @Request() req,
-    @Body() body: { fileUrl: string },
-  ) {
+  async updateProfileImage(@Request() req, @Body() body: { fileUrl: string }) {
     await this.usersService.updateProfileImages(req.user.userId, {
-      profileImage: body.fileUrl
+      profileImage: body.fileUrl,
     });
 
     return { message: 'Profile image updated successfully' };
@@ -140,12 +142,9 @@ export class UsersController {
     status: 401,
     description: 'Unauthorized',
   })
-  async updateCoverImage(
-    @Request() req,
-    @Body() body: { fileUrl: string },
-  ) {
+  async updateCoverImage(@Request() req, @Body() body: { fileUrl: string }) {
     await this.usersService.updateProfileImages(req.user.userId, {
-      coverImage: body.fileUrl
+      coverImage: body.fileUrl,
     });
 
     return { message: 'Cover image updated successfully' };
@@ -166,7 +165,8 @@ export class UsersController {
   })
   async addResume(
     @Request() req,
-    @Body() body: { 
+    @Body()
+    body: {
       fileUrl: string;
       fileName: string;
       originalName: string;
@@ -184,7 +184,10 @@ export class UsersController {
       description: body.description,
     };
 
-    const resume = await this.usersService.uploadResume(req.user.userId, uploadResumeDto);
+    const resume = await this.usersService.uploadResume(
+      req.user.userId,
+      uploadResumeDto,
+    );
     return resume;
   }
 
@@ -225,10 +228,7 @@ export class UsersController {
     status: 404,
     description: 'Resume not found',
   })
-  async deleteResume(
-    @Request() req,
-    @Param('resumeId') resumeId: string,
-  ) {
+  async deleteResume(@Request() req, @Param('resumeId') resumeId: string) {
     await this.usersService.deleteResume(req.user.userId, resumeId);
     return { message: 'Resume deleted successfully' };
   }

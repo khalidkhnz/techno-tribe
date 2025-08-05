@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { UsersService } from '../users/users.service';
@@ -20,9 +24,9 @@ export class AuthService {
 
     // Check if user already exists
     const existingUser = await this.usersService.findByEmail(email);
-    
-    if (existingUser) throw new ConflictException('User with this email already exists');
-   
+
+    if (existingUser)
+      throw new ConflictException('User with this email already exists');
 
     // Create user
     const user = await this.usersService.create({
@@ -47,7 +51,10 @@ export class AuthService {
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
 
     // Store refresh token
-    await this.usersService.updateRefreshToken((user._id as any).toString(), refreshToken);
+    await this.usersService.updateRefreshToken(
+      (user._id as any).toString(),
+      refreshToken,
+    );
 
     return {
       access_token: accessToken,
@@ -59,8 +66,8 @@ export class AuthService {
         lastName: user.lastName,
         role: user.role,
         avatar: user.avatar,
-      }
-    }
+      },
+    };
   }
 
   async validateUser(email: string, password: string): Promise<any> {
@@ -74,7 +81,7 @@ export class AuthService {
 
   async login(loginDto: LoginDto) {
     const user = await this.validateUser(loginDto.email, loginDto.password);
-    
+
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -112,7 +119,7 @@ export class AuthService {
 
   async refreshToken(refreshToken: string) {
     try {
-      const payload = this.jwtService.verify(refreshToken) as any;
+      const payload = this.jwtService.verify(refreshToken);
       const user = (await this.usersService.findByEmail(payload.email)) as User;
 
       if (!user || user.refreshToken !== refreshToken) {
@@ -151,10 +158,16 @@ export class AuthService {
     return { message: 'Logged out successfully' };
   }
 
-  async completeRecruiterProfile(userId: string, profileData: CompleteRecruiterProfileDto) {
+  async completeRecruiterProfile(
+    userId: string,
+    profileData: CompleteRecruiterProfileDto,
+  ) {
     // Update user profile with recruiter-specific information
-    const updatedUser = await this.usersService.updateRecruiterProfile(userId, profileData);
-    
+    const updatedUser = await this.usersService.updateRecruiterProfile(
+      userId,
+      profileData,
+    );
+
     return {
       message: 'Recruiter profile completed successfully',
       user: {
@@ -165,14 +178,20 @@ export class AuthService {
         role: updatedUser.role,
         company: updatedUser.currentCompany,
         profileCompleted: true,
-      }
+      },
     };
   }
 
-  async completeDeveloperProfile(userId: string, profileData: CompleteDeveloperProfileDto) {
+  async completeDeveloperProfile(
+    userId: string,
+    profileData: CompleteDeveloperProfileDto,
+  ) {
     // Update user profile with developer-specific information
-    const updatedUser = await this.usersService.updateDeveloperProfile(userId, profileData);
-    
+    const updatedUser = await this.usersService.updateDeveloperProfile(
+      userId,
+      profileData,
+    );
+
     return {
       message: 'Developer profile completed successfully',
       user: {
@@ -183,7 +202,7 @@ export class AuthService {
         role: updatedUser.role,
         customUrl: updatedUser.customUrl,
         profileCompleted: true,
-      }
+      },
     };
   }
 }

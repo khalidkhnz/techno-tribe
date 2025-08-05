@@ -1,13 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { toast } from "sonner";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useRecruiterDashboard } from "@/hooks/use-api";
+import { RecruiterDashboard as RecruiterDashboardType } from "@/types/dashboard";
+
 import { 
   Briefcase, 
   Users, 
@@ -20,102 +23,21 @@ import {
   CheckCircle,
   AlertCircle,
   XCircle,
-  Edit
+  Edit,
+  Calendar,
+  FileText,
+  UserCheck,
+  UserX,
+  PlayCircle,
+  Award,
+  RotateCcw
 } from "lucide-react";
 
-interface Job {
-  _id: string;
-  jobTitle: string;
-  company: string;
-  location: string;
-  employmentType: string;
-  experienceLevel: string;
-  minimumSalary: number;
-  maximumSalary: number;
-  currency: string;
-  status: string;
-  applicationCount: number;
-  createdAt: string;
-}
-
-interface DashboardStats {
-  totalJobs: number;
-  activeJobs: number;
-  totalApplications: number;
-  recentApplications: number;
-  averageViews: number;
-  successRate: number;
-}
-
 export default function RecruiterDashboard() {
-  const [jobs, setJobs] = useState<Job[]>([]);
-  const [stats, setStats] = useState<DashboardStats>({
-    totalJobs: 0,
-    activeJobs: 0,
-    totalApplications: 0,
-    recentApplications: 0,
-    averageViews: 0,
-    successRate: 0,
-  });
-  const [loading, setLoading] = useState(true);
+  const { data: dashboardData, isLoading, error } = useRecruiterDashboard();
   const [activeTab, setActiveTab] = useState("overview");
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
-
-  const fetchDashboardData = async () => {
-    try {
-      // Simulate API calls
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const mockJobs: Job[] = [
-        {
-          _id: "1",
-          jobTitle: "Senior React Developer",
-          company: "TechCorp",
-          location: "San Francisco, CA",
-          employmentType: "full-time",
-          experienceLevel: "senior",
-          minimumSalary: 120000,
-          maximumSalary: 180000,
-          currency: "USD",
-          status: "published",
-          applicationCount: 12,
-          createdAt: "2024-01-15",
-        },
-        {
-          _id: "2",
-          jobTitle: "Frontend Developer",
-          company: "StartupXYZ",
-          location: "Remote",
-          employmentType: "contract",
-          experienceLevel: "mid-level",
-          minimumSalary: 80000,
-          maximumSalary: 120000,
-          currency: "USD",
-          status: "published",
-          applicationCount: 8,
-          createdAt: "2024-01-12",
-        },
-      ];
-      
-      setJobs(mockJobs);
-      setStats({
-        totalJobs: 2,
-        activeJobs: 2,
-        totalApplications: 20,
-        recentApplications: 5,
-        averageViews: 45,
-        successRate: 85,
-      });
-    } catch (error) {
-      console.error("Error fetching dashboard data:", error);
-      toast.error("Failed to load dashboard data");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const dashboard = dashboardData?.data as RecruiterDashboardType;
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
@@ -125,6 +47,23 @@ export default function RecruiterDashboard() {
     };
     
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.draft;
+    const Icon = config.icon;
+    
+    return (
+      <Badge variant={config.variant} className="flex items-center gap-1">
+        <Icon className="h-3 w-3" />
+        {config.label}
+      </Badge>
+    );
+  };
+
+  const getApplicationStatusBadge = (status: string) => {
+    // Simplified status handling since we only have 'applied' status
+    const statusConfig = {
+      applied: { variant: "secondary" as const, label: "Applied", icon: FileText },
+    };
+    
+    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.applied;
     const Icon = config.icon;
     
     return (
@@ -165,11 +104,42 @@ export default function RecruiterDashboard() {
     });
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <Skeleton className="h-8 w-64" />
+            <Skeleton className="h-4 w-96 mt-2" />
+          </div>
         </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[...Array(4)].map((_, i) => (
+            <Card key={i}>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-4" />
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-8 w-16 mb-2" />
+                <Skeleton className="h-3 w-32" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !dashboard) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-lg font-medium mb-2">Failed to load dashboard</h3>
+          <p className="text-muted-foreground">Please try again later</p>
+        </div>
+      </div>
     );
   }
 
@@ -195,9 +165,9 @@ export default function RecruiterDashboard() {
               <Briefcase className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.totalJobs}</div>
+              <div className="text-2xl font-bold">{dashboard.overview.totalJobs}</div>
               <p className="text-xs text-muted-foreground">
-                {stats.activeJobs} active jobs
+                {dashboard.overview.publishedJobs} published jobs
               </p>
             </CardContent>
           </Card>
@@ -210,9 +180,9 @@ export default function RecruiterDashboard() {
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.totalApplications}</div>
+              <div className="text-2xl font-bold">{dashboard.overview.totalApplications}</div>
               <p className="text-xs text-muted-foreground">
-                {stats.recentApplications} this week
+                {dashboard.overview.appliedApplications} applied
               </p>
             </CardContent>
           </Card>
@@ -220,29 +190,29 @@ export default function RecruiterDashboard() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Average Views
+                Offered Applications
+              </CardTitle>
+              <UserCheck className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{dashboard.overview.offeredApplications}</div>
+              <p className="text-xs text-muted-foreground">
+                {dashboard.overview.averageApplicationsPerJob} avg per job
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Profile Views
               </CardTitle>
               <Eye className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.averageViews}</div>
+              <div className="text-2xl font-bold">{dashboard.profile.profileViews}</div>
               <p className="text-xs text-muted-foreground">
-                per job posting
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Success Rate
-              </CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.successRate}%</div>
-              <p className="text-xs text-muted-foreground">
-                applications to hires
+                {dashboard.profile.isProfileComplete ? 'Profile complete' : 'Profile incomplete'}
               </p>
             </CardContent>
           </Card>
@@ -257,40 +227,103 @@ export default function RecruiterDashboard() {
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
-            {/* Recent Activity */}
+            {/* Recent Applications */}
             <Card>
               <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
+                <CardTitle>Recent Applications</CardTitle>
                 <CardDescription>
-                  Latest applications and job updates
+                  Latest applications for your job postings
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {jobs.slice(0, 5).map((job) => (
-                    <div key={job._id} className="flex items-center justify-between p-4 border rounded-lg">
-                      <div className="flex items-center space-x-4">
-                        <Avatar>
-                          <AvatarFallback>
-                            <Building2 className="h-4 w-4" />
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <h4 className="font-medium">{job.jobTitle}</h4>
-                          <p className="text-sm text-muted-foreground">{job.company}</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="flex items-center gap-2">
-                          {getStatusBadge(job.status)}
-                          <Badge variant="outline">{job.applicationCount} applications</Badge>
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {formatDate(job.createdAt)}
-                        </p>
-                      </div>
+                  {dashboard.recentApplications.length === 0 ? (
+                    <div className="text-center py-8">
+                      <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                      <h3 className="text-lg font-medium mb-2">No applications yet</h3>
+                      <p className="text-muted-foreground">Applications will appear here once candidates apply to your jobs</p>
                     </div>
-                  ))}
+                  ) : (
+                    dashboard.recentApplications.map((application) => (
+                      <div key={application._id} className="flex items-center justify-between p-4 border rounded-lg">
+                        <div className="flex items-center space-x-4">
+                          <Avatar>
+                            <AvatarImage src={application.applicantId?.profileImage} />
+                            <AvatarFallback>
+                              {application.applicantId ? 
+                                `${application.applicantId.firstName.charAt(0)}${application.applicantId.lastName.charAt(0)}` : 
+                                <UserCheck className="h-4 w-4" />
+                              }
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <h4 className="font-medium">
+                              {application.applicantId ? 
+                                `${application.applicantId.firstName} ${application.applicantId.lastName}` : 
+                                'Unknown Applicant'
+                              }
+                            </h4>
+                            <p className="text-sm text-muted-foreground">{application.jobId.jobTitle}</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="flex items-center gap-2">
+                            {getApplicationStatusBadge(application.status)}
+                            <Badge variant="outline">{application.jobId.company}</Badge>
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {formatDate(application.createdAt)}
+                          </p>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Recent Jobs */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent Jobs</CardTitle>
+                <CardDescription>
+                  Your latest job postings
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {dashboard.recentJobs.length === 0 ? (
+                    <div className="text-center py-8">
+                      <Briefcase className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                      <h3 className="text-lg font-medium mb-2">No jobs posted yet</h3>
+                      <p className="text-muted-foreground">Create your first job posting to get started</p>
+                    </div>
+                  ) : (
+                    dashboard.recentJobs.map((job) => (
+                      <div key={job._id} className="flex items-center justify-between p-4 border rounded-lg">
+                        <div className="flex items-center space-x-4">
+                          <Avatar>
+                            <AvatarFallback>
+                              <Building2 className="h-4 w-4" />
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <h4 className="font-medium">{job.jobTitle}</h4>
+                            <p className="text-sm text-muted-foreground">{job.company}</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="flex items-center gap-2">
+                            {getStatusBadge(job.status)}
+                            <Badge variant="outline">{job.location}</Badge>
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {formatDate(job.createdAt)}
+                          </p>
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -305,7 +338,7 @@ export default function RecruiterDashboard() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                {jobs.length === 0 ? (
+                {dashboard.recentJobs.length === 0 ? (
                   <div className="text-center py-12">
                     <Briefcase className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                     <h3 className="text-lg font-medium mb-2">No jobs posted yet</h3>
@@ -321,20 +354,19 @@ export default function RecruiterDashboard() {
                           <TableHead>Job Title</TableHead>
                           <TableHead>Company</TableHead>
                           <TableHead>Location</TableHead>
-                          <TableHead>Type</TableHead>
-                          <TableHead>Applications</TableHead>
                           <TableHead>Status</TableHead>
+                          <TableHead>Created</TableHead>
                           <TableHead>Actions</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {jobs.map((job) => (
+                        {dashboard.recentJobs.map((job) => (
                           <TableRow key={job._id}>
                             <TableCell>
                               <div>
                                 <div className="font-medium">{job.jobTitle}</div>
                                 <div className="text-sm text-muted-foreground">
-                                  {getExperienceLevelLabel(job.experienceLevel)}
+                                  {job.company}
                                 </div>
                               </div>
                             </TableCell>
@@ -345,19 +377,13 @@ export default function RecruiterDashboard() {
                                 {job.location}
                               </div>
                             </TableCell>
-                            <TableCell>
-                              <div className="flex items-center gap-1">
-                                <Clock className="h-3 w-3" />
-                                {getEmploymentTypeLabel(job.employmentType)}
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex items-center gap-1">
-                                <Users className="h-3 w-3" />
-                                {job.applicationCount}
-                              </div>
-                            </TableCell>
                             <TableCell>{getStatusBadge(job.status)}</TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-1">
+                                <Calendar className="h-3 w-3" />
+                                {formatDate(job.createdAt)}
+                              </div>
+                            </TableCell>
                             <TableCell>
                               <div className="flex gap-2">
                                 <Button variant="outline" size="sm" disabled>
@@ -384,45 +410,84 @@ export default function RecruiterDashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Application Trends</CardTitle>
+                  <CardTitle>Monthly Statistics</CardTitle>
                   <CardDescription>
-                    Track application growth over time
+                    Jobs created and applications received over the last 6 months
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-64 flex items-center justify-center text-muted-foreground">
-                    <div className="text-center">
-                      <BarChart3 className="h-12 w-12 mx-auto mb-4" />
-                      <p>Analytics chart will be displayed here</p>
-                    </div>
+                  <div className="space-y-4">
+                    {dashboard.monthlyStats.map((stat, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                        <div>
+                          <span className="text-sm font-medium">{stat.month}</span>
+                        </div>
+                        <div className="flex gap-4">
+                          <div className="text-center">
+                            <div className="text-lg font-bold text-blue-600">{stat.jobsCreated || 0}</div>
+                            <div className="text-xs text-muted-foreground">Jobs</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-lg font-bold text-green-600">{stat.applicationsReceived || 0}</div>
+                            <div className="text-xs text-muted-foreground">Applications</div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Performance Metrics</CardTitle>
+                  <CardTitle>Application Status Breakdown</CardTitle>
                   <CardDescription>
-                    Key performance indicators
+                    Current application status distribution
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Average Time to Fill</span>
-                      <span className="text-sm text-muted-foreground">15 days</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
+                        <span className="text-sm font-medium">Applied</span>
+                      </div>
+                      <span className="text-sm text-muted-foreground">{dashboard.overview.appliedApplications}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Quality Score</span>
-                      <span className="text-sm text-muted-foreground">8.5/10</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                        <span className="text-sm font-medium">Reviewing</span>
+                      </div>
+                      <span className="text-sm text-muted-foreground">{dashboard.overview.reviewingApplications}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Response Rate</span>
-                      <span className="text-sm text-muted-foreground">92%</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+                        <span className="text-sm font-medium">Interviewing</span>
+                      </div>
+                      <span className="text-sm text-muted-foreground">{dashboard.overview.interviewingApplications}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Hire Rate</span>
-                      <span className="text-sm text-muted-foreground">78%</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                        <span className="text-sm font-medium">Offered</span>
+                      </div>
+                      <span className="text-sm text-muted-foreground">{dashboard.overview.offeredApplications}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                        <span className="text-sm font-medium">Rejected</span>
+                      </div>
+                      <span className="text-sm text-muted-foreground">{dashboard.overview.rejectedApplications}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+                        <span className="text-sm font-medium">Withdrawn</span>
+                      </div>
+                      <span className="text-sm text-muted-foreground">{dashboard.overview.withdrawnApplications}</span>
                     </div>
                   </div>
                 </CardContent>

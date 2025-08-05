@@ -11,7 +11,7 @@ export class UploadService {
     fileName: string,
     originalName: string,
     fileSize: number,
-    mimeType: string
+    mimeType: string,
   ): UploadFileResponseDto {
     return {
       fileUrl,
@@ -41,10 +41,12 @@ export class UploadService {
       'image/jpeg',
       'image/png',
       'image/webp',
-      'application/pdf'
+      'application/pdf',
     ];
     if (!allowedTypes.includes(file.mimetype)) {
-      throw new BadRequestException('Invalid file type. Only JPEG, PNG, WebP, and PDF files are allowed');
+      throw new BadRequestException(
+        'Invalid file type. Only JPEG, PNG, WebP, and PDF files are allowed',
+      );
     }
   }
 
@@ -53,7 +55,7 @@ export class UploadService {
    */
   validateResumeFile(file: Express.Multer.File): void {
     this.validateFile(file);
-    
+
     if (file.mimetype !== 'application/pdf') {
       throw new BadRequestException('Resumes must be PDF files');
     }
@@ -67,4 +69,4 @@ export class UploadService {
     // For now, we'll just log the deletion
     console.log(`Deleting file from UploadThing: ${fileUrl}`);
   }
-} 
+}

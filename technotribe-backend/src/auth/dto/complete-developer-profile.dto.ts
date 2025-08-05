@@ -24,7 +24,8 @@ export class CompleteDeveloperProfileDto {
 
   @ApiPropertyOptional({
     description: 'Professional bio',
-    example: 'Full-stack developer with 5+ years of experience in React and Node.js...',
+    example:
+      'Full-stack developer with 5+ years of experience in React and Node.js...',
   })
   @IsString()
   @IsOptional()
@@ -127,4 +128,4 @@ export class CompleteDeveloperProfileDto {
   @IsUrl({}, { each: true })
   @IsOptional()
   socialLinks?: string[];
-} 
+}

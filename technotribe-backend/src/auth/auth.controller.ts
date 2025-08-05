@@ -49,8 +49,10 @@ export class AuthController {
     status: 409,
     description: 'User with this email already exists',
   })
-  async signup(@Body() signupDto: SignupDto): ReturnType<AuthService['signup']> {
-    const response = await this.authService.signup(signupDto)
+  async signup(
+    @Body() signupDto: SignupDto,
+  ): ReturnType<AuthService['signup']> {
+    const response = await this.authService.signup(signupDto);
     return response;
   }
 
@@ -67,7 +69,7 @@ export class AuthController {
     description: 'Invalid credentials',
   })
   async login(@Body() loginDto: LoginDto): ReturnType<AuthService['login']> {
-    const response = await this.authService.login(loginDto)
+    const response = await this.authService.login(loginDto);
     return response;
   }
 
@@ -86,7 +88,7 @@ export class AuthController {
   async refresh(
     @Body() body: RefreshTokenDto,
   ): ReturnType<AuthService['refreshToken']> {
-    const response = await this.authService.refreshToken(body.refresh_token)
+    const response = await this.authService.refreshToken(body.refresh_token);
     return response;
   }
 
@@ -105,8 +107,8 @@ export class AuthController {
     description: 'Unauthorized',
   })
   async logout(@Request() req): ReturnType<AuthService['logout']> {
-    const response = await this.authService.logout(req.user.userId)
-    return response
+    const response = await this.authService.logout(req.user.userId);
+    return response;
   }
 
   @Put('complete-recruiter-profile')

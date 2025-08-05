@@ -54,4 +54,4 @@ export class ApplicationResponseDto {
     this.createdAt = application.createdAt;
     this.updatedAt = application.updatedAt;
   }
-} 
+}

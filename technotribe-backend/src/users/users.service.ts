@@ -20,17 +20,14 @@ export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(Resume.name) private resumeModel: Model<Resume>,
-    private uploadService: UploadService
+    private uploadService: UploadService,
   ) {}
-
 
   generateCustomUrl(firstName: string, lastName: string): string {
     return `${firstName.toLowerCase()}-${lastName.toLowerCase()}-${Date.now()}`;
   }
 
-
   async create(payload: SignupDto): Promise<User> {
-
     const hashedPassword = await bcrypt.hash(payload.password, 10);
 
     const user = await this.userModel.create({
@@ -46,20 +43,20 @@ export class UsersService {
     return user;
   }
 
-
   async findByEmail(email: string): Promise<User | null> {
     const user = await this.userModel.findOne({ email }).populate('resumes');
     return user;
   }
 
   async findByCustomUrl(customUrl: string): Promise<User> {
-    const user = await this.userModel.findOne({ customUrl }).populate('resumes');
+    const user = await this.userModel
+      .findOne({ customUrl })
+      .populate('resumes');
     if (!user) {
       throw new NotFoundException('User not found');
     }
     return user;
   }
-
 
   async getUserProfile(userId: string): Promise<User> {
     const user = await this.userModel.findById(userId).populate('resumes');
@@ -69,18 +66,23 @@ export class UsersService {
     return user;
   }
 
-
-  async updateProfile(userId: string, updateProfileDto: UpdateProfileDto): Promise<User> {
-    
+  async updateProfile(
+    userId: string,
+    updateProfileDto: UpdateProfileDto,
+  ): Promise<User> {
     if (updateProfileDto.customUrl) {
-      const existingUser = await this.userModel.findOne({ customUrl: updateProfileDto.customUrl });
+      const existingUser = await this.userModel.findOne({
+        customUrl: updateProfileDto.customUrl,
+      });
       if (existingUser && (existingUser._id as any).toString() !== userId) {
         throw new ConflictException('Custom URL is already taken');
       }
     }
 
     if (updateProfileDto.email) {
-      const existingUser = await this.userModel.findOne({ email: updateProfileDto.email });
+      const existingUser = await this.userModel.findOne({
+        email: updateProfileDto.email,
+      });
       if (existingUser && (existingUser._id as any).toString() !== userId) {
         throw new ConflictException('Email is already taken');
       }
@@ -96,32 +98,49 @@ export class UsersService {
 
     if (user.role === 'developer') {
       const developerProfileFields = [
-        'bio', 'location', 'skills', 'experienceLevel', 'yearsOfExperience',
-        'currentCompany', 'currentPosition', 'education', 'certifications'
+        'bio',
+        'location',
+        'skills',
+        'experienceLevel',
+        'yearsOfExperience',
+        'currentCompany',
+        'currentPosition',
+        'education',
+        'certifications',
       ];
-      
-      isProfileComplete = developerProfileFields.every(field => 
-        updateProfileDto[field] && 
-        (Array.isArray(updateProfileDto[field]) ? updateProfileDto[field].length > 0 : true)
+
+      isProfileComplete = developerProfileFields.every(
+        (field) =>
+          updateProfileDto[field] &&
+          (Array.isArray(updateProfileDto[field])
+            ? updateProfileDto[field].length > 0
+            : true),
       );
     } else if (user.role === 'recruiter') {
       const recruiterProfileFields = [
-        'company', 'industry', 'jobTitle', 'phone', 'linkedin'
+        'company',
+        'industry',
+        'jobTitle',
+        'phone',
+        'linkedin',
       ];
-      
-      isProfileComplete = recruiterProfileFields.every(field => 
-        updateProfileDto[field] && 
-        (Array.isArray(updateProfileDto[field]) ? updateProfileDto[field].length > 0 : true)
+
+      isProfileComplete = recruiterProfileFields.every(
+        (field) =>
+          updateProfileDto[field] &&
+          (Array.isArray(updateProfileDto[field])
+            ? updateProfileDto[field].length > 0
+            : true),
       );
     }
 
     const updatedUser = await this.userModel.findByIdAndUpdate(
       userId,
-      { 
+      {
         ...updateProfileDto,
-        isProfileComplete: isProfileComplete || false
+        isProfileComplete: isProfileComplete || false,
       },
-      { new: true }
+      { new: true },
     );
 
     if (!updatedUser) {
@@ -132,10 +151,9 @@ export class UsersService {
   }
 
   async incrementProfileViews(userId: string): Promise<void> {
-    await this.userModel.findByIdAndUpdate(
-      userId,
-      { $inc: { profileViews: 1 } }
-    );
+    await this.userModel.findByIdAndUpdate(userId, {
+      $inc: { profileViews: 1 },
+    });
   }
 
   async updateRefreshToken(
@@ -153,7 +171,10 @@ export class UsersService {
     await this.userModel.findByIdAndUpdate(userId, { lastLoginAt: new Date() });
   }
 
-  async updateRecruiterProfile(userId: string, profileData: CompleteRecruiterProfileDto): Promise<User> {
+  async updateRecruiterProfile(
+    userId: string,
+    profileData: CompleteRecruiterProfileDto,
+  ): Promise<User> {
     const user = await this.userModel.findById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -178,7 +199,7 @@ export class UsersService {
     const updatedUser = await this.userModel.findByIdAndUpdate(
       userId,
       updateData,
-      { new: true }
+      { new: true },
     );
 
     if (!updatedUser) {
@@ -188,7 +209,10 @@ export class UsersService {
     return updatedUser;
   }
 
-  async updateDeveloperProfile(userId: string, profileData: CompleteDeveloperProfileDto): Promise<User> {
+  async updateDeveloperProfile(
+    userId: string,
+    profileData: CompleteDeveloperProfileDto,
+  ): Promise<User> {
     const user = await this.userModel.findById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -200,7 +224,9 @@ export class UsersService {
 
     // Check if custom URL is already taken by another user
     if (profileData.customUrl) {
-      const existingUser = await this.userModel.findOne({ customUrl: profileData.customUrl });
+      const existingUser = await this.userModel.findOne({
+        customUrl: profileData.customUrl,
+      });
       if (existingUser && (existingUser._id as any).toString() !== userId) {
         throw new ConflictException('Custom URL is already taken');
       }
@@ -226,7 +252,7 @@ export class UsersService {
     const updatedUser = await this.userModel.findByIdAndUpdate(
       userId,
       updateData,
-      { new: true }
+      { new: true },
     );
 
     if (!updatedUser) {
@@ -237,7 +263,10 @@ export class UsersService {
   }
 
   // Resume Management Methods
-  async uploadResume(userId: string, uploadResumeDto: UploadResumeDto): Promise<Resume> {
+  async uploadResume(
+    userId: string,
+    uploadResumeDto: UploadResumeDto,
+  ): Promise<Resume> {
     const user = await this.userModel.findById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -260,20 +289,21 @@ export class UsersService {
     });
 
     // Add resume to user's resumes array
-    await this.userModel.findByIdAndUpdate(
-      userId,
-      { $push: { resumes: resume._id } }
-    );
+    await this.userModel.findByIdAndUpdate(userId, {
+      $push: { resumes: resume._id },
+    });
 
     return resume;
   }
 
   async getUserResumes(userId: string): Promise<Resume[]> {
-    const resumes = await this.resumeModel.find({
-      userId: new Types.ObjectId(userId),
-      isActive: true,
-      expiresAt: { $gt: new Date() }
-    }).sort({ uploadedAt: -1 });
+    const resumes = await this.resumeModel
+      .find({
+        userId: new Types.ObjectId(userId),
+        isActive: true,
+        expiresAt: { $gt: new Date() },
+      })
+      .sort({ uploadedAt: -1 });
 
     return resumes;
   }
@@ -281,7 +311,7 @@ export class UsersService {
   async deleteResume(userId: string, resumeId: string): Promise<void> {
     const resume = await this.resumeModel.findOne({
       _id: resumeId,
-      userId: new Types.ObjectId(userId)
+      userId: new Types.ObjectId(userId),
     });
 
     if (!resume) {
@@ -295,13 +325,15 @@ export class UsersService {
     await this.resumeModel.findByIdAndUpdate(resumeId, { isActive: false });
 
     // Remove from user's resumes array
-    await this.userModel.findByIdAndUpdate(
-      userId,
-      { $pull: { resumes: resumeId } }
-    );
+    await this.userModel.findByIdAndUpdate(userId, {
+      $pull: { resumes: resumeId },
+    });
   }
 
-  async updateProfileImages(userId: string, updateProfileImagesDto: UpdateProfileImagesDto): Promise<User> {
+  async updateProfileImages(
+    userId: string,
+    updateProfileImagesDto: UpdateProfileImagesDto,
+  ): Promise<User> {
     const user = await this.userModel.findById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -320,7 +352,7 @@ export class UsersService {
     const updatedUser = await this.userModel.findByIdAndUpdate(
       userId,
       updateData,
-      { new: true }
+      { new: true },
     );
 
     if (!updatedUser) {
@@ -331,7 +363,8 @@ export class UsersService {
   }
 
   async getUserProfileWithResumes(userId: string): Promise<User> {
-    const user = await this.userModel.findById(userId)
+    const user = await this.userModel
+      .findById(userId)
       .populate('resumes')
       .exec();
 

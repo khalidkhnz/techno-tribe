@@ -119,4 +119,11 @@ export const api = {
     withdraw: (id: string) => apiClient.put(`/applications/${id}/withdraw`),
     getById: (id: string) => apiClient.get(`/applications/${id}`),
   },
+
+  // Dashboard endpoints
+  dashboard: {
+    getRecruiterDashboard: () => apiClient.get("/dashboard/recruiter"),
+    getDeveloperDashboard: () => apiClient.get("/dashboard/developer"),
+    getDashboard: () => apiClient.get("/dashboard"),
+  },
 };

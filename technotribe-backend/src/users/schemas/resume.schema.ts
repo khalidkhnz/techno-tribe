@@ -38,4 +38,4 @@ export const ResumeSchema = SchemaFactory.createForClass(Resume);
 
 // Index for automatic cleanup of expired resumes
 ResumeSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
-ResumeSchema.index({ userId: 1, isActive: 1 }); 
+ResumeSchema.index({ userId: 1, isActive: 1 });

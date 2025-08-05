@@ -21,10 +21,10 @@ export class Application extends Document {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   recruiterId: Types.ObjectId;
 
-  @Prop({ 
-    required: true, 
-    enum: ApplicationStatus, 
-    default: ApplicationStatus.APPLIED 
+  @Prop({
+    required: true,
+    enum: ApplicationStatus,
+    default: ApplicationStatus.APPLIED,
   })
   status: ApplicationStatus;
 
@@ -53,4 +53,4 @@ export class Application extends Document {
   viewedAt?: Date;
 }
 
-export const ApplicationSchema = SchemaFactory.createForClass(Application); 
+export const ApplicationSchema = SchemaFactory.createForClass(Application);

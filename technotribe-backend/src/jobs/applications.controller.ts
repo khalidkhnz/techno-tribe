@@ -75,9 +75,10 @@ export class ApplicationsController {
     description: 'Unauthorized',
   })
   async getMyApplications(@Request() req): Promise<ApplicationResponseDto[]> {
-    const applications = await this.applicationsService.getApplicationsByApplicant(
-      req.user.userId,
-    );
+    const applications =
+      await this.applicationsService.getApplicationsByApplicant(
+        req.user.userId,
+      );
     return applications.map((app) => new ApplicationResponseDto(app));
   }
 
@@ -260,8 +261,10 @@ export class ApplicationsController {
     status: 404,
     description: 'Application not found',
   })
-  async getApplication(@Param('id') id: string): Promise<ApplicationResponseDto> {
+  async getApplication(
+    @Param('id') id: string,
+  ): Promise<ApplicationResponseDto> {
     const application = await this.applicationsService.getApplicationById(id);
     return new ApplicationResponseDto(application);
   }
-} 
+}

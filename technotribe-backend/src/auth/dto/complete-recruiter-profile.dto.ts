@@ -76,4 +76,4 @@ export class CompleteRecruiterProfileDto {
   @IsString()
   @IsOptional()
   linkedin?: string;
-} 
+}

@@ -246,3 +246,31 @@ export const usePublicProfile = (customUrl: string) => {
     retry: 1,
   });
 };
+
+// Dashboard hooks
+export const useRecruiterDashboard = () => {
+  return useQuery({
+    queryKey: ["recruiter-dashboard"],
+    queryFn: api.dashboard.getRecruiterDashboard,
+    enabled: !!localStorage.getItem("access_token"),
+    staleTime: 2 * 60 * 1000, // 2 minutes
+  });
+};
+
+export const useDeveloperDashboard = () => {
+  return useQuery({
+    queryKey: ["developer-dashboard"],
+    queryFn: api.dashboard.getDeveloperDashboard,
+    enabled: !!localStorage.getItem("access_token"),
+    staleTime: 2 * 60 * 1000, // 2 minutes
+  });
+};
+
+export const useDashboard = () => {
+  return useQuery({
+    queryKey: ["dashboard"],
+    queryFn: api.dashboard.getDashboard,
+    enabled: !!localStorage.getItem("access_token"),
+    staleTime: 2 * 60 * 1000, // 2 minutes
+  });
+};

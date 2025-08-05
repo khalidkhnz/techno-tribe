@@ -10,7 +10,7 @@ import { Resume, ResumeSchema } from './schemas/resume.schema';
   imports: [
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
-      { name: Resume.name, schema: ResumeSchema }
+      { name: Resume.name, schema: ResumeSchema },
     ]),
   ],
   controllers: [UsersController],

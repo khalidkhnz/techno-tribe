@@ -14,7 +14,7 @@ import { UsersModule } from '../users/users.module';
     MongooseModule.forFeature([
       { name: Job.name, schema: JobSchema },
       { name: Application.name, schema: ApplicationSchema },
-      { name: User.name, schema: UserSchema }
+      { name: User.name, schema: UserSchema },
     ]),
     UsersModule,
   ],
