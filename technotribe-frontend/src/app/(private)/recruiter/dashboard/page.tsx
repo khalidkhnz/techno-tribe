@@ -152,7 +152,7 @@ export default function RecruiterDashboard() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Recruiter Dashboard</h1>
+            <h1 className="text-3xl font-bold text-primary">Recruiter Dashboard</h1>
             <p className="text-muted-foreground mt-2">
               Manage your job postings and track applications
             </p>
@@ -428,11 +428,11 @@ export default function RecruiterDashboard() {
                         </div>
                         <div className="flex gap-4">
                           <div className="text-center">
-                            <div className="text-lg font-bold text-blue-600">{stat.jobsCreated || 0}</div>
+                            <div className="text-lg font-bold text-primary">{stat.jobsCreated || 0}</div>
                             <div className="text-xs text-muted-foreground">Jobs</div>
                           </div>
                           <div className="text-center">
-                            <div className="text-lg font-bold text-green-600">{stat.applicationsReceived || 0}</div>
+                            <div className="text-lg font-bold text-accent">{stat.applicationsReceived || 0}</div>
                             <div className="text-xs text-muted-foreground">Applications</div>
                           </div>
                         </div>
@@ -453,42 +453,42 @@ export default function RecruiterDashboard() {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
+                        <div className="w-3 h-3 bg-muted-foreground rounded-full"></div>
                         <span className="text-sm font-medium">Applied</span>
                       </div>
                       <span className="text-sm text-muted-foreground">{dashboard.overview.appliedApplications}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                        <div className="w-3 h-3 bg-primary rounded-full"></div>
                         <span className="text-sm font-medium">Reviewing</span>
                       </div>
                       <span className="text-sm text-muted-foreground">{dashboard.overview.reviewingApplications}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+                        <div className="w-3 h-3 bg-secondary rounded-full"></div>
                         <span className="text-sm font-medium">Interviewing</span>
                       </div>
                       <span className="text-sm text-muted-foreground">{dashboard.overview.interviewingApplications}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                        <div className="w-3 h-3 bg-accent rounded-full"></div>
                         <span className="text-sm font-medium">Offered</span>
                       </div>
                       <span className="text-sm text-muted-foreground">{dashboard.overview.offeredApplications}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                        <div className="w-3 h-3 bg-destructive rounded-full"></div>
                         <span className="text-sm font-medium">Rejected</span>
                       </div>
                       <span className="text-sm text-muted-foreground">{dashboard.overview.rejectedApplications}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+                        <div className="w-3 h-3 bg-accent-foreground rounded-full"></div>
                         <span className="text-sm font-medium">Withdrawn</span>
                       </div>
                       <span className="text-sm text-muted-foreground">{dashboard.overview.withdrawnApplications}</span>

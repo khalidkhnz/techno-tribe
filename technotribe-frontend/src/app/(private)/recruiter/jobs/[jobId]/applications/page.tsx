@@ -61,6 +61,8 @@ interface Application {
     certifications: string[];
     portfolioLinks: string[];
     socialLinks: string[];
+    profileImage?: string;
+    coverImage?: string;
   };
   status: string;
   appliedAt: string;
@@ -249,16 +251,16 @@ export default function JobApplicationsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 p-8">
-        <div className="max-w-7xl mx-auto">
+      <div className="min-h-screen bg-background">
+        <div className=" mx-auto">
           <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 rounded w-1/4 mb-8"></div>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="h-24 bg-gray-200 rounded"></div>
-              ))}
-            </div>
-            <div className="h-96 bg-gray-200 rounded"></div>
+                          <div className="h-8 bg-muted rounded w-1/4 mb-8"></div>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="h-24 bg-muted rounded"></div>
+                ))}
+              </div>
+              <div className="h-96 bg-muted rounded"></div>
           </div>
         </div>
       </div>
@@ -266,15 +268,15 @@ export default function JobApplicationsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-background">
+      <div className="mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Job Applications</h1>
+          <h1 className="text-3xl font-bold text-primary">Job Applications</h1>
           {job && (
             <div className="mt-2">
-              <p className="text-lg text-gray-600">{job.jobTitle}</p>
-              <p className="text-gray-500">{job.company} • {job.location}</p>
+              <p className="text-lg text-muted-foreground">{job.jobTitle}</p>
+              <p className="text-muted-foreground">{job.company} • {job.location}</p>
             </div>
           )}
         </div>
@@ -283,7 +285,7 @@ export default function JobApplicationsPage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Total Applications
               </CardTitle>
             </CardHeader>
@@ -293,36 +295,36 @@ export default function JobApplicationsPage() {
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Under Review
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-blue-600">
+              <div className="text-2xl font-bold text-primary">
                 {stats.reviewing}
               </div>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Interviewing
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-purple-600">
+              <div className="text-2xl font-bold">
                 {stats.interviewing}
               </div>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Offers
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">
+              <div className="text-2xl font-bold">
                 {stats.offered}
               </div>
             </CardContent>
@@ -334,7 +336,7 @@ export default function JobApplicationsPage() {
           {applications.length === 0 ? (
             <Card>
               <CardContent className="text-center py-12">
-                <p className="text-gray-500">No applications received yet</p>
+                <p className="text-muted-foreground">No applications received yet</p>
               </CardContent>
             </Card>
           ) : (
@@ -343,7 +345,7 @@ export default function JobApplicationsPage() {
                 <CardContent className="p-6">
                   <div className="flex items-start gap-4">
                     <Avatar className="w-16 h-16">
-                      <AvatarImage src={application.applicantId.avatar} />
+                      <AvatarImage src={application.applicantId.profileImage} />
                       <AvatarFallback className="text-lg">
                         {getInitials(application.applicantId.firstName, application.applicantId.lastName)}
                       </AvatarFallback>
@@ -352,12 +354,12 @@ export default function JobApplicationsPage() {
                     <div className="flex-1">
                       <div className="flex items-start justify-between mb-4">
                         <div>
-                          <h3 className="text-xl font-semibold text-gray-900">
+                          <h3 className="text-xl font-semibold text-foreground">
                             {application.applicantId.firstName} {application.applicantId.lastName}
                           </h3>
-                          <p className="text-gray-600">{application.applicantId.email}</p>
+                          <p className="text-muted-foreground">{application.applicantId.email}</p>
                           {application.applicantId.currentPosition && application.applicantId.currentCompany && (
-                            <p className="text-gray-500">
+                            <p className="text-muted-foreground">
                               {application.applicantId.currentPosition} at {application.applicantId.currentCompany}
                             </p>
                           )}
@@ -375,19 +377,19 @@ export default function JobApplicationsPage() {
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         {application.applicantId.location && (
-                          <div className="flex items-center gap-2 text-gray-600">
+                          <div className="flex items-center gap-2 text-muted-foreground">
                             <MapPin className="w-4 h-4" />
                             <span>{application.applicantId.location}</span>
                           </div>
                         )}
                         {application.applicantId.experienceLevel && (
-                          <div className="flex items-center gap-2 text-gray-600">
+                          <div className="flex items-center gap-2 text-muted-foreground">
                             <Briefcase className="w-4 h-4" />
                             <span>{getExperienceLevelLabel(application.applicantId.experienceLevel)}</span>
                           </div>
                         )}
                         {application.applicantId.yearsOfExperience && (
-                          <div className="flex items-center gap-2 text-gray-600">
+                          <div className="flex items-center gap-2 text-muted-foreground">
                             <Calendar className="w-4 h-4" />
                             <span>{application.applicantId.yearsOfExperience} years experience</span>
                           </div>
@@ -396,7 +398,7 @@ export default function JobApplicationsPage() {
 
                       {application.applicantId.skills && application.applicantId.skills.length > 0 && (
                         <div className="mb-4">
-                          <p className="text-sm font-medium text-gray-700 mb-2">Skills:</p>
+                          <p className="text-sm font-medium text-foreground mb-2">Skills:</p>
                           <div className="flex flex-wrap gap-2">
                             {application.applicantId.skills.slice(0, 8).map((skill) => (
                               <Badge key={skill} variant="secondary" className="text-xs">
@@ -413,7 +415,7 @@ export default function JobApplicationsPage() {
                       )}
 
                       <div className="flex items-center justify-between">
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-muted-foreground">
                           Applied on {formatDate(application.appliedAt)}
                         </div>
                         
@@ -449,7 +451,7 @@ export default function JobApplicationsPage() {
                                   {/* Basic Info */}
                                   <div className="flex items-start gap-4">
                                     <Avatar className="w-20 h-20">
-                                      <AvatarImage src={selectedApplication.applicantId.avatar} />
+                                      <AvatarImage src={selectedApplication.applicantId.profileImage} />
                                       <AvatarFallback className="text-xl">
                                         {getInitials(selectedApplication.applicantId.firstName, selectedApplication.applicantId.lastName)}
                                       </AvatarFallback>
@@ -458,14 +460,14 @@ export default function JobApplicationsPage() {
                                       <h3 className="text-xl font-semibold">
                                         {selectedApplication.applicantId.firstName} {selectedApplication.applicantId.lastName}
                                       </h3>
-                                      <p className="text-gray-600">{selectedApplication.applicantId.email}</p>
+                                      <p className="text-muted-foreground">{selectedApplication.applicantId.email}</p>
                                       {selectedApplication.applicantId.currentPosition && selectedApplication.applicantId.currentCompany && (
-                                        <p className="text-gray-500">
+                                        <p className="text-muted-foreground">
                                           {selectedApplication.applicantId.currentPosition} at {selectedApplication.applicantId.currentCompany}
                                         </p>
                                       )}
                                       {selectedApplication.applicantId.location && (
-                                        <p className="text-gray-500 flex items-center gap-1">
+                                        <p className="text-muted-foreground flex items-center gap-1">
                                           <MapPin className="w-4 h-4" />
                                           {selectedApplication.applicantId.location}
                                         </p>
@@ -477,7 +479,7 @@ export default function JobApplicationsPage() {
                                   {selectedApplication.applicantId.bio && (
                                     <div>
                                       <h4 className="font-semibold mb-2">About</h4>
-                                      <p className="text-gray-700">{selectedApplication.applicantId.bio}</p>
+                                      <p className="text-foreground">{selectedApplication.applicantId.bio}</p>
                                     </div>
                                   )}
 
@@ -504,7 +506,7 @@ export default function JobApplicationsPage() {
                                       </h4>
                                       <div className="space-y-2">
                                         {selectedApplication.applicantId.education.map((edu, index) => (
-                                          <p key={index} className="text-gray-700">{edu}</p>
+                                          <p key={index} className="text-foreground">{edu}</p>
                                         ))}
                                       </div>
                                     </div>
@@ -519,7 +521,7 @@ export default function JobApplicationsPage() {
                                       </h4>
                                       <div className="space-y-2">
                                         {selectedApplication.applicantId.certifications.map((cert, index) => (
-                                          <p key={index} className="text-gray-700">{cert}</p>
+                                          <p key={index} className="text-foreground">{cert}</p>
                                         ))}
                                       </div>
                                     </div>
@@ -539,7 +541,7 @@ export default function JobApplicationsPage() {
                                             href={link}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-2"
+                                            className="text-primary hover:text-primary/80 hover:underline flex items-center gap-2"
                                           >
                                             <LinkIcon className="w-4 h-4" />
                                             {link}

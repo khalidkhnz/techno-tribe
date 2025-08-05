@@ -170,16 +170,16 @@ export default function DeveloperApplicationsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 p-8">
-        <div className="max-w-7xl mx-auto">
+      <div className="min-h-screen bg-background p-8">
+        <div className="mx-auto">
           <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 rounded w-1/4 mb-8"></div>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="h-24 bg-gray-200 rounded"></div>
-              ))}
-            </div>
-            <div className="h-96 bg-gray-200 rounded"></div>
+                          <div className="h-8 bg-muted rounded w-1/4 mb-8"></div>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="h-24 bg-muted rounded"></div>
+                ))}
+              </div>
+              <div className="h-96 bg-muted rounded"></div>
           </div>
         </div>
       </div>
@@ -190,8 +190,8 @@ export default function DeveloperApplicationsPage() {
     <div className="min-h-screen w-full bg-background">
       <div className="w-full mr-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">My Applications</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-bold text-primary">My Applications</h1>
+          <p className="text-muted-foreground mt-2">
             Track your job applications and their status
           </p>
         </div>
@@ -200,7 +200,7 @@ export default function DeveloperApplicationsPage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Total Applications
               </CardTitle>
             </CardHeader>
@@ -210,36 +210,36 @@ export default function DeveloperApplicationsPage() {
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Under Review
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-blue-600">
+              <div className="text-2xl font-bold text-primary">
                 {stats.reviewing}
               </div>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Interviewing
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-purple-600">
+              <div className="text-2xl font-bold text-secondary">
                 {stats.interviewing}
               </div>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Offers
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">
+              <div className="text-2xl font-bold text-accent">
                 {stats.offered}
               </div>
             </CardContent>
@@ -269,7 +269,7 @@ export default function DeveloperApplicationsPage() {
               <TabsContent value={activeTab} className="mt-6">
                 {filteredApplications.length === 0 ? (
                   <div className="text-center py-12">
-                    <p className="text-gray-500">
+                    <p className="text-muted-foreground">
                       No applications found in this category
                     </p>
                   </div>
@@ -294,7 +294,7 @@ export default function DeveloperApplicationsPage() {
                               <div className="font-medium">
                                 {application.jobId.jobTitle}
                               </div>
-                              <div className="text-sm text-gray-500">
+                              <div className="text-sm text-muted-foreground">
                                 {getExperienceLevelLabel(application.jobId.experienceLevel)} •{" "}
                                 {getEmploymentTypeLabel(application.jobId.employmentType)}
                               </div>
@@ -305,7 +305,7 @@ export default function DeveloperApplicationsPage() {
                               <div className="font-medium">
                                 {application.jobId.company}
                               </div>
-                              <div className="text-sm text-gray-500">
+                              <div className="text-sm text-muted-foreground">
                                 {application.recruiterId.firstName} {application.recruiterId.lastName}
                               </div>
                             </div>

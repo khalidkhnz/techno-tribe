@@ -342,8 +342,8 @@ export default function DeveloperProfilePage() {
     return (
       <div className="min-h-screen w-full bg-background flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Error Loading Profile</h2>
-          <p className="text-gray-600">Failed to load your profile. Please try again.</p>
+          <h2 className="text-2xl font-bold text-primary mb-2">Error Loading Profile</h2>
+          <p className="text-muted-foreground">Failed to load your profile. Please try again.</p>
           <Button onClick={() => window.location.reload()} className="mt-4">
             Retry
           </Button>
@@ -354,14 +354,14 @@ export default function DeveloperProfilePage() {
 
   return (
     <div className="min-h-screen w-full bg-background">
-      <div className="w-full max-w-7xl mx-auto p-6">
+      <div className="w-full mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div>
             <div className="flex items-center gap-2 mb-2">
               <Code className="h-6 w-6 text-primary" />
-              <h1 className="text-3xl font-bold text-gray-900">Developer Profile</h1>
+              <h1 className="text-3xl font-bold text-primary">Developer Profile</h1>
             </div>
-            <p className="text-gray-600">
+            <p className="text-muted-foreground">
               Build your professional profile to attract recruiters
             </p>
           </div>
@@ -404,7 +404,7 @@ export default function DeveloperProfilePage() {
                     disabled={!isEditing}
                   />
                   {errors.firstName && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-destructive text-sm mt-1">
                       {errors.firstName.message}
                     </p>
                   )}
@@ -417,7 +417,7 @@ export default function DeveloperProfilePage() {
                     disabled={!isEditing}
                   />
                   {errors.lastName && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-destructive text-sm mt-1">
                       {errors.lastName.message}
                     </p>
                   )}
@@ -433,16 +433,16 @@ export default function DeveloperProfilePage() {
                   disabled={true}
                 />
                 {errors.email && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.email.message}
-                  </p>
+                                      <p className="text-destructive text-sm mt-1">
+                      {errors.email.message}
+                    </p>
                 )}
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="customUrl">Custom URL</Label>
                 <div className="flex items-center gap-2">
-                  <span className="text-gray-500">technotribe.com/profile/</span>
+                  <span className="text-muted-foreground">technotribe.com/profile/</span>
                   <Input
                     id="customUrl"
                     {...register("customUrl")}
@@ -451,9 +451,9 @@ export default function DeveloperProfilePage() {
                   />
                 </div>
                 {errors.customUrl && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.customUrl.message}
-                  </p>
+                                      <p className="text-destructive text-sm mt-1">
+                      {errors.customUrl.message}
+                    </p>
                 )}
               </div>
 
@@ -467,9 +467,9 @@ export default function DeveloperProfilePage() {
                   rows={4}
                 />
                 {errors.bio && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.bio.message}
-                  </p>
+                                      <p className="text-destructive text-sm mt-1">
+                      {errors.bio.message}
+                    </p>
                 )}
               </div>
 
@@ -483,7 +483,7 @@ export default function DeveloperProfilePage() {
                     placeholder="City, Country"
                   />
                   {errors.location && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-destructive text-sm mt-1">
                       {errors.location.message}
                     </p>
                   )}
@@ -497,7 +497,7 @@ export default function DeveloperProfilePage() {
                     placeholder="https://yourwebsite.com"
                   />
                   {errors.website && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-destructive text-sm mt-1">
                       {errors.website.message}
                     </p>
                   )}
@@ -535,7 +535,7 @@ export default function DeveloperProfilePage() {
                     </SelectContent>
                   </Select>
                   {errors.experienceLevel && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-destructive text-sm mt-1">
                       {errors.experienceLevel.message}
                     </p>
                   )}
@@ -551,7 +551,7 @@ export default function DeveloperProfilePage() {
                     max="50"
                   />
                   {errors.yearsOfExperience && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-destructive text-sm mt-1">
                       {errors.yearsOfExperience.message}
                     </p>
                   )}
@@ -564,7 +564,7 @@ export default function DeveloperProfilePage() {
                     disabled={!isEditing}
                   />
                   {errors.currentCompany && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-destructive text-sm mt-1">
                       {errors.currentCompany.message}
                     </p>
                   )}
@@ -580,9 +580,9 @@ export default function DeveloperProfilePage() {
                   placeholder="e.g., Senior Software Engineer"
                 />
                 {errors.currentPosition && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.currentPosition.message}
-                  </p>
+                                      <p className="text-destructive text-sm mt-1">
+                      {errors.currentPosition.message}
+                    </p>
                 )}
               </div>
             </CardContent>
@@ -840,7 +840,7 @@ export default function DeveloperProfilePage() {
               {/* Profile Image */}
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                  <div className="w-20 h-20 rounded-full overflow-hidden bg-muted flex items-center justify-center">
                     {user?.data?.profileImage ? (
                       <img 
                         src={user.data.profileImage} 
@@ -855,7 +855,7 @@ export default function DeveloperProfilePage() {
                   </div>
                   <div className="flex-1">
                     <Label htmlFor="profile-image">Profile Image</Label>
-                    <p className="text-sm text-gray-600 mb-2">
+                    <p className="text-sm text-muted-foreground mb-2">
                       Upload a professional headshot (JPG, PNG, WebP, max 4MB)
                     </p>
                     <div className="flex gap-2">
@@ -891,7 +891,7 @@ export default function DeveloperProfilePage() {
               {/* Cover Image */}
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-32 h-20 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+                  <div className="w-32 h-20 rounded-lg overflow-hidden bg-muted flex items-center justify-center">
                     {user?.data?.coverImage ? (
                       <img 
                         src={user.data.coverImage} 
@@ -899,14 +899,14 @@ export default function DeveloperProfilePage() {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="text-gray-400">
+                      <div className="text-muted-foreground">
                         <Upload className="h-8 w-8" />
                       </div>
                     )}
                   </div>
                   <div className="flex-1">
                     <Label htmlFor="cover-image">Cover Image</Label>
-                    <p className="text-sm text-gray-600 mb-2">
+                    <p className="text-sm text-muted-foreground mb-2">
                       Upload a cover image for your profile (JPG, PNG, WebP, max 4MB)
                     </p>
                     <div className="flex gap-2">
@@ -995,21 +995,21 @@ export default function DeveloperProfilePage() {
                         key={resume._id}
                         className={`p-4 border rounded-lg ${
                           isResumeExpired(resume.expiresAt) 
-                            ? 'border-red-200 bg-red-50' 
-                            : 'border-gray-200 bg-gray-50'
+                            ? 'border-destructive bg-destructive/10' 
+                            : 'border-muted-foreground bg-muted'
                         }`}
                       >
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between" >
                           <div className="flex items-center gap-3">
-                            <FileText className="h-5 w-5 text-blue-600" />
+                            <FileText className="h-5 w-5 text-primary" />
                             <div>
                               <p className="font-medium">{resume.originalName}</p>
-                              <div className="flex items-center gap-4 text-sm text-gray-600">
+                              <div className="flex items-center gap-4 text-sm">
                                 <span>{formatFileSize(resume.fileSize)}</span>
                                 <span>Uploaded: {formatDate(resume.uploadedAt)}</span>
                                 <span>Expires: {formatDate(resume.expiresAt)}</span>
                                 {resume.description && (
-                                  <span className="text-gray-500">{resume.description}</span>
+                                  <span className="text-muted-foreground">{resume.description}</span>
                                 )}
                               </div>
                             </div>
@@ -1032,7 +1032,7 @@ export default function DeveloperProfilePage() {
                               size="sm"
                               onClick={() => handleDeleteResume(resume._id)}
                             >
-                              <Trash2 className="h-4 w-4 text-red-600" />
+                              <Trash2 className="h-4 w-4 text-destructive" />
                             </Button>
                           </div>
                         </div>
@@ -1040,8 +1040,8 @@ export default function DeveloperProfilePage() {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-gray-500">
-                    <FileText className="h-12 w-12 mx-auto mb-2 text-gray-300" />
+                  <div className="text-center py-8 text-muted-foreground">
+                    <FileText className="h-12 w-12 mx-auto mb-2 text-muted-foreground" />
                     <p>No resumes uploaded yet</p>
                     <p className="text-sm">Upload your first resume to get started</p>
                   </div>
@@ -1060,28 +1060,28 @@ export default function DeveloperProfilePage() {
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">
+                  <div className="text-2xl font-bold text-primary">
                     {user.data.profileViews || 0}
                   </div>
-                  <div className="text-sm text-gray-600">Profile Views</div>
+                  <div className="text-sm text-muted-foreground">Profile Views</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600">
+                  <div className="text-2xl font-bold text-accent">
                     {user.data.skills?.length || 0}
                   </div>
-                  <div className="text-sm text-gray-600">Skills</div>
+                  <div className="text-sm text-muted-foreground">Skills</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-600">
+                  <div className="text-2xl font-bold text-secondary">
                     {user.data.education?.length || 0}
                   </div>
-                  <div className="text-sm text-gray-600">Education</div>
+                  <div className="text-sm text-muted-foreground">Education</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-orange-600">
+                  <div className="text-2xl font-bold text-accent-foreground">
                     {user.data.certifications?.length || 0}
                   </div>
-                  <div className="text-sm text-gray-600">Certifications</div>
+                  <div className="text-sm text-muted-foreground">Certifications</div>
                 </div>
               </div>
             </CardContent>

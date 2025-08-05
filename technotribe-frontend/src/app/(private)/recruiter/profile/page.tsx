@@ -198,8 +198,8 @@ export default function RecruiterProfilePage() {
     return (
       <div className="min-h-screen w-full bg-background flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Error Loading Profile</h2>
-          <p className="text-gray-600">Failed to load your profile. Please try again.</p>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Error Loading Profile</h2>
+          <p className="text-muted-foreground">Failed to load your profile. Please try again.</p>
           <Button onClick={() => window.location.reload()} className="mt-4">
             Retry
           </Button>
@@ -210,16 +210,16 @@ export default function RecruiterProfilePage() {
 
   return (
     <div className="min-h-screen w-full bg-background">
-      <div className="w-full max-w-7xl mx-auto p-6">
+      <div className="w-full mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <Briefcase className="h-6 w-6 text-primary" />
-                <h1 className="text-3xl font-bold text-gray-900">Recruiter Profile</h1>
+                <h1 className="text-3xl font-bold text-primary">Recruiter Profile</h1>
               </div>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Manage your company profile and recruitment preferences
               </p>
             </div>
@@ -273,7 +273,7 @@ export default function RecruiterProfilePage() {
                     disabled={!isEditing}
                   />
                   {errors.firstName && (
-                    <p className="text-sm text-red-500">{errors.firstName.message}</p>
+                    <p className="text-sm text-destructive">{errors.firstName.message}</p>
                   )}
                 </div>
                 <div className="space-y-2">
@@ -284,7 +284,7 @@ export default function RecruiterProfilePage() {
                     disabled={!isEditing}
                   />
                   {errors.lastName && (
-                    <p className="text-sm text-red-500">{errors.lastName.message}</p>
+                    <p className="text-sm text-destructive">{errors.lastName.message}</p>
                   )}
                 </div>
               </div>
@@ -302,7 +302,7 @@ export default function RecruiterProfilePage() {
                   />
                 </div>
                 {errors.email && (
-                  <p className="text-sm text-red-500">{errors.email.message}</p>
+                                      <p className="text-sm text-destructive">{errors.email.message}</p>
                 )}
               </div>
 
@@ -316,7 +316,7 @@ export default function RecruiterProfilePage() {
                   rows={4}
                 />
                 {errors.bio && (
-                  <p className="text-sm text-red-500">{errors.bio.message}</p>
+                                      <p className="text-sm text-destructive">{errors.bio.message}</p>
                 )}
               </div>
 
@@ -334,7 +334,7 @@ export default function RecruiterProfilePage() {
                     />
                   </div>
                   {errors.location && (
-                    <p className="text-sm text-red-500">{errors.location.message}</p>
+                    <p className="text-sm text-destructive">{errors.location.message}</p>
                   )}
                 </div>
                 <div className="space-y-2">
@@ -351,7 +351,7 @@ export default function RecruiterProfilePage() {
                     />
                   </div>
                   {errors.website && (
-                    <p className="text-sm text-red-500">{errors.website.message}</p>
+                    <p className="text-sm text-destructive">{errors.website.message}</p>
                   )}
                 </div>
               </div>
@@ -370,7 +370,7 @@ export default function RecruiterProfilePage() {
               {/* Profile Image */}
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                  <div className="w-20 h-20 rounded-full overflow-hidden bg-muted flex items-center justify-center">
                     {user?.data?.profileImage ? (
                       <img 
                         src={user.data.profileImage} 
@@ -385,7 +385,7 @@ export default function RecruiterProfilePage() {
                   </div>
                   <div className="flex-1">
                     <Label htmlFor="profile-image">Profile Image</Label>
-                    <p className="text-sm text-gray-600 mb-2">
+                    <p className="text-sm text-muted-foreground mb-2">
                       Upload a professional headshot (JPG, PNG, WebP, max 4MB)
                     </p>
                     <div className="flex gap-2">
@@ -421,7 +421,7 @@ export default function RecruiterProfilePage() {
               {/* Cover Image */}
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-32 h-20 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+                  <div className="w-32 h-20 rounded-lg overflow-hidden bg-muted flex items-center justify-center">
                     {user?.data?.coverImage ? (
                       <img 
                         src={user.data.coverImage} 
@@ -429,14 +429,14 @@ export default function RecruiterProfilePage() {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="text-gray-400">
+                      <div className="text-muted-foreground">
                         <Upload className="h-8 w-8" />
                       </div>
                     )}
                   </div>
                   <div className="flex-1">
                     <Label htmlFor="cover-image">Cover Image</Label>
-                    <p className="text-sm text-gray-600 mb-2">
+                    <p className="text-sm text-muted-foreground mb-2">
                       Upload a cover image for your profile (JPG, PNG, WebP, max 4MB)
                     </p>
                     <div className="flex gap-2">
@@ -574,7 +574,7 @@ export default function RecruiterProfilePage() {
                   disabled={!isEditing}
                 />
                 {errors.customUrl && (
-                  <p className="text-sm text-red-500">{errors.customUrl.message}</p>
+                                      <p className="text-sm text-destructive">{errors.customUrl.message}</p>
                 )}
                 <p className="text-sm text-muted-foreground">
                   Your company profile will be available at: technotribe.com/company/{watch("customUrl") || "your-company-name"}
@@ -723,28 +723,28 @@ export default function RecruiterProfilePage() {
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">
+                  <div className="text-2xl font-bold text-primary">
                     {user.data.profileViews || 0}
                   </div>
-                  <div className="text-sm text-gray-600">Profile Views</div>
+                  <div className="text-sm text-muted-foreground">Profile Views</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600">
+                  <div className="text-2xl font-bold text-accent">
                     {user.data.jobsPosted || 0}
                   </div>
-                  <div className="text-sm text-gray-600">Jobs Posted</div>
+                  <div className="text-sm text-muted-foreground">Jobs Posted</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-600">
+                  <div className="text-2xl font-bold text-secondary">
                     {user.data.activeJobs || 0}
                   </div>
-                  <div className="text-sm text-gray-600">Active Jobs</div>
+                  <div className="text-sm text-muted-foreground">Active Jobs</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-orange-600">
+                  <div className="text-2xl font-bold text-accent-foreground">
                     {user.data.totalApplications || 0}
                   </div>
-                  <div className="text-sm text-gray-600">Total Applications</div>
+                  <div className="text-sm text-muted-foreground">Total Applications</div>
                 </div>
               </div>
             </CardContent>

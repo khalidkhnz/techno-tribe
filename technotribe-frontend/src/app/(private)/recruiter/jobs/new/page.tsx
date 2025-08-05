@@ -99,8 +99,8 @@ export default function CreateJobPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-background">
+      <div className="mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-4">
@@ -112,8 +112,8 @@ export default function CreateJobPage() {
             </Link>
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Post a New Job</h1>
-            <p className="text-gray-600 mt-2">
+            <h1 className="text-3xl font-bold text-primary">Post a New Job</h1>
+            <p className="text-muted-foreground mt-2">
               Create a compelling job posting to attract top talent
             </p>
           </div>
@@ -123,10 +123,10 @@ export default function CreateJobPage() {
           {/* Form-level error display */}
           {Object.keys(errors).length > 0 && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-              <h3 className="text-sm font-medium text-red-800 mb-2">
-                Please fix the following errors:
-              </h3>
-              <ul className="text-sm text-red-700 space-y-1">
+                          <h3 className="text-sm font-medium text-destructive mb-2">
+              Please fix the following errors:
+            </h3>
+            <ul className="text-sm text-destructive space-y-1">
                 {Object.entries(errors).map(([field, error]) => (
                   <li key={field}>
                     • {error?.message || `${field} is required`}
@@ -155,7 +155,7 @@ export default function CreateJobPage() {
                   {...register("jobTitle")}
                 />
                 {errors.jobTitle && (
-                  <p className="text-sm text-red-500">{errors.jobTitle.message}</p>
+                                      <p className="text-sm text-destructive">{errors.jobTitle.message}</p>
                 )}
               </div>
 
@@ -167,7 +167,7 @@ export default function CreateJobPage() {
                   {...register("company")}
                 />
                 {errors.company && (
-                  <p className="text-sm text-red-500">{errors.company.message}</p>
+                                      <p className="text-sm text-destructive">{errors.company.message}</p>
                 )}
               </div>
 
@@ -190,7 +190,7 @@ export default function CreateJobPage() {
                     </SelectContent>
                   </Select>
                   {errors.employmentType && (
-                    <p className="text-sm text-red-500">{errors.employmentType.message}</p>
+                    <p className="text-sm text-destructive">{errors.employmentType.message}</p>
                   )}
                 </div>
 
@@ -212,7 +212,7 @@ export default function CreateJobPage() {
                     </SelectContent>
                   </Select>
                   {errors.experienceLevel && (
-                    <p className="text-sm text-red-500">{errors.experienceLevel.message}</p>
+                    <p className="text-sm text-destructive">{errors.experienceLevel.message}</p>
                   )}
                 </div>
               </div>
@@ -229,7 +229,7 @@ export default function CreateJobPage() {
                   />
                 </div>
                 {errors.location && (
-                  <p className="text-sm text-red-500">{errors.location.message}</p>
+                                      <p className="text-sm text-destructive">{errors.location.message}</p>
                 )}
               </div>
             </CardContent>
@@ -258,7 +258,7 @@ export default function CreateJobPage() {
                     {...register("minimumSalary", { valueAsNumber: true })}
                   />
                   {errors.minimumSalary && (
-                    <p className="text-sm text-red-500">{errors.minimumSalary.message}</p>
+                    <p className="text-sm text-destructive">{errors.minimumSalary.message}</p>
                   )}
                 </div>
 
@@ -272,7 +272,7 @@ export default function CreateJobPage() {
                     {...register("maximumSalary", { valueAsNumber: true })}
                   />
                   {errors.maximumSalary && (
-                    <p className="text-sm text-red-500">{errors.maximumSalary.message}</p>
+                    <p className="text-sm text-destructive">{errors.maximumSalary.message}</p>
                   )}
                 </div>
 
@@ -294,7 +294,7 @@ export default function CreateJobPage() {
                     </SelectContent>
                   </Select>
                   {errors.currency && (
-                    <p className="text-sm text-red-500">{errors.currency.message}</p>
+                    <p className="text-sm text-destructive">{errors.currency.message}</p>
                   )}
                 </div>
               </div>
@@ -328,7 +328,7 @@ export default function CreateJobPage() {
                   ))}
                 </div>
                 {watchedSkills.length === 0 && (
-                  <p className="text-sm text-red-500">Please select at least one skill</p>
+                                      <p className="text-sm text-destructive">Please select at least one skill</p>
                 )}
                 <p className="text-sm text-muted-foreground">
                   Selected: {watchedSkills.length} skills
@@ -358,7 +358,7 @@ export default function CreateJobPage() {
                   rows={8}
                 />
                 {errors.jobDescription && (
-                  <p className="text-sm text-red-500">{errors.jobDescription.message}</p>
+                                      <p className="text-sm text-destructive">{errors.jobDescription.message}</p>
                 )}
                 <p className="text-sm text-muted-foreground">
                   Minimum 50 characters. Current: {watch("jobDescription")?.length || 0}

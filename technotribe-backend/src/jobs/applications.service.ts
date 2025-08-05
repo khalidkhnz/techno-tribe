@@ -138,8 +138,7 @@ export class ApplicationsService {
     return this.applicationModel
       .find({ jobId: new Types.ObjectId(jobId) })
       .populate(
-        'applicantId',
-        'firstName lastName email avatar skills experienceLevel currentCompany currentPosition',
+        'applicantId'
       )
       .sort({ createdAt: -1 })
       .exec();

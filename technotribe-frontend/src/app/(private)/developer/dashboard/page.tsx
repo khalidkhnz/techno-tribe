@@ -121,7 +121,7 @@ export default function DashboardPage() {
         >
           <div>
             <motion.h1
-              className="text-3xl font-bold text-foreground"
+              className="text-3xl font-bold text-primary"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
@@ -288,10 +288,10 @@ export default function DashboardPage() {
                 dashboard.recentApplications.slice(0, 3).map((application) => (
                   <div key={application._id} className="flex items-center space-x-4">
                     <div className={`w-2 h-2 rounded-full ${
-                      application.status === ApplicationStatus.OFFERED ? 'bg-green-500' :
-                      application.status === ApplicationStatus.REJECTED ? 'bg-red-500' :
-                      application.status === ApplicationStatus.REVIEWING || application.status === ApplicationStatus.INTERVIEWING ? 'bg-blue-500' :
-                      'bg-yellow-500'
+                      application.status === ApplicationStatus.OFFERED ? 'bg-accent' :
+                      application.status === ApplicationStatus.REJECTED ? 'bg-destructive' :
+                      application.status === ApplicationStatus.REVIEWING || application.status === ApplicationStatus.INTERVIEWING ? 'bg-primary' :
+                      'bg-secondary'
                     }`}></div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">
