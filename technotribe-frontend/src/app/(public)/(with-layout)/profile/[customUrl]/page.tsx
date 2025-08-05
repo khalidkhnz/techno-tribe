@@ -53,8 +53,25 @@ import {
   ExternalLinkIcon
 } from "lucide-react";
 
+interface Resume {
+  _id: string;
+  userId: string;
+  fileName: string;
+  originalName: string;
+  fileUrl: string;
+  fileSize: number;
+  mimeType: string;
+  uploadedAt: string;
+  expiresAt: string;
+  isActive: boolean;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
 interface User {
-  id: string;
+  _id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -74,7 +91,9 @@ interface User {
   socialLinks: string[];
   isProfileComplete: boolean;
   profileViews: number;
-  avatar?: string;
+  profileImage?: string;
+  coverImage?: string;
+  resumes: Resume[];
   // Recruiter specific fields
   companyName?: string;
   companySize?: string;
@@ -139,6 +158,22 @@ export default function PublicProfilePage() {
       default:
         return "outline";
     }
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
   };
 
   if (isLoading) {
@@ -225,12 +260,22 @@ export default function PublicProfilePage() {
   return (
     <div className="p-8 bg-gradient-to-br from-background via-background to-muted/20">
       <div className="max-w-6xl mx-auto">
-        {/* Hero Header */}
+        {/* Hero Header with Cover Image */}
         <Card className="mb-8 overflow-hidden border-0 shadow-lg">
+          {user.coverImage && (
+            <div className="relative h-48 bg-gradient-to-r from-primary/20 to-secondary/20">
+              <img 
+                src={user.coverImage} 
+                alt="Cover" 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/20"></div>
+            </div>
+          )}
           <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-secondary/10 p-8">
             <div className="flex items-start gap-6">
               <Avatar className="w-28 h-28 border-4 border-background shadow-lg">
-                <AvatarImage src={user.avatar} />
+                <AvatarImage src={user.profileImage} />
                 <AvatarFallback className="text-3xl font-bold bg-gradient-to-br from-primary to-secondary text-primary-foreground">
                   {getInitials(user.firstName, user.lastName)}
                 </AvatarFallback>
@@ -321,13 +366,13 @@ export default function PublicProfilePage() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                                           <div className="flex flex-wrap gap-2">
-                       {user.skills.map((skill: string) => (
-                         <Badge key={skill} variant="secondary" className="text-sm">
-                           {skill}
-                         </Badge>
-                       ))}
-                     </div>
+                      <div className="flex flex-wrap gap-2">
+                        {user.skills.map((skill: string) => (
+                          <Badge key={skill} variant="secondary" className="text-sm">
+                            {skill}
+                          </Badge>
+                        ))}
+                      </div>
                     </CardContent>
                   </Card>
                 )}
@@ -342,30 +387,30 @@ export default function PublicProfilePage() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                                           <div className="space-y-4">
-                       {user.projects.map((project: any, index: number) => (
-                         <div key={index} className="p-4 border border-border rounded-lg">
-                           <div className="flex items-start justify-between mb-2">
-                             <h4 className="font-semibold text-foreground">{project.name}</h4>
-                             {project.link && (
-                               <Button variant="ghost" size="sm" asChild>
-                                 <a href={project.link} target="_blank" rel="noopener noreferrer">
-                                   <ExternalLinkIcon className="w-4 h-4" />
-                                 </a>
-                               </Button>
-                             )}
-                           </div>
-                           <p className="text-muted-foreground mb-3">{project.description}</p>
-                           <div className="flex flex-wrap gap-1">
-                             {project.technologies.map((tech: string) => (
-                               <Badge key={tech} variant="outline" className="text-xs">
-                                 {tech}
-                               </Badge>
-                             ))}
-                           </div>
-                         </div>
-                       ))}
-                     </div>
+                      <div className="space-y-4">
+                        {user.projects.map((project: any, index: number) => (
+                          <div key={index} className="p-4 border border-border rounded-lg">
+                            <div className="flex items-start justify-between mb-2">
+                              <h4 className="font-semibold text-foreground">{project.name}</h4>
+                              {project.link && (
+                                <Button variant="ghost" size="sm" asChild>
+                                  <a href={project.link} target="_blank" rel="noopener noreferrer">
+                                    <ExternalLinkIcon className="w-4 h-4" />
+                                  </a>
+                                </Button>
+                              )}
+                            </div>
+                            <p className="text-muted-foreground mb-3">{project.description}</p>
+                            <div className="flex flex-wrap gap-1">
+                              {project.technologies.map((tech: string) => (
+                                <Badge key={tech} variant="outline" className="text-xs">
+                                  {tech}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </CardContent>
                   </Card>
                 )}
@@ -481,17 +526,60 @@ export default function PublicProfilePage() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                                           <div className="flex flex-wrap gap-2">
-                       {user.hiringNeeds.map((need: string) => (
-                         <Badge key={need} variant="secondary" className="text-sm">
-                           {need}
-                         </Badge>
-                       ))}
-                     </div>
+                      <div className="flex flex-wrap gap-2">
+                        {user.hiringNeeds.map((need: string) => (
+                          <Badge key={need} variant="secondary" className="text-sm">
+                            {need}
+                          </Badge>
+                        ))}
+                      </div>
                     </CardContent>
                   </Card>
                 )}
               </>
+            )}
+
+            {/* Resumes */}
+            {user.resumes && user.resumes.length > 0 && (
+              <Card className="shadow-md">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <FileText className="w-5 h-5 text-blue-500" />
+                    Resumes & Documents
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {user.resumes.map((resume: Resume) => (
+                      <div key={resume._id} className="flex items-center justify-between p-4 border border-border rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <FileText className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                          <div>
+                            <h4 className="font-medium text-foreground">{resume.originalName}</h4>
+                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                              <span>{formatFileSize(resume.fileSize)}</span>
+                              <span>•</span>
+                              <span>Uploaded {formatDate(resume.uploadedAt)}</span>
+                              {resume.description && (
+                                <>
+                                  <span>•</span>
+                                  <span>{resume.description}</span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        <Button variant="outline" size="sm" asChild>
+                          <a href={resume.fileUrl} target="_blank" rel="noopener noreferrer">
+                            <Download className="w-4 h-4 mr-2" />
+                            Download
+                          </a>
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
             )}
 
             {/* Education */}
@@ -504,14 +592,14 @@ export default function PublicProfilePage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                                     <div className="space-y-3">
-                     {user.education.map((edu: string, index: number) => (
-                       <div key={index} className="flex items-center gap-3 p-3 border border-border rounded-lg">
-                         <GraduationCap className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-                         <span className="text-foreground">{edu}</span>
-                       </div>
-                     ))}
-                   </div>
+                  <div className="space-y-3">
+                    {user.education.map((edu: string, index: number) => (
+                      <div key={index} className="flex items-center gap-3 p-3 border border-border rounded-lg">
+                        <GraduationCap className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                        <span className="text-foreground">{edu}</span>
+                      </div>
+                    ))}
+                  </div>
                 </CardContent>
               </Card>
             )}
@@ -673,6 +761,10 @@ export default function PublicProfilePage() {
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">Certifications</span>
                   <span className="font-semibold">{user.certifications?.length || 0}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground">Resumes</span>
+                  <span className="font-semibold">{user.resumes?.length || 0}</span>
                 </div>
                 {isDeveloper && user.projects && (
                   <div className="flex justify-between items-center">
