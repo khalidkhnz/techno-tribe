@@ -86,6 +86,13 @@ export const api = {
     getPublicProfile: (customUrl: string) => apiClient.get(`/users/profile/${customUrl}`),
     getAll: () => apiClient.get("/users"),
     getById: (id: string) => apiClient.get(`/users/${id}`),
+    getProfileWithResumes: () => apiClient.get("/users/profile-with-resumes"),
+    getUserResumes: () => apiClient.get("/users/resumes"),
+    updateProfileImage: (fileUrl: string) => apiClient.post("/users/update-profile-image", { fileUrl }),
+    updateCoverImage: (fileUrl: string) => apiClient.post("/users/update-cover-image", { fileUrl }),
+    addResume: (data: { fileUrl: string; fileName: string; originalName: string; fileSize: number; mimeType: string; description?: string }) => 
+      apiClient.post("/users/add-resume", data),
+    deleteResume: (resumeId: string) => apiClient.delete(`/users/resumes/${resumeId}`),
   },
 
   // Job endpoints

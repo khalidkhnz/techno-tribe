@@ -4,6 +4,8 @@ import {
   Body,
   Param,
   Put,
+  Post,
+  Delete,
   UseGuards,
   Request,
   NotFoundException,
@@ -16,14 +18,20 @@ import {
   ApiParam,
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
+import { UploadService } from './upload.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { UploadResumeDto, UpdateProfileImagesDto } from './dto/upload-file.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { User } from './schemas/user.schema';
+import { Resume } from './schemas/resume.schema';
 
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly uploadService: UploadService
+  ) {}
 
   @Get('profile')
   @UseGuards(JwtAuthGuard)
@@ -95,5 +103,153 @@ export class UsersController {
     }
     await this.usersService.incrementProfileViews((user._id as any).toString());
     return user;
+  }
+
+  // File Upload Endpoints - These will be handled by UploadThing on the frontend
+  // The backend will receive the file URLs from UploadThing and process them
+  
+  @Post('update-profile-image')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Update profile image URL' })
+  @ApiResponse({
+    status: 200,
+    description: 'Profile image updated successfully',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+  })
+  async updateProfileImage(
+    @Request() req,
+    @Body() body: { fileUrl: string },
+  ) {
+    await this.usersService.updateProfileImages(req.user.userId, {
+      profileImage: body.fileUrl
+    });
+
+    return { message: 'Profile image updated successfully' };
+  }
+
+  @Post('update-cover-image')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Update cover image URL' })
+  @ApiResponse({
+    status: 200,
+    description: 'Cover image updated successfully',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+  })
+  async updateCoverImage(
+    @Request() req,
+    @Body() body: { fileUrl: string },
+  ) {
+    await this.usersService.updateProfileImages(req.user.userId, {
+      coverImage: body.fileUrl
+    });
+
+    return { message: 'Cover image updated successfully' };
+  }
+
+  @Post('add-resume')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Add resume from UploadThing' })
+  @ApiResponse({
+    status: 201,
+    description: 'Resume added successfully',
+    type: Resume,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+  })
+  async addResume(
+    @Request() req,
+    @Body() body: { 
+      fileUrl: string;
+      fileName: string;
+      originalName: string;
+      fileSize: number;
+      mimeType: string;
+      description?: string;
+    },
+  ) {
+    const uploadResumeDto: UploadResumeDto = {
+      fileUrl: body.fileUrl,
+      fileName: body.fileName,
+      originalName: body.originalName,
+      fileSize: body.fileSize,
+      mimeType: body.mimeType,
+      description: body.description,
+    };
+
+    const resume = await this.usersService.uploadResume(req.user.userId, uploadResumeDto);
+    return resume;
+  }
+
+  @Get('resumes')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Get user resumes' })
+  @ApiResponse({
+    status: 200,
+    description: 'User resumes retrieved successfully',
+    type: [Resume],
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+  })
+  async getUserResumes(@Request() req) {
+    return this.usersService.getUserResumes(req.user.userId);
+  }
+
+  @Delete('resumes/:resumeId')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiParam({
+    name: 'resumeId',
+    description: 'Resume ID to delete',
+  })
+  @ApiOperation({ summary: 'Delete resume' })
+  @ApiResponse({
+    status: 200,
+    description: 'Resume deleted successfully',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Resume not found',
+  })
+  async deleteResume(
+    @Request() req,
+    @Param('resumeId') resumeId: string,
+  ) {
+    await this.usersService.deleteResume(req.user.userId, resumeId);
+    return { message: 'Resume deleted successfully' };
+  }
+
+  @Get('profile-with-resumes')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Get user profile with resumes' })
+  @ApiResponse({
+    status: 200,
+    description: 'User profile with resumes retrieved successfully',
+    type: User,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+  })
+  async getProfileWithResumes(@Request() req) {
+    return this.usersService.getUserProfileWithResumes(req.user.userId);
   }
 }

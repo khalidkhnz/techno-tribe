@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export enum UserRole {
   DEVELOPER = 'developer',
@@ -47,6 +47,15 @@ export class User extends Document {
 
   @Prop()
   avatar?: string;
+
+  @Prop()
+  profileImage?: string;
+
+  @Prop()
+  coverImage?: string;
+
+  @Prop({ type: [Types.ObjectId], ref: 'Resume', default: [] })
+  resumes: Types.ObjectId[];
 
   @Prop({ default: false })
   isEmailVerified: boolean;

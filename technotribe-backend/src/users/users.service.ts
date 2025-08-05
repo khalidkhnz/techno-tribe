@@ -4,17 +4,24 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { User } from './schemas/user.schema';
+import { Resume } from './schemas/resume.schema';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { UploadResumeDto, UpdateProfileImagesDto } from './dto/upload-file.dto';
 import { SignupDto } from 'src/auth/dto/signup.dto';
 import { CompleteRecruiterProfileDto } from 'src/auth/dto/complete-recruiter-profile.dto';
 import { CompleteDeveloperProfileDto } from 'src/auth/dto/complete-developer-profile.dto';
+import { UploadService } from './upload.service';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(Resume.name) private resumeModel: Model<Resume>,
+    private uploadService: UploadService
+  ) {}
 
 
   generateCustomUrl(firstName: string, lastName: string): string {
@@ -227,5 +234,111 @@ export class UsersService {
     }
 
     return updatedUser;
+  }
+
+  // Resume Management Methods
+  async uploadResume(userId: string, uploadResumeDto: UploadResumeDto): Promise<Resume> {
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Calculate expiration date (3 months from now)
+    const expiresAt = new Date();
+    expiresAt.setMonth(expiresAt.getMonth() + 3);
+
+    const resume = await this.resumeModel.create({
+      userId: new Types.ObjectId(userId),
+      fileName: uploadResumeDto.fileName,
+      originalName: uploadResumeDto.originalName,
+      fileUrl: uploadResumeDto.fileUrl,
+      fileSize: uploadResumeDto.fileSize,
+      mimeType: uploadResumeDto.mimeType,
+      uploadedAt: new Date(),
+      expiresAt,
+      description: uploadResumeDto.description,
+    });
+
+    // Add resume to user's resumes array
+    await this.userModel.findByIdAndUpdate(
+      userId,
+      { $push: { resumes: resume._id } }
+    );
+
+    return resume;
+  }
+
+  async getUserResumes(userId: string): Promise<Resume[]> {
+    const resumes = await this.resumeModel.find({
+      userId: new Types.ObjectId(userId),
+      isActive: true,
+      expiresAt: { $gt: new Date() }
+    }).sort({ uploadedAt: -1 });
+
+    return resumes;
+  }
+
+  async deleteResume(userId: string, resumeId: string): Promise<void> {
+    const resume = await this.resumeModel.findOne({
+      _id: resumeId,
+      userId: new Types.ObjectId(userId)
+    });
+
+    if (!resume) {
+      throw new NotFoundException('Resume not found');
+    }
+
+    // Delete file from storage
+    await this.uploadService.deleteFile(resume.fileUrl);
+
+    // Mark resume as inactive
+    await this.resumeModel.findByIdAndUpdate(resumeId, { isActive: false });
+
+    // Remove from user's resumes array
+    await this.userModel.findByIdAndUpdate(
+      userId,
+      { $pull: { resumes: resumeId } }
+    );
+  }
+
+  async updateProfileImages(userId: string, updateProfileImagesDto: UpdateProfileImagesDto): Promise<User> {
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const updateData: any = {};
+
+    if (updateProfileImagesDto.profileImage) {
+      updateData.profileImage = updateProfileImagesDto.profileImage;
+    }
+
+    if (updateProfileImagesDto.coverImage) {
+      updateData.coverImage = updateProfileImagesDto.coverImage;
+    }
+
+    const updatedUser = await this.userModel.findByIdAndUpdate(
+      userId,
+      updateData,
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      throw new NotFoundException('User not found');
+    }
+
+    return updatedUser;
+  }
+
+  async getUserProfileWithResumes(userId: string): Promise<User> {
+    const user = await this.userModel.findById(userId)
+      .populate('resumes')
+      .exec();
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
   }
 }
