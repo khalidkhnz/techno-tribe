@@ -176,7 +176,7 @@ export function Header({ onMenuToggle, user: userData }: HeaderProps) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={handleSearchFocus}
-              className="pl-9 bg-white/80 backdrop-blur-sm border-0 shadow-sm"
+              className="pl-9 bg-background/80 backdrop-blur-sm border-0 shadow-sm"
             />
             {isLoading && (
               <div className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground">
@@ -186,15 +186,15 @@ export function Header({ onMenuToggle, user: userData }: HeaderProps) {
             
             {/* Search Results Dropdown */}
             {showSearchResults && searchResults?.data && searchResults.data.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-80 overflow-y-auto z-50">
+              <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-border rounded-lg shadow-lg max-h-80 overflow-y-auto z-50">
                 <div className="p-2">
-                  <div className="text-xs font-medium text-gray-500 mb-2 px-2">
+                  <div className="text-xs font-medium text-muted-foreground mb-2 px-2">
                     Found {searchResults.data.length} user{searchResults.data.length !== 1 ? 's' : ''}
                   </div>
                                      {searchResults.data.map((user: SearchUser) => (
                     <div
                       key={user._id}
-                      className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-50 cursor-pointer transition-colors"
+                      className="flex items-center gap-3 p-2 rounded-md hover:bg-muted cursor-pointer transition-colors"
                       onClick={() => handleUserClick(user)}
                     >
                       <Avatar className="h-10 w-10">
@@ -205,7 +205,7 @@ export function Header({ onMenuToggle, user: userData }: HeaderProps) {
                       </Avatar>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <p className="text-sm font-medium text-gray-900 truncate">
+                          <p className="text-sm font-medium text-foreground truncate">
                             {user.firstName} {user.lastName}
                           </p>
                           {user.role && (
@@ -215,12 +215,12 @@ export function Header({ onMenuToggle, user: userData }: HeaderProps) {
                           )}
                         </div>
                         {user.currentPosition && (
-                          <p className="text-xs text-gray-500 truncate">
+                          <p className="text-xs text-muted-foreground truncate">
                             {user.currentPosition}
                           </p>
                         )}
                         {user.location && (
-                          <p className="text-xs text-gray-400 truncate">
+                          <p className="text-xs text-muted-foreground truncate">
                             📍 {user.location}
                           </p>
                         )}
@@ -233,9 +233,9 @@ export function Header({ onMenuToggle, user: userData }: HeaderProps) {
             
             {/* No Results */}
             {showSearchResults && searchQuery && !isLoading && searchResults && searchResults.data && searchResults.data.length === 0 && (
-              <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-                <div className="p-4 text-center text-gray-500">
-                  <Search className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+              <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-border rounded-lg shadow-lg z-50">
+                <div className="p-4 text-center text-muted-foreground">
+                  <Search className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
                   <p className="text-sm">No users found for "{searchQuery}"</p>
                 </div>
               </div>
@@ -313,7 +313,7 @@ export function Header({ onMenuToggle, user: userData }: HeaderProps) {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={handleLogout}
-                  className="text-red-600"
+                  className="text-destructive"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
                   Log out

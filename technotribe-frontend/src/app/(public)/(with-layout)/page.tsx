@@ -324,7 +324,7 @@ export default function HomePage() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="border-background text-background hover:bg-background hover:text-primary px-8 py-3"
+                    className="text-primary dark:text-background px-8 py-3"
                   >
                     <Users className="mr-2 h-5 w-5" />
                     Browse Jobs
@@ -614,7 +614,7 @@ export default function HomePage() {
                           transition={{ delay: i * 0.1, duration: 0.3 }}
                           viewport={{ once: true }}
                         >
-                          <Star className="h-5 w-5 text-yellow-400 fill-current" />
+                          <Star className="h-5 w-5 text-accent fill-current" />
                         </motion.div>
                       ))}
                     </div>
@@ -714,7 +714,7 @@ export default function HomePage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-background text-background hover:bg-background hover:text-primary px-8 py-3"
+                  className="border-background text-primary dark:text-background hover:bg-background hover:text-primary px-8 py-3"
                 >
                   <Users className="mr-2 h-5 w-5" />
                   Find Jobs

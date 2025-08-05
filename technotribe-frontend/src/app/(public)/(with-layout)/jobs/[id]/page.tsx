@@ -170,10 +170,10 @@ export default function JobDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 p-8">
+      <div className="min-h-screen bg-background p-8">
         <div className="max-w-4xl mx-auto">
           <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 rounded w-1/4 mb-8"></div>
+            <div className="h-8 bg-muted rounded w-1/4 mb-8"></div>
             <div className="space-y-6">
               <div className="h-32 bg-gray-200 rounded"></div>
               <div className="h-96 bg-gray-200 rounded"></div>
@@ -186,10 +186,10 @@ export default function JobDetailPage() {
 
   if (!job) {
     return (
-      <div className="min-h-screen bg-gray-50 p-8">
+      <div className="min-h-screen bg-background p-8">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Job Not Found</h1>
-          <p className="text-gray-600 mb-6">The job you're looking for doesn't exist or has been removed.</p>
+          <h1 className="text-2xl font-bold text-foreground mb-4">Job Not Found</h1>
+          <p className="text-muted-foreground mb-6">The job you're looking for doesn't exist or has been removed.</p>
           <Link href={FRONTEND_ROUTES.JOBS}>
             <Button>
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -202,7 +202,7 @@ export default function JobDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-background p-8">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -216,13 +216,13 @@ export default function JobDetailPage() {
           <div className="flex items-start justify-between">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <h1 className="text-3xl font-bold text-gray-900">{job.jobTitle}</h1>
+                <h1 className="text-3xl font-bold text-foreground">{job.jobTitle}</h1>
                 {job.isUrgent && (
                   <Badge variant="destructive">Urgent</Badge>
                 )}
               </div>
-              <p className="text-xl text-gray-600 mb-2">{job.company}</p>
-              <div className="flex items-center gap-4 text-gray-500">
+              <p className="text-xl text-muted-foreground mb-2">{job.company}</p>
+              <div className="flex items-center gap-4 text-muted-foreground">
                 <div className="flex items-center gap-1">
                   <MapPin className="h-4 w-4" />
                   <span>{job.location}</span>
@@ -239,10 +239,10 @@ export default function JobDetailPage() {
             </div>
             
             <div className="text-right">
-              <div className="text-2xl font-bold text-green-600 mb-1">
+              <div className="text-2xl font-bold text-accent mb-1">
                 {job.currency} {job.minimumSalary.toLocaleString()} - {job.maximumSalary.toLocaleString()}
               </div>
-              <p className="text-sm text-gray-500">Annual Salary</p>
+              <p className="text-sm text-muted-foreground">Annual Salary</p>
             </div>
           </div>
         </div>
@@ -257,7 +257,7 @@ export default function JobDetailPage() {
               </CardHeader>
               <CardContent>
                 <div className="prose max-w-none">
-                  <p className="text-gray-700 whitespace-pre-wrap">{job.jobDescription}</p>
+                  <p className="text-foreground whitespace-pre-wrap">{job.jobDescription}</p>
                 </div>
               </CardContent>
             </Card>
@@ -311,9 +311,9 @@ export default function JobDetailPage() {
               <CardContent className="p-6">
                 {hasApplied ? (
                   <div className="text-center">
-                    <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-                    <h3 className="font-semibold text-green-700 mb-2">Application Submitted</h3>
-                    <p className="text-sm text-gray-600 mb-4">
+                    <CheckCircle className="h-12 w-12 text-accent mx-auto mb-4" />
+                    <h3 className="font-semibold text-accent mb-2">Application Submitted</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
                       You've already applied for this position. We'll review your application and get back to you soon.
                     </p>
                     <Button variant="outline" className="w-full" disabled>
@@ -322,7 +322,7 @@ export default function JobDetailPage() {
                   </div>
                 ) : (
                   <div className="text-center">
-                    <h3 className="font-semibold text-gray-900 mb-4">Interested in this position?</h3>
+                    <h3 className="font-semibold text-foreground mb-4">Interested in this position?</h3>
                     <Button 
                       onClick={handleApply} 
                       disabled={applying}
@@ -331,7 +331,7 @@ export default function JobDetailPage() {
                     >
                       {applying ? "Applying..." : "Apply Now"}
                     </Button>
-                    <p className="text-xs text-gray-500 mt-2">
+                    <p className="text-xs text-muted-foreground mt-2">
                       One click application - no resume upload required
                     </p>
                   </div>
@@ -347,24 +347,24 @@ export default function JobDetailPage() {
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Eye className="h-4 w-4 text-blue-500" />
-                    <span className="text-sm text-gray-600">Views</span>
+                    <Eye className="h-4 w-4 text-primary" />
+                    <span className="text-sm text-muted-foreground">Views</span>
                   </div>
                   <span className="font-semibold">{job.viewCount}</span>
                 </div>
                 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Users className="h-4 w-4 text-green-500" />
-                    <span className="text-sm text-gray-600">Applications</span>
+                    <Users className="h-4 w-4 text-accent" />
+                    <span className="text-sm text-muted-foreground">Applications</span>
                   </div>
                   <span className="font-semibold">{job.applicationCount}</span>
                 </div>
                 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-purple-500" />
-                    <span className="text-sm text-gray-600">Posted</span>
+                    <Calendar className="h-4 w-4 text-secondary" />
+                    <span className="text-sm text-muted-foreground">Posted</span>
                   </div>
                   <span className="font-semibold">{formatDate(job.createdAt)}</span>
                 </div>
@@ -378,34 +378,34 @@ export default function JobDetailPage() {
                </CardHeader>
                <CardContent className="space-y-4">
                  <div className="flex items-center gap-3">
-                   <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                   <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center text-primary-foreground font-semibold text-lg">
                      {job.recruiterId.firstName.charAt(0)}{job.recruiterId.lastName.charAt(0)}
                    </div>
                    <div className="flex-1">
-                     <p className="font-semibold text-gray-900">
+                     <p className="font-semibold text-foreground">
                        {job.recruiterId.firstName} {job.recruiterId.lastName}
                      </p>
-                     <p className="text-sm text-gray-600">Recruiter</p>
-                     <p className="text-sm text-gray-500">{job.company}</p>
+                     <p className="text-sm text-muted-foreground">Recruiter</p>
+                     <p className="text-sm text-muted-foreground">{job.company}</p>
                    </div>
                  </div>
                  
                  <div className="pt-3 border-t space-y-3">
                    {job.recruiterId.jobTitle && (
-                     <div className="flex items-center gap-2 text-sm text-gray-600">
+                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                        <Clock className="h-4 w-4" />
                        <span>{job.recruiterId.jobTitle}</span>
                      </div>
                    )}
                    
                    {job.recruiterId.linkedin && (
-                     <div className="flex items-center gap-2 text-sm text-gray-600">
-                       <Linkedin className="h-4 w-4 text-blue-600" />
+                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                       <Linkedin className="h-4 w-4 text-primary" />
                        <a 
                          href={job.recruiterId.linkedin} 
                          target="_blank" 
                          rel="noopener noreferrer"
-                         className="text-blue-600 hover:underline"
+                         className="text-primary hover:text-primary/80 hover:underline"
                        >
                          View LinkedIn Profile
                        </a>
@@ -434,7 +434,7 @@ export default function JobDetailPage() {
                        <span className="font-medium">Email:</span>
                        <a 
                          href={`mailto:${job.recruiterId.email}`}
-                         className="text-blue-600 hover:underline"
+                         className="text-primary hover:text-primary/80 hover:underline"
                        >
                          {job.recruiterId.email}
                        </a>
@@ -445,7 +445,7 @@ export default function JobDetailPage() {
                        <span className="font-medium">Phone:</span>
                        <a 
                          href={`tel:${job.recruiterId.phone}`}
-                         className="text-blue-600 hover:underline"
+                         className="text-primary hover:text-primary/80 hover:underline"
                        >
                          {job.recruiterId.phone}
                        </a>
@@ -462,10 +462,10 @@ export default function JobDetailPage() {
                </CardHeader>
                <CardContent className="space-y-3">
                  <div className="flex items-center gap-3">
-                   <Building2 className="h-5 w-5 text-gray-500" />
+                   <Building2 className="h-5 w-5 text-muted-foreground" />
                    <div>
                      <p className="font-medium">{job.company}</p>
-                     <p className="text-sm text-gray-500">
+                     <p className="text-sm text-muted-foreground">
                        Posted by {job.recruiterId.firstName} {job.recruiterId.lastName}
                      </p>
                    </div>
@@ -473,7 +473,7 @@ export default function JobDetailPage() {
                  
                  {job.recruiterId.companyDescription && (
                    <div className="pt-2 border-t">
-                     <p className="text-sm text-gray-600 leading-relaxed">
+                     <p className="text-sm text-muted-foreground leading-relaxed">
                        {job.recruiterId.companyDescription}
                      </p>
                    </div>
@@ -485,7 +485,7 @@ export default function JobDetailPage() {
                        href={job.recruiterId.companyWebsite} 
                        target="_blank" 
                        rel="noopener noreferrer"
-                       className="text-sm text-blue-600 hover:underline flex items-center gap-1"
+                       className="text-sm text-primary hover:text-primary/80 hover:underline flex items-center gap-1"
                      >
                        <Building2 className="h-3 w-3" />
                        Visit Company Website

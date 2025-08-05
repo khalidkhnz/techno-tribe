@@ -382,7 +382,7 @@ export default function PublicProfilePage() {
                   <Card className="shadow-md">
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
-                        <Code className="w-5 h-5 text-blue-500" />
+                        <Code className="w-5 h-5 text-primary" />
                         Featured Projects
                       </CardTitle>
                     </CardHeader>
@@ -419,7 +419,7 @@ export default function PublicProfilePage() {
                 <Card className="shadow-md">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <Target className="w-5 h-5 text-green-500" />
+                      <Target className="w-5 h-5 text-accent" />
                       Availability & Preferences
                     </CardTitle>
                   </CardHeader>
@@ -460,7 +460,7 @@ export default function PublicProfilePage() {
                 <Card className="shadow-md">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <Building className="w-5 h-5 text-blue-500" />
+                      <Building className="w-5 h-5 text-primary" />
                       Company Information
                     </CardTitle>
                   </CardHeader>
@@ -544,7 +544,7 @@ export default function PublicProfilePage() {
               <Card className="shadow-md">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-blue-500" />
+                    <FileText className="w-5 h-5 text-primary" />
                     Resumes & Documents
                   </CardTitle>
                 </CardHeader>
@@ -587,7 +587,7 @@ export default function PublicProfilePage() {
               <Card className="shadow-md">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <GraduationCap className="w-5 h-5 text-indigo-500" />
+                    <GraduationCap className="w-5 h-5 text-secondary" />
                     Education
                   </CardTitle>
                 </CardHeader>
@@ -609,7 +609,7 @@ export default function PublicProfilePage() {
               <Card className="shadow-md">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Award className="w-5 h-5 text-yellow-500" />
+                    <Award className="w-5 h-5 text-accent-foreground" />
                     Certifications
                   </CardTitle>
                 </CardHeader>
@@ -631,7 +631,7 @@ export default function PublicProfilePage() {
               <Card className="shadow-md">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <LinkIcon className="w-5 h-5 text-blue-500" />
+                    <LinkIcon className="w-5 h-5 text-primary" />
                     Portfolio & Links
                   </CardTitle>
                 </CardHeader>
@@ -793,9 +793,9 @@ export default function PublicProfilePage() {
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     {user.isProfileComplete ? (
-                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <CheckCircle className="w-4 h-4 text-accent" />
                     ) : (
-                      <AlertCircle className="w-4 h-4 text-yellow-500" />
+                      <AlertCircle className="w-4 h-4 text-accent-foreground" />
                     )}
                     <span className="text-sm">
                       {user.isProfileComplete ? "Profile Complete" : "Profile Incomplete"}
