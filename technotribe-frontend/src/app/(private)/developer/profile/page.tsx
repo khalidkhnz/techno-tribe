@@ -200,7 +200,7 @@ export default function DeveloperProfilePage() {
   const handleFileUpload = async (file: File, type: 'profile' | 'cover' | 'resume', description?: string) => {
     if (!file) return;
 
-    const userId = user?.data?.id;
+    const userId = user?.data?._id;
     if (!userId) {
       toast.error('User not found');
       return;

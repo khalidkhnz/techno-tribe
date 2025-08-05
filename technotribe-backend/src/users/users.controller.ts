@@ -105,9 +105,6 @@ export class UsersController {
     return user;
   }
 
-  // File Upload Endpoints - These will be handled by UploadThing on the frontend
-  // The backend will receive the file URLs from UploadThing and process them
-  
   @Post('update-profile-image')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')

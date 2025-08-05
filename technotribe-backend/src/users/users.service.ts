@@ -48,12 +48,12 @@ export class UsersService {
 
 
   async findByEmail(email: string): Promise<User | null> {
-    const user = await this.userModel.findOne({ email });
+    const user = await this.userModel.findOne({ email }).populate('resumes');
     return user;
   }
 
   async findByCustomUrl(customUrl: string): Promise<User> {
-    const user = await this.userModel.findOne({ customUrl });
+    const user = await this.userModel.findOne({ customUrl }).populate('resumes');
     if (!user) {
       throw new NotFoundException('User not found');
     }
@@ -62,7 +62,7 @@ export class UsersService {
 
 
   async getUserProfile(userId: string): Promise<User> {
-    const user = await this.userModel.findById(userId);
+    const user = await this.userModel.findById(userId).populate('resumes');
     if (!user) {
       throw new NotFoundException('User not found');
     }
