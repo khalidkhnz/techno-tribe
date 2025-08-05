@@ -62,7 +62,7 @@ export interface RecentApplication {
     email: string;
     profileImage?: string;
   };
-  status: string; // Simplified to just 'applied' since we don't have detailed status tracking
+  status: ApplicationStatus;
   createdAt: string;
   updatedAt: string;
 }

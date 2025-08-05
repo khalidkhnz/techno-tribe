@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRecruiterDashboard } from "@/hooks/use-api";
 import { RecruiterDashboard as RecruiterDashboardType } from "@/types/dashboard";
-
+import { ApplicationStatus } from "@/types/enums";
 import { 
   Briefcase, 
   Users, 
@@ -57,13 +57,17 @@ export default function RecruiterDashboard() {
     );
   };
 
-  const getApplicationStatusBadge = (status: string) => {
-    // Simplified status handling since we only have 'applied' status
+  const getApplicationStatusBadge = (status: ApplicationStatus) => {
     const statusConfig = {
-      applied: { variant: "secondary" as const, label: "Applied", icon: FileText },
+      [ApplicationStatus.APPLIED]: { variant: "secondary" as const, label: "Applied", icon: FileText },
+      [ApplicationStatus.REVIEWING]: { variant: "default" as const, label: "Reviewing", icon: AlertCircle },
+      [ApplicationStatus.INTERVIEWING]: { variant: "default" as const, label: "Interviewing", icon: PlayCircle },
+      [ApplicationStatus.OFFERED]: { variant: "default" as const, label: "Offered", icon: Award },
+      [ApplicationStatus.REJECTED]: { variant: "destructive" as const, label: "Rejected", icon: XCircle },
+      [ApplicationStatus.WITHDRAWN]: { variant: "outline" as const, label: "Withdrawn", icon: RotateCcw },
     };
     
-    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.applied;
+    const config = statusConfig[status] || statusConfig[ApplicationStatus.APPLIED];
     const Icon = config.icon;
     
     return (

@@ -14,7 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
 import { useDeveloperDashboard } from "@/hooks/use-api";
 import { DeveloperDashboard as DeveloperDashboardType } from "@/types/dashboard";
-
+import { ApplicationStatus } from "@/types/enums";
 import { 
   Briefcase, 
   Calendar, 
@@ -41,13 +41,17 @@ export default function DashboardPage() {
   const { data: dashboardData, isLoading, error } = useDeveloperDashboard();
   const dashboard = dashboardData?.data as DeveloperDashboardType;
 
-  const getStatusBadge = (status: string) => {
-    // Simplified status handling since we only have 'applied' status
+  const getStatusBadge = (status: ApplicationStatus) => {
     const statusConfig = {
-      applied: { variant: "secondary" as const, label: "Applied", icon: FileText },
+      [ApplicationStatus.APPLIED]: { variant: "secondary" as const, label: "Applied", icon: FileText },
+      [ApplicationStatus.REVIEWING]: { variant: "default" as const, label: "Reviewing", icon: AlertCircle },
+      [ApplicationStatus.INTERVIEWING]: { variant: "default" as const, label: "Interviewing", icon: PlayCircle },
+      [ApplicationStatus.OFFERED]: { variant: "default" as const, label: "Offered", icon: Award },
+      [ApplicationStatus.REJECTED]: { variant: "destructive" as const, label: "Rejected", icon: XCircle },
+      [ApplicationStatus.WITHDRAWN]: { variant: "outline" as const, label: "Withdrawn", icon: RotateCcw },
     };
     
-    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.applied;
+    const config = statusConfig[status] || statusConfig[ApplicationStatus.APPLIED];
     const Icon = config.icon;
     
     return (
@@ -246,7 +250,7 @@ export default function DashboardPage() {
               <CardTitle>Quick Actions</CardTitle>
               <CardDescription>Get started with common tasks</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-2 flex flex-col">
               <Link href={FRONTEND_ROUTES.JOBS}>
                 <Button className="w-full justify-start">
                   <Briefcase className="mr-2 h-4 w-4" />
@@ -284,7 +288,10 @@ export default function DashboardPage() {
                 dashboard.recentApplications.slice(0, 3).map((application) => (
                   <div key={application._id} className="flex items-center space-x-4">
                     <div className={`w-2 h-2 rounded-full ${
-                      application.status === 'applied' ? 'bg-yellow-500' : 'bg-gray-500'
+                      application.status === ApplicationStatus.OFFERED ? 'bg-green-500' :
+                      application.status === ApplicationStatus.REJECTED ? 'bg-red-500' :
+                      application.status === ApplicationStatus.REVIEWING || application.status === ApplicationStatus.INTERVIEWING ? 'bg-blue-500' :
+                      'bg-yellow-500'
                     }`}></div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">
