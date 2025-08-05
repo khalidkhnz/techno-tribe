@@ -23,6 +23,42 @@ export class UsersService {
     private uploadService: UploadService,
   ) {}
 
+
+  async searchUsers(query: string, page: number = 1, limit: number = 10): Promise<{data:User[], totalPages: number, currentPage: number, totalItems: number, limit: number}> {
+    const users = await this.userModel.find({
+      $or: [
+        { firstName: { $regex: query, $options: 'i' } },
+        { lastName: { $regex: query, $options: 'i' } },
+        { email: { $regex: query, $options: 'i' } },
+        { currentCompany: { $regex: query, $options: 'i' } },
+        { currentPosition: { $regex: query, $options: 'i' } },
+      ]
+    })
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .exec();
+
+    const totalItems = await this.userModel.countDocuments({
+      $or: [
+        { firstName: { $regex: query, $options: 'i' } },
+        { lastName: { $regex: query, $options: 'i' } },
+        { email: { $regex: query, $options: 'i' } },
+        { currentCompany: { $regex: query, $options: 'i' } },
+        { currentPosition: { $regex: query, $options: 'i' } },
+      ]
+    });
+
+    const totalPages = Math.ceil(totalItems / limit);
+
+    return {
+      data: users,
+      totalPages,
+      currentPage: page,
+      totalItems,
+      limit
+    };
+  }
+
   generateCustomUrl(firstName: string, lastName: string): string {
     return `${firstName.toLowerCase()}-${lastName.toLowerCase()}-${Date.now()}`;
   }

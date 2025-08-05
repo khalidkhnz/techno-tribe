@@ -9,6 +9,8 @@ import {
   UseGuards,
   Request,
   NotFoundException,
+  Query,
+  BadRequestException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -32,6 +34,21 @@ export class UsersController {
     private readonly usersService: UsersService,
     private readonly uploadService: UploadService,
   ) {}
+
+
+  @Get("search")
+  @ApiOperation({ summary: 'Search users' })
+  @ApiResponse({
+    status: 200,
+    description: 'Users searched successfully',
+    type: [User],
+  })
+  async searchUsers(@Query('query') query: string, @Query('page') page: number = 1, @Query('limit') limit: number = 10) {
+    if(!query) {
+      throw new BadRequestException('Query is required');
+    }
+    return this.usersService.searchUsers(query, page, limit);
+  }
 
   @Get('profile')
   @UseGuards(JwtAuthGuard)

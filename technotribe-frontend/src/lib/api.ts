@@ -93,6 +93,7 @@ export const api = {
     addResume: (data: { fileUrl: string; fileName: string; originalName: string; fileSize: number; mimeType: string; description?: string }) => 
       apiClient.post("/users/add-resume", data),
     deleteResume: (resumeId: string) => apiClient.delete(`/users/resumes/${resumeId}`),
+    searchUsers: (query: string, page: number = 1, limit: number = 10) => apiClient.get(`/users/search`, { params: { query, page, limit } }),
   },
 
   // Job endpoints

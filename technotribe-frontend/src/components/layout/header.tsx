@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -27,9 +27,28 @@ import {
   Plus,
   Menu,
   Briefcase,
+  Loader2,
 } from "lucide-react";
 import { config } from "@/lib/config";
 import FRONTEND_ROUTES from "@/lib/fe-routes";
+import useDebounce from "@/hooks/use-debounce";
+import { useSearchUsers } from "@/hooks/use-api";
+import { useDetectOutsideClick } from "@/hooks/use-detect-outside-click";
+
+interface SearchUser {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  avatar?: string;
+  profileImage?: string;
+  currentPosition?: string;
+  currentCompany?: string;
+  location?: string;
+  customUrl?: string;
+  skills?: string[];
+}
 
 interface HeaderProps {
   onMenuToggle?: () => void;
@@ -48,12 +67,39 @@ export function Header({ onMenuToggle, user: userData }: HeaderProps) {
 
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
+  const [showSearchResults, setShowSearchResults] = useState(false);
+
+  const debouncedSearch = useDebounce(searchQuery, 500);
+
+  const { data: searchResults, isLoading } = useSearchUsers(debouncedSearch, 1, 20);
+
+  const searchRef = useDetectOutsideClick<HTMLDivElement>({
+    callback: () => setShowSearchResults(false),
+    enabled: showSearchResults,
+  });
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`${FRONTEND_ROUTES.JOBS}?search=${encodeURIComponent(searchQuery.trim())}`);
+  };
+
+  const handleSearchFocus = () => {
+    if (searchQuery && searchResults?.data && searchResults.data.length > 0) {
+      setShowSearchResults(true);
     }
+  };
+
+  useEffect(() => {
+    if (searchQuery && searchResults?.data && searchResults.data.length > 0) {
+      setShowSearchResults(true);
+    } else if (!searchQuery || !searchResults?.data || searchResults.data.length === 0) {
+      setShowSearchResults(false);
+    }
+  }, [searchResults, searchQuery]);
+
+  const handleUserClick = (user: SearchUser) => {
+    setShowSearchResults(false);
+    setSearchQuery("");
+    router.push(`/profile/${user.customUrl || user._id}`);
   };
 
   const handleLogout = () => {
@@ -122,15 +168,78 @@ export function Header({ onMenuToggle, user: userData }: HeaderProps) {
         </div>
 
         {/* Center Section - Search */}
-        <div className="hidden flex-1 max-w-md mx-8 lg:block">
+        <div ref={searchRef} className="hidden flex-1 max-w-md mx-8 lg:block">
           <form onSubmit={handleSearch} className="relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Search jobs, companies, skills..."
+              placeholder="Search users, skills..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={handleSearchFocus}
               className="pl-9 bg-white/80 backdrop-blur-sm border-0 shadow-sm"
             />
+            {isLoading && (
+              <div className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground">
+                <Loader2 className="h-4 w-4 animate-spin" />
+              </div>
+            )}
+            
+            {/* Search Results Dropdown */}
+            {showSearchResults && searchResults?.data && searchResults.data.length > 0 && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-80 overflow-y-auto z-50">
+                <div className="p-2">
+                  <div className="text-xs font-medium text-gray-500 mb-2 px-2">
+                    Found {searchResults.data.length} user{searchResults.data.length !== 1 ? 's' : ''}
+                  </div>
+                                     {searchResults.data.map((user: SearchUser) => (
+                    <div
+                      key={user._id}
+                      className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-50 cursor-pointer transition-colors"
+                      onClick={() => handleUserClick(user)}
+                    >
+                      <Avatar className="h-10 w-10">
+                        <AvatarImage src={user.profileImage} alt={`${user.firstName} ${user.lastName}`} />
+                        <AvatarFallback className="text-sm">
+                          {user.firstName?.charAt(0)}{user.lastName?.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-medium text-gray-900 truncate">
+                            {user.firstName} {user.lastName}
+                          </p>
+                          {user.role && (
+                            <Badge variant="outline" className="text-xs">
+                              {user.role}
+                            </Badge>
+                          )}
+                        </div>
+                        {user.currentPosition && (
+                          <p className="text-xs text-gray-500 truncate">
+                            {user.currentPosition}
+                          </p>
+                        )}
+                        {user.location && (
+                          <p className="text-xs text-gray-400 truncate">
+                            📍 {user.location}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* No Results */}
+            {showSearchResults && searchQuery && !isLoading && searchResults && searchResults.data && searchResults.data.length === 0 && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                <div className="p-4 text-center text-gray-500">
+                  <Search className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+                  <p className="text-sm">No users found for "{searchQuery}"</p>
+                </div>
+              </div>
+            )}
           </form>
         </div>
 

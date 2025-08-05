@@ -274,3 +274,13 @@ export const useDashboard = () => {
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
 };
+
+
+export const useSearchUsers = (query: string, page: number = 1, limit: number = 10) => {
+  return useQuery({
+    queryKey: ["search-users", query, page, limit],
+    queryFn: () => api.users.searchUsers(query, page, limit).then(res => res?.data),
+    enabled: !!query,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+  });
+}
