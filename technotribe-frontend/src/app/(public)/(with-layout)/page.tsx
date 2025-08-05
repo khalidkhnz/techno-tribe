@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import {
   Briefcase,
   Users,
@@ -36,141 +37,259 @@ import {
   Calendar,
   BarChart3,
   User,
+  ChevronDown,
+  Play,
+  Pause,
+  Volume2,
+  Github,
+  Twitter,
+  Linkedin,
+  Mail,
+  Phone,
+  MapPinIcon,
+  Send,
+  MousePointer2,
+  Layers,
+  Database,
+  Server,
+  Smartphone,
+  Monitor,
+  Cpu,
+  Brain,
+  Zap as Lightning,
+  Infinity,
+  Eye,
+  Coffee,
+  Cloud,
 } from "lucide-react";
 
 import FRONTEND_ROUTES from "@/lib/fe-routes";
 
+// Floating particles component
+const FloatingParticles = () => {
+  const particles = Array.from({ length: 50 }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    size: Math.random() * 4 + 1,
+    duration: Math.random() * 20 + 10,
+  }));
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {particles.map((particle) => (
+        <motion.div
+          key={particle.id}
+          className="absolute bg-primary/10 rounded-full blur-sm"
+          style={{
+            left: `${particle.x}%`,
+            top: `${particle.y}%`,
+            width: `${particle.size}px`,
+            height: `${particle.size}px`,
+          }}
+          animate={{
+            y: [0, -100, 0],
+            opacity: [0, 1, 0],
+          }}
+          transition={{
+            duration: particle.duration,
+            repeat: 999999,
+            ease: "linear",
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+// Aceternity-style grid background
+const GridBackground = () => {
+  return (
+    <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)] opacity-20" />
+    </div>
+  );
+};
+
+// Aceternity-style spotlight effect
+const Spotlight = ({ className }: { className?: string }) => {
+  return (
+    <div
+      className={`absolute inset-0 bg-gradient-to-r from-transparent via-primary/20 to-transparent blur-3xl ${className}`}
+    />
+  );
+};
+
+// Animated number counter
+const AnimatedCounter = ({ value, duration = 2 }: { value: string; duration?: number }) => {
+  const [count, setCount] = useState(0);
+  const finalValue = parseInt(value.replace(/[^0-9]/g, '')) || 0;
+
+  useEffect(() => {
+    let startTime: number;
+    let animationFrame: number;
+
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
+      
+      setCount(Math.floor(progress * finalValue));
+      
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(animate);
+      }
+    };
+
+    animationFrame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrame);
+  }, [finalValue, duration]);
+
+  return <span>{value.includes('+') ? `${count}+` : value.includes('%') ? `${count}%` : count}</span>;
+};
+
+// Modern tech stack icons (unused for now but kept for future use)
+// const techStack = [
+//   { name: "React", icon: Code, color: "text-blue-500" },
+//   { name: "Node.js", icon: Server, color: "text-green-500" },
+//   { name: "Python", icon: Code, color: "text-yellow-500" },
+//   { name: "TypeScript", icon: Code, color: "text-blue-600" },
+//   { name: "MongoDB", icon: Database, color: "text-green-600" },
+//   { name: "Docker", icon: Layers, color: "text-blue-400" },
+//   { name: "AWS", icon: Cloud, color: "text-orange-500" },
+//   { name: "GraphQL", icon: Zap, color: "text-pink-500" },
+// ];
+
 const features = [
   {
-    icon: Zap,
+    icon: Brain,
     title: "AI-Powered Matching",
-    description:
-      "Our advanced AI matches the perfect candidates with your job requirements in seconds.",
-    color: "from-blue-500 to-cyan-500",
+    description: "Advanced machine learning algorithms match developers with perfect opportunities based on skills, experience, and preferences.",
+    gradient: "from-blue-500 via-purple-500 to-pink-500",
   },
   {
     icon: Shield,
     title: "Verified Profiles",
-    description:
-      "All developers and recruiters are thoroughly verified for your peace of mind.",
-    color: "from-green-500 to-emerald-500",
+    description: "Every developer and company profile is thoroughly verified through our multi-step authentication process.",
+    gradient: "from-green-500 via-teal-500 to-blue-500",
   },
   {
-    icon: Clock,
-    title: "Quick Hiring",
-    description:
-      "Reduce time-to-hire by up to 70% with our streamlined recruitment process.",
-    color: "from-purple-500 to-pink-500",
+    icon: Lightning,
+    title: "Instant Connections",
+    description: "Connect with potential matches instantly through our real-time messaging and video interview platform.",
+    gradient: "from-yellow-500 via-orange-500 to-red-500",
   },
   {
     icon: Globe,
-    title: "Global Talent Pool",
-    description:
-      "Access developers from around the world with diverse skills and experience.",
-    color: "from-orange-500 to-red-500",
+    title: "Global Network",
+    description: "Access a worldwide network of top-tier developers and innovative companies across all time zones.",
+    gradient: "from-purple-500 via-pink-500 to-rose-500",
   },
 ];
 
 const stats = [
-  { number: "10,000+", label: "Active Developers", icon: Users, delay: 0.1 },
-  { number: "500+", label: "Companies", icon: Building2, delay: 0.2 },
-  { number: "95%", label: "Success Rate", icon: TrendingUp, delay: 0.3 },
-  { number: "24/7", label: "Support", icon: Clock, delay: 0.4 },
+  { number: "50,000+", label: "Active Developers", icon: Users },
+  { number: "2,500+", label: "Companies", icon: Building2 },
+  { number: "98%", label: "Success Rate", icon: TrendingUp },
+  { number: "24/7", label: "Support", icon: Clock },
 ];
 
 const testimonials = [
   {
-    name: "Sarah Johnson",
+    name: "Sarah Chen",
+    role: "Engineering Director at Meta",
+    content: "TechnoTribe revolutionized our hiring process. We found exceptional talent 3x faster than traditional methods.",
+    rating: 5,
+    avatar: "SC",
+    company: "Meta",
+  },
+  {
+    name: "Alex Rodriguez",
+    role: "Senior Full-Stack Developer",
+    content: "Found my dream role at a unicorn startup through TechnoTribe. The AI matching was incredibly accurate!",
+    rating: 5,
+    avatar: "AR",
+    company: "Stripe",
+  },
+  {
+    name: "Emily Johnson",
     role: "CTO at TechCorp",
-    content:
-      "TechnoTribe helped us find exceptional developers in record time. The AI matching is incredible!",
+    content: "The quality of developers on TechnoTribe is unmatched. Every candidate was pre-screened and interview-ready.",
     rating: 5,
-    avatar: "SJ",
-  },
-  {
-    name: "Michael Chen",
-    role: "Senior Developer",
-    content:
-      "Found my dream job through TechnoTribe. The platform is intuitive and the opportunities are amazing.",
-    rating: 5,
-    avatar: "MC",
-  },
-  {
-    name: "Emily Rodriguez",
-    role: "HR Director at StartupXYZ",
-    content:
-      "The quality of candidates we receive is outstanding. Highly recommend for any company hiring developers.",
-    rating: 5,
-    avatar: "ER",
+    avatar: "EJ",
+    company: "TechCorp",
   },
 ];
 
 const jobCategories = [
   {
     title: "Frontend Development",
-    count: 234,
-    icon: Code,
-    color: "from-blue-500 to-cyan-500",
+    count: 1234,
+    icon: Monitor,
+    description: "React, Vue, Angular, Next.js",
+    gradient: "from-blue-500 to-cyan-500",
   },
   {
     title: "Backend Development",
-    count: 189,
-    icon: Code,
-    color: "from-green-500 to-emerald-500",
+    count: 987,
+    icon: Server,
+    description: "Node.js, Python, Java, Go",
+    gradient: "from-green-500 to-emerald-500",
   },
   {
     title: "Full Stack Development",
-    count: 156,
-    icon: Code,
-    color: "from-purple-500 to-pink-500",
-  },
-  {
-    title: "DevOps Engineering",
-    count: 98,
-    icon: Code,
-    color: "from-orange-500 to-red-500",
+    count: 756,
+    icon: Layers,
+    description: "MERN, MEAN, Django, Rails",
+    gradient: "from-purple-500 to-pink-500",
   },
   {
     title: "Mobile Development",
-    count: 145,
-    icon: Code,
-    color: "from-indigo-500 to-blue-500",
+    count: 543,
+    icon: Smartphone,
+    description: "React Native, Flutter, Swift",
+    gradient: "from-orange-500 to-red-500",
   },
   {
-    title: "Data Science",
-    count: 87,
-    icon: Code,
-    color: "from-teal-500 to-green-500",
+    title: "DevOps Engineering",
+    count: 432,
+    icon: Cpu,
+    description: "AWS, Docker, Kubernetes, CI/CD",
+    gradient: "from-indigo-500 to-blue-500",
+  },
+  {
+    title: "AI/ML Engineering",
+    count: 321,
+    icon: Brain,
+    description: "TensorFlow, PyTorch, OpenAI",
+    gradient: "from-teal-500 to-green-500",
   },
 ];
 
 const howItWorks = [
   {
-    step: "1",
+    step: "01",
     title: "Create Your Profile",
-    description:
-      "Sign up as a developer or recruiter and build your comprehensive profile with skills, experience, and preferences.",
+    description: "Build a comprehensive profile showcasing your skills, experience, and career aspirations with our AI-powered profile builder.",
     icon: User,
-    color: "from-blue-500 to-cyan-500",
+    gradient: "from-blue-500 to-cyan-500",
   },
   {
-    step: "2",
+    step: "02",
     title: "AI Matching",
-    description:
-      "Our advanced AI analyzes profiles and requirements to find the perfect matches with high accuracy.",
-    icon: Target,
-    color: "from-purple-500 to-pink-500",
+    description: "Our advanced AI analyzes thousands of data points to match you with the perfect opportunities or candidates.",
+    icon: Brain,
+    gradient: "from-purple-500 to-pink-500",
   },
   {
-    step: "3",
-    title: "Connect & Hire",
-    description:
-      "Start conversations, schedule interviews, and make hiring decisions with confidence.",
+    step: "03",
+    title: "Connect & Interview",
+    description: "Start meaningful conversations, schedule interviews, and make hiring decisions with confidence using our platform.",
     icon: MessageCircle,
-    color: "from-green-500 to-emerald-500",
+    gradient: "from-green-500 to-emerald-500",
   },
 ];
 
+// Animation variants
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -183,9 +302,22 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut" as const,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, scale: 0.9, y: 20 },
+  visible: {
+    opacity: 1,
+    scale: 1,
     y: 0,
     transition: {
       duration: 0.5,
@@ -194,238 +326,229 @@ const itemVariants = {
   },
 };
 
-const cardVariants = {
-  hidden: { opacity: 0, scale: 0.8 },
+const slideInVariants = {
+  hidden: { opacity: 0, x: -50 },
   visible: {
     opacity: 1,
-    scale: 1,
+    x: 0,
     transition: {
-      duration: 0.5,
+      duration: 0.8,
       ease: "easeOut" as const,
     },
   },
 };
 
-const floatingVariants = {
-  animate: {
-    y: [-10, 10, -10],
+const fadeInUpVariants = {
+  hidden: { opacity: 0, y: 60 },
+  visible: {
+    opacity: 1,
+    y: 0,
     transition: {
-      duration: 3,
-      repeat: Infinity,
-      ease: "easeInOut" as const,
+      duration: 0.8,
+      ease: "easeOut" as const,
     },
   },
 };
 
 export default function HomePage() {
+  const { scrollY } = useScroll();
+  const y1 = useTransform(scrollY, [0, 300], [0, 50]);
+  const y2 = useTransform(scrollY, [0, 300], [0, -50]);
+
   return (
     <>
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary/90 to-primary/80 text-primary-foreground">
-        <div className="absolute inset-0 bg-black/10"></div>
-
-        {/* Animated Background Elements */}
-        <motion.div
-          className="absolute top-20 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.6, 0.3],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute top-40 right-20 w-32 h-32 bg-white/5 rounded-full blur-2xl"
-          animate={{
-            scale: [1, 1.5, 1],
-            opacity: [0.2, 0.4, 0.2],
-          }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          }}
-        />
-
-        <div className="relative container mx-auto px-4 py-24 lg:py-32">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-muted/30">
+        <GridBackground />
+        <FloatingParticles />
+        
+        {/* Spotlight Effects */}
+        <Spotlight className="top-40 left-0 w-[50vw] h-[40vh]" />
+        <Spotlight className="top-10 right-0 w-[50vw] h-[40vh]" />
+        
+        <div className="relative z-10 container mx-auto px-4 py-20">
           <motion.div
-            className="max-w-4xl mx-auto text-center"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            className="max-w-6xl mx-auto text-center"
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
           >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-            >
+            <motion.div variants={itemVariants}>
               <Badge
-                variant="secondary"
-                className="mb-6 text-primary bg-background/90 backdrop-blur-sm"
+                variant="outline"
+                className="mb-6 text-primary bg-primary/5 border-primary/20 backdrop-blur-sm"
               >
                 <Sparkles className="w-4 h-4 mr-2" />
-                Trusted by 500+ Companies Worldwide
+                Trusted by 2,500+ Companies Worldwide
               </Badge>
             </motion.div>
 
             <motion.h1
-              className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
+              className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight"
+              variants={fadeInUpVariants}
             >
-              Connect with the Best
-              <span className="block text-primary-foreground/80">
-                Developer Talent
+              <span className="bg-gradient-to-r from-primary via-primary/80 to-accent bg-clip-text text-transparent">
+                Connect
+              </span>{" "}
+              with the{" "}
+              <span className="bg-gradient-to-r from-accent via-secondary to-primary bg-clip-text text-transparent">
+                Future
               </span>
+              <br />
+              <span className="text-foreground/80">of Developer Talent</span>
             </motion.h1>
 
             <motion.p
-              className="text-xl md:text-2xl mb-8 text-primary-foreground/90 max-w-3xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
+              className="text-xl md:text-2xl mb-12 text-muted-foreground max-w-4xl mx-auto leading-relaxed"
+              variants={fadeInUpVariants}
             >
-              AI-powered platform connecting exceptional developers with
-              innovative companies. Find your next opportunity or hire the
-              perfect talent.
+              Revolutionary AI-powered platform that connects exceptional developers 
+              with innovative companies. Experience the next generation of tech recruitment.
             </motion.p>
 
             <motion.div
-              className="flex flex-col sm:flex-row gap-4 justify-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
+              className="flex flex-col sm:flex-row gap-6 justify-center mb-16"
+              variants={fadeInUpVariants}
             >
               <motion.div
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
+                className="group"
               >
                 <Link href={FRONTEND_ROUTES.SIGNUP}>
                   <Button
                     size="lg"
-                    className="bg-background text-primary hover:bg-background/90 px-8 py-3 shadow-lg"
+                    className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground px-10 py-4 text-lg shadow-xl shadow-primary/25 group-hover:shadow-2xl group-hover:shadow-primary/40 transition-all duration-300"
                   >
-                    <Briefcase className="mr-2 h-5 w-5" />
-                    Post a Job
+                    <Rocket className="mr-3 h-6 w-6" />
+                    Start Your Journey
+                    <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
               </motion.div>
 
               <motion.div
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
+                className="group"
               >
                 <Link href={FRONTEND_ROUTES.JOBS}>
                   <Button
                     size="lg"
                     variant="outline"
-                    className="text-primary dark:text-background px-8 py-3"
+                    className="border-2 border-primary text-primary hover:bg-primary/5 px-10 py-4 text-lg backdrop-blur-sm"
                   >
-                    <Users className="mr-2 h-5 w-5" />
-                    Browse Jobs
+                    <Eye className="mr-3 h-6 w-6" />
+                    Explore Opportunities
                   </Button>
                 </Link>
               </motion.div>
             </motion.div>
-          </motion.div>
-        </div>
 
-        {/* Stats Bar */}
-        <motion.div
-          className="bg-background/10 backdrop-blur-sm border-t border-background/20"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.8 }}
-        >
-          <div className="container mx-auto px-4 py-6">
+            {/* Animated Stats */}
             <motion.div
-              className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
+              className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
               variants={containerVariants}
-              initial="hidden"
-              animate="visible"
             >
               {stats.map((stat, index) => (
                 <motion.div
                   key={index}
-                  className="flex flex-col items-center"
+                  className="text-center group"
                   variants={itemVariants}
                   whileHover={{ scale: 1.05 }}
                 >
                   <motion.div
-                    variants={floatingVariants}
-                    animate="animate"
-                    style={{ animationDelay: `${stat.delay}s` }}
+                    className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl flex items-center justify-center group-hover:from-primary/20 group-hover:to-accent/20 transition-all duration-300"
+                    whileHover={{ rotate: 360 }}
+                    transition={{ duration: 0.6 }}
                   >
-                    <stat.icon className="h-8 w-8 mb-2 text-primary-foreground/80" />
+                    <stat.icon className="h-8 w-8 text-primary" />
                   </motion.div>
-                  <div className="text-2xl font-bold">{stat.number}</div>
-                  <div className="text-sm text-primary-foreground/70">
+                  <div className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+                    <AnimatedCounter value={stat.number} />
+                  </div>
+                  <div className="text-sm text-muted-foreground font-medium">
                     {stat.label}
                   </div>
                 </motion.div>
               ))}
             </motion.div>
-          </div>
+          </motion.div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <motion.div
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: 999999 }}
+        >
+          <ChevronDown className="h-8 w-8 text-muted-foreground" />
         </motion.div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4">
+      <section className="py-32 bg-background relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-muted/5 to-transparent" />
+        
+        <div className="container mx-auto px-4 relative z-10">
           <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+            className="text-center mb-20"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={containerVariants}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Why Choose TechnoTribe?
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              We&apos;ve built the most advanced developer recruitment platform with
-              cutting-edge technology and a focus on user experience.
-            </p>
+            <motion.h2
+              className="text-4xl md:text-6xl font-bold mb-6"
+              variants={fadeInUpVariants}
+            >
+              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                Revolutionary
+              </span>{" "}
+              Features
+            </motion.h2>
+            <motion.p
+              className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed"
+              variants={fadeInUpVariants}
+            >
+              Experience the next generation of developer recruitment with cutting-edge AI technology 
+              and seamless user experience designed for modern professionals.
+            </motion.p>
           </motion.div>
 
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+            className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
           >
             {features.map((feature, index) => (
               <motion.div
                 key={index}
                 variants={cardVariants}
                 whileHover={{
-                  scale: 1.05,
-                  transition: { duration: 0.2 },
+                  scale: 1.02,
+                  y: -5,
+                  transition: { duration: 0.3 },
                 }}
+                className="group"
               >
-                <Card className="text-center border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-card">
-                  <CardHeader>
+                <Card className="p-8 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/20 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10">
+                  <CardContent className="p-0">
                     <motion.div
-                      className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg`}
+                      className={`w-20 h-20 bg-gradient-to-r ${feature.gradient} rounded-3xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
                       whileHover={{ rotate: 360 }}
-                      transition={{ duration: 0.6 }}
+                      transition={{ duration: 0.8 }}
                     >
-                      <feature.icon className="h-8 w-8 text-white" />
+                      <feature.icon className="h-10 w-10 text-white" />
                     </motion.div>
-                    <CardTitle className="text-xl text-foreground">
+                    <h3 className="text-2xl font-bold mb-4 text-foreground group-hover:text-primary transition-colors">
                       {feature.title}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-base text-muted-foreground">
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed text-lg">
                       {feature.description}
-                    </CardDescription>
+                    </p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -435,49 +558,64 @@ export default function HomePage() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 bg-muted/30">
+      <section className="py-32 bg-gradient-to-b from-muted/20 to-background relative overflow-hidden">
         <div className="container mx-auto px-4">
           <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+            className="text-center mb-20"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={containerVariants}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              How It Works
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              Simple steps to find your perfect match
-            </p>
+            <motion.h2
+              className="text-4xl md:text-6xl font-bold mb-6 text-foreground"
+              variants={fadeInUpVariants}
+            >
+              How It <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Works</span>
+            </motion.h2>
+            <motion.p
+              className="text-xl text-muted-foreground max-w-3xl mx-auto"
+              variants={fadeInUpVariants}
+            >
+              Three simple steps to revolutionize your career or hiring process
+            </motion.p>
           </motion.div>
 
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+            className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl mx-auto"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
           >
             {howItWorks.map((step, index) => (
               <motion.div
                 key={index}
-                className="text-center"
+                className="relative text-center group"
                 variants={itemVariants}
                 whileHover={{ y: -10 }}
                 transition={{ duration: 0.3 }}
               >
                 <motion.div
-                  className={`w-20 h-20 bg-gradient-to-r ${step.color} rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg`}
-                  whileHover={{ scale: 1.1, rotate: 360 }}
-                  transition={{ duration: 0.6 }}
+                  className="relative mb-8"
                 >
-                  <step.icon className="h-8 w-8 text-white" />
+                  <motion.div
+                    className={`w-24 h-24 bg-gradient-to-r ${step.gradient} rounded-3xl flex items-center justify-center mx-auto shadow-2xl group-hover:scale-110 transition-transform duration-300`}
+                    whileHover={{ rotate: 360 }}
+                    transition={{ duration: 0.8 }}
+                  >
+                    <step.icon className="h-12 w-12 text-white" />
+                  </motion.div>
+                  <div className="absolute -top-4 -right-4 w-12 h-12 bg-foreground text-background rounded-full flex items-center justify-center text-lg font-bold shadow-lg">
+                    {step.step}
+                  </div>
                 </motion.div>
-                <h3 className="text-xl font-semibold mb-4 text-foreground">
+                <h3 className="text-2xl font-bold mb-4 text-foreground group-hover:text-primary transition-colors">
                   {step.title}
                 </h3>
-                <p className="text-muted-foreground">{step.description}</p>
+                <p className="text-muted-foreground leading-relaxed text-lg">
+                  {step.description}
+                </p>
               </motion.div>
             ))}
           </motion.div>
@@ -485,67 +623,73 @@ export default function HomePage() {
       </section>
 
       {/* Job Categories Section */}
-      <section className="py-20 bg-background">
+      <section className="py-32 bg-background">
         <div className="container mx-auto px-4">
           <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+            className="text-center mb-20"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={containerVariants}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Popular Job Categories
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              Find opportunities in your area of expertise
-            </p>
+            <motion.h2
+              className="text-4xl md:text-6xl font-bold mb-6"
+              variants={fadeInUpVariants}
+            >
+              Popular <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Categories</span>
+            </motion.h2>
+            <motion.p
+              className="text-xl text-muted-foreground max-w-3xl mx-auto"
+              variants={fadeInUpVariants}
+            >
+              Discover opportunities across the most in-demand tech specializations
+            </motion.p>
           </motion.div>
 
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
           >
             {jobCategories.map((category, index) => (
               <motion.div
                 key={index}
                 variants={cardVariants}
                 whileHover={{
-                  scale: 1.02,
-                  y: -5,
-                  transition: { duration: 0.2 },
+                  scale: 1.03,
+                  y: -8,
+                  transition: { duration: 0.3 },
                 }}
+                className="group cursor-pointer"
               >
-                <Card className="hover:shadow-lg transition-all duration-300 cursor-pointer group bg-card border-border">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <motion.div
-                          className={`w-12 h-12 bg-gradient-to-r ${category.color} rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
-                          whileHover={{ rotate: 360 }}
-                          transition={{ duration: 0.6 }}
-                        >
-                          <category.icon className="h-6 w-6 text-white" />
-                        </motion.div>
-                        <div>
-                          <h3 className="font-semibold text-lg text-foreground">
-                            {category.title}
-                          </h3>
-                          <p className="text-muted-foreground">
-                            {category.count} jobs available
-                          </p>
-                        </div>
-                      </div>
+                <Card className="p-6 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5">
+                  <CardContent className="p-0">
+                    <div className="flex items-center justify-between mb-4">
+                      <motion.div
+                        className={`w-16 h-16 bg-gradient-to-r ${category.gradient} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg`}
+                        whileHover={{ rotate: 360 }}
+                        transition={{ duration: 0.6 }}
+                      >
+                        <category.icon className="h-8 w-8 text-white" />
+                      </motion.div>
                       <motion.div
                         whileHover={{ x: 5 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                        <ArrowRight className="h-6 w-6 text-muted-foreground group-hover:text-primary transition-colors" />
                       </motion.div>
                     </div>
+                    <h3 className="text-xl font-bold mb-2 text-foreground group-hover:text-primary transition-colors">
+                      {category.title}
+                    </h3>
+                    <p className="text-muted-foreground mb-3 text-sm">
+                      {category.description}
+                    </p>
+                    <p className="text-primary font-semibold">
+                      <AnimatedCounter value={category.count.toString()} /> jobs available
+                    </p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -553,16 +697,16 @@ export default function HomePage() {
           </motion.div>
 
           <motion.div
-            className="text-center mt-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            className="text-center mt-16"
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true }}
+            variants={fadeInUpVariants}
           >
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link href={FRONTEND_ROUTES.JOBS}>
-                <Button size="lg" className="bg-primary hover:bg-primary/90">
-                  View All Jobs
+                <Button size="lg" className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground px-8 py-4 text-lg shadow-xl">
+                  Explore All Opportunities
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
@@ -572,40 +716,47 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 bg-muted/30">
+      <section className="py-32 bg-gradient-to-b from-muted/10 to-background relative overflow-hidden">
         <div className="container mx-auto px-4">
           <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+            className="text-center mb-20"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={containerVariants}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              What Our Users Say
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              Join thousands of satisfied developers and recruiters
-            </p>
+            <motion.h2
+              className="text-4xl md:text-6xl font-bold mb-6"
+              variants={fadeInUpVariants}
+            >
+              Success <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Stories</span>
+            </motion.h2>
+            <motion.p
+              className="text-xl text-muted-foreground max-w-3xl mx-auto"
+              variants={fadeInUpVariants}
+            >
+              Join thousands of satisfied professionals who transformed their careers with TechnoTribe
+            </motion.p>
           </motion.div>
 
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
           >
             {testimonials.map((testimonial, index) => (
               <motion.div
                 key={index}
                 variants={cardVariants}
-                whileHover={{ y: -10 }}
+                whileHover={{ y: -10, scale: 1.02 }}
                 transition={{ duration: 0.3 }}
+                className="group"
               >
-                <Card className="shadow-lg bg-card border-border">
-                  <CardContent className="p-6">
-                    <div className="flex items-center mb-4">
+                <Card className="p-8 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/20 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5">
+                  <CardContent className="p-0">
+                    <div className="flex items-center mb-6">
                       {[...Array(testimonial.rating)].map((_, i) => (
                         <motion.div
                           key={i}
@@ -618,19 +769,26 @@ export default function HomePage() {
                         </motion.div>
                       ))}
                     </div>
-                    <p className="text-foreground mb-4 italic">
+                    <p className="text-foreground mb-6 text-lg leading-relaxed italic">
                       "{testimonial.content}"
                     </p>
                     <div className="flex items-center">
-                      <div className="w-12 h-12 bg-gradient-to-r from-primary to-primary/80 rounded-full flex items-center justify-center mr-4 text-white font-semibold">
+                      <motion.div
+                        className="w-16 h-16 bg-gradient-to-r from-primary to-accent rounded-2xl flex items-center justify-center mr-4 text-white font-bold text-lg shadow-lg group-hover:scale-110 transition-transform duration-300"
+                        whileHover={{ rotate: 360 }}
+                        transition={{ duration: 0.6 }}
+                      >
                         {testimonial.avatar}
-                      </div>
+                      </motion.div>
                       <div>
-                        <h4 className="font-semibold text-foreground">
+                        <h4 className="font-bold text-foreground text-lg">
                           {testimonial.name}
                         </h4>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-muted-foreground">
                           {testimonial.role}
+                        </p>
+                        <p className="text-primary font-semibold text-sm">
+                          {testimonial.company}
                         </p>
                       </div>
                     </div>
@@ -643,196 +801,173 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-primary via-primary/90 to-primary/80 text-primary-foreground relative overflow-hidden">
-        {/* Animated Background Elements */}
-        <motion.div
-          className="absolute top-10 left-10 w-32 h-32 bg-white/5 rounded-full blur-2xl"
-          animate={{
-            scale: [1, 1.3, 1],
-            opacity: [0.2, 0.4, 0.2],
-          }}
-          transition={{
-            duration: 5,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute bottom-10 right-10 w-24 h-24 bg-white/5 rounded-full blur-xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.6, 0.3],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 2,
-          }}
-        />
-
+      <section className="py-32 bg-gradient-to-br from-primary via-primary/90 to-accent text-primary-foreground relative overflow-hidden">
+        <GridBackground />
+        <FloatingParticles />
+        
+        {/* Spotlight Effects */}
+        <Spotlight className="top-0 left-0 w-full h-full" />
+        
         <div className="container mx-auto px-4 text-center relative z-10">
-          <motion.h2
-            className="text-3xl md:text-4xl font-bold mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            Ready to Get Started?
-          </motion.h2>
-          <motion.p
-            className="text-xl mb-8 text-primary-foreground/90 max-w-2xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            Join thousands of developers and companies who have already found
-            their perfect match on TechnoTribe.
-          </motion.p>
           <motion.div
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true }}
+            variants={containerVariants}
+            className="max-w-4xl mx-auto"
           >
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link href={FRONTEND_ROUTES.SIGNUP}>
-                <Button
-                  size="lg"
-                  className="bg-background text-primary hover:bg-background/90 px-8 py-3 shadow-lg"
-                >
-                  <Briefcase className="mr-2 h-5 w-5" />
-                  Start Hiring
-                </Button>
-              </Link>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link href={FRONTEND_ROUTES.SIGNUP}>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-background text-primary dark:text-background hover:bg-background hover:text-primary px-8 py-3"
-                >
-                  <Users className="mr-2 h-5 w-5" />
-                  Find Jobs
-                </Button>
-              </Link>
+            <motion.h2
+              className="text-5xl md:text-7xl font-bold mb-8"
+              variants={fadeInUpVariants}
+            >
+              Ready to Transform Your
+              <span className="block text-primary-foreground/80">Career Journey?</span>
+            </motion.h2>
+            <motion.p
+              className="text-xl md:text-2xl mb-12 text-primary-foreground/90 leading-relaxed"
+              variants={fadeInUpVariants}
+            >
+              Join the revolution in tech recruitment. Connect with your perfect match today 
+              and experience the future of professional networking.
+            </motion.p>
+            <motion.div
+              className="flex flex-col sm:flex-row gap-6 justify-center"
+              variants={fadeInUpVariants}
+            >
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Link href={FRONTEND_ROUTES.SIGNUP}>
+                  <Button
+                    size="lg"
+                    className="bg-background text-primary hover:bg-background/90 px-10 py-4 text-lg shadow-2xl font-semibold"
+                  >
+                    <Rocket className="mr-3 h-6 w-6" />
+                    Start Your Journey
+                  </Button>
+                </Link>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Link href={FRONTEND_ROUTES.JOBS}>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="border-2 border-background text-background hover:bg-background/10 px-10 py-4 text-lg backdrop-blur-sm font-semibold"
+                  >
+                    <Eye className="mr-3 h-6 w-6" />
+                    Explore Opportunities
+                  </Button>
+                </Link>
+              </motion.div>
             </motion.div>
           </motion.div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-card border-t border-border py-12">
+      <footer className="bg-card/50 backdrop-blur-sm border-t border-border/50 py-16">
         <div className="container mx-auto px-4">
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-4 gap-8"
+            className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
           >
-            <motion.div variants={itemVariants}>
-              <div className="flex items-center gap-2 mb-4">
+            <motion.div variants={itemVariants} className="md:col-span-2">
+              <div className="flex items-center gap-3 mb-6">
                 <motion.div
-                  className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center"
-                  whileHover={{ rotate: 360 }}
+                  className="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-2xl flex items-center justify-center shadow-lg"
+                  whileHover={{ rotate: 360, scale: 1.1 }}
                   transition={{ duration: 0.6 }}
                 >
-                  <Briefcase className="h-4 w-4 text-primary-foreground" />
+                  <Briefcase className="h-6 w-6 text-white" />
                 </motion.div>
-                <span className="text-xl font-bold text-foreground">
+                <span className="text-2xl font-bold text-foreground">
                   TechnoTribe
                 </span>
               </div>
-              <p className="text-muted-foreground mb-4">
-                Connecting exceptional developers with innovative companies
-                through AI-powered matching.
+              <p className="text-muted-foreground mb-6 text-lg leading-relaxed max-w-md">
+                Revolutionizing the way exceptional developers connect with innovative companies 
+                through cutting-edge AI technology and seamless user experience.
               </p>
+              <div className="flex space-x-4">
+                {[Twitter, Linkedin, Github].map((Icon, index) => (
+                  <motion.div
+                    key={index}
+                    whileHover={{ scale: 1.2, y: -2 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary">
+                      <Icon className="h-5 w-5" />
+                    </Button>
+                  </motion.div>
+                ))}
+              </div>
             </motion.div>
 
             <motion.div variants={itemVariants}>
-              <h3 className="font-semibold mb-4 text-foreground">
+              <h3 className="font-bold mb-6 text-foreground text-lg">
                 For Developers
               </h3>
-              <ul className="space-y-2 text-muted-foreground">
-                <li>
-                  <Link
-                    href={FRONTEND_ROUTES.JOBS}
-                    className="hover:text-foreground transition-colors"
-                  >
-                    Browse Jobs
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href={FRONTEND_ROUTES.SIGNUP}
-                    className="hover:text-foreground transition-colors"
-                  >
-                    Create Profile
-                  </Link>
-                </li>
+              <ul className="space-y-3 text-muted-foreground">
+                {[
+                  { label: "Browse Jobs", href: FRONTEND_ROUTES.JOBS },
+                  { label: "Create Profile", href: FRONTEND_ROUTES.SIGNUP },
+                  { label: "Career Resources", href: "#" },
+                  { label: "Success Stories", href: "#" },
+                ].map((item, index) => (
+                  <li key={index}>
+                    <Link
+                      href={item.href}
+                      className="hover:text-primary transition-colors duration-200 flex items-center group"
+                    >
+                      <ArrowRight className="h-4 w-4 mr-2 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </motion.div>
 
             <motion.div variants={itemVariants}>
-              <h3 className="font-semibold mb-4 text-foreground">
-                For Recruiters
+              <h3 className="font-bold mb-6 text-foreground text-lg">
+                For Companies
               </h3>
-              <ul className="space-y-2 text-muted-foreground">
-                <li>
-                  <Link
-                    href={FRONTEND_ROUTES.SIGNUP}
-                    className="hover:text-foreground transition-colors"
-                  >
-                    Post Jobs
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href={FRONTEND_ROUTES.RECRUITER.JOBS.BASE}
-                    className="hover:text-foreground transition-colors"
-                  >
-                    Manage Jobs
-                  </Link>
-                </li>
-              </ul>
-            </motion.div>
-
-            <motion.div variants={itemVariants}>
-              <h3 className="font-semibold mb-4 text-foreground">Company</h3>
-              <ul className="space-y-2 text-muted-foreground">
-                <li>
-                  <Link
-                    href={FRONTEND_ROUTES.ABOUT}
-                    className="hover:text-foreground transition-colors"
-                  >
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href={FRONTEND_ROUTES.CONTACT}
-                    className="hover:text-foreground transition-colors"
-                  >
-                    Contact
-                  </Link>
-                </li>
+              <ul className="space-y-3 text-muted-foreground">
+                {[
+                  { label: "Post Jobs", href: FRONTEND_ROUTES.SIGNUP },
+                  { label: "Find Talent", href: FRONTEND_ROUTES.JOBS },
+                  { label: "Pricing", href: "#" },
+                  { label: "Enterprise", href: "#" },
+                ].map((item, index) => (
+                  <li key={index}>
+                    <Link
+                      href={item.href}
+                      className="hover:text-primary transition-colors duration-200 flex items-center group"
+                    >
+                      <ArrowRight className="h-4 w-4 mr-2 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </motion.div>
           </motion.div>
 
           <motion.div
-            className="border-t border-border mt-8 pt-8 text-center text-muted-foreground"
+            className="border-t border-border/50 pt-8 flex flex-col md:flex-row justify-between items-center"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <p>&copy; 2024 TechnoTribe. All rights reserved.</p>
+            <p className="text-muted-foreground mb-4 md:mb-0">
+              &copy; 2024 TechnoTribe. All rights reserved. Built with ❤️ for the developer community.
+            </p>
+            <div className="flex space-x-6 text-sm text-muted-foreground">
+              <Link href="#" className="hover:text-primary transition-colors">Privacy Policy</Link>
+              <Link href="#" className="hover:text-primary transition-colors">Terms of Service</Link>
+              <Link href={FRONTEND_ROUTES.CONTACT} className="hover:text-primary transition-colors">Contact</Link>
+            </div>
           </motion.div>
         </div>
       </footer>
