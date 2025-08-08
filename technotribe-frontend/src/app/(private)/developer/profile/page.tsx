@@ -442,7 +442,7 @@ export default function DeveloperProfilePage() {
               <div className="space-y-2">
                 <Label htmlFor="customUrl">Custom URL</Label>
                 <div className="flex items-center gap-2">
-                  <span className="text-muted-foreground">technotribe.com/profile/</span>
+                  <span className="text-muted-foreground">TechnoTribes.com/profile/</span>
                   <Input
                     id="customUrl"
                     {...register("customUrl")}

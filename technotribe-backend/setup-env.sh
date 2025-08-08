@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # ===========================================
-# TechnoTribe Backend Environment Setup Script
+# TechnoTribes Backend Environment Setup Script
 # ===========================================
 
-echo "🚀 Setting up TechnoTribe Backend Environment"
+echo "🚀 Setting up TechnoTribes Backend Environment"
 echo "=============================================="
 
 # Check if .env file already exists

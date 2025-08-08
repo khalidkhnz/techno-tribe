@@ -55,8 +55,8 @@ const contactInfo = [
     icon: Mail,
     title: "Email Us",
     description: "Get in touch via email",
-    value: "hello@technotribe.com",
-    link: "mailto:hello@technotribe.com",
+    value: "hello@TechnoTribes.com",
+    link: "mailto:hello@TechnoTribes.com",
   },
   {
     icon: Phone,
@@ -88,7 +88,7 @@ const faqs = [
       "Our AI analyzes job requirements and candidate profiles to find the best matches based on skills, experience, and preferences.",
   },
   {
-    question: "Is TechnoTribe free to use?",
+    question: "Is TechnoTribes free to use?",
     answer:
       "We offer both free and premium plans. Basic job posting and browsing are free, with premium features for advanced users.",
   },
@@ -145,7 +145,7 @@ export default function ContactPage() {
               <span className="block text-primary-foreground/80">Amazing Together</span>
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90 max-w-3xl mx-auto">
-              Have questions about TechnoTribe? Want to partner with us? We'd
+              Have questions about TechnoTribes? Want to partner with us? We'd
               love to hear from you and help you succeed.
             </p>
           </div>
@@ -278,7 +278,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground mb-1">Email</h3>
-                    <p className="text-muted-foreground">hello@technotribe.com</p>
+                    <p className="text-muted-foreground">hello@TechnoTribes.com</p>
                     <p className="text-sm text-muted-foreground">
                       We'll respond within 24 hours
                     </p>
@@ -340,7 +340,7 @@ export default function ContactPage() {
               Frequently Asked Questions
             </h2>
             <p className="text-xl text-muted-foreground">
-              Find answers to common questions about TechnoTribe
+              Find answers to common questions about TechnoTribes
             </p>
           </div>
 
@@ -367,7 +367,7 @@ export default function ContactPage() {
           </h2>
           <p className="text-xl mb-8 text-primary-foreground/90 max-w-2xl mx-auto">
             Join thousands of developers and companies already using
-            TechnoTribe to find their perfect match.
+            TechnoTribes to find their perfect match.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

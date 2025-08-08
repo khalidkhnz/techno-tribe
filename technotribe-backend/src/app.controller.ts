@@ -28,7 +28,7 @@ export class AppController {
       properties: {
         status: { type: 'string', example: 'ok' },
         timestamp: { type: 'string', example: '2024-01-01T00:00:00.000Z' },
-        service: { type: 'string', example: 'TechnoTribe Backend' },
+        service: { type: 'string', example: 'TechnoTribes Backend' },
         version: { type: 'string', example: '1.0.0' },
       },
     },
@@ -37,7 +37,7 @@ export class AppController {
     return {
       status: 'ok',
       timestamp: new Date().toISOString(),
-      service: 'TechnoTribe Backend',
+      service: 'TechnoTribes Backend',
       version: '1.0.0',
     };
   }

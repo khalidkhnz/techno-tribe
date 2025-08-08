@@ -1,9 +1,9 @@
 @echo off
 REM ===========================================
-REM TechnoTribe Backend Environment Setup Script (Windows)
+REM TechnoTribes Backend Environment Setup Script (Windows)
 REM ===========================================
 
-echo 🚀 Setting up TechnoTribe Backend Environment
+echo 🚀 Setting up TechnoTribes Backend Environment
 echo ==============================================
 
 REM Check if .env file already exists

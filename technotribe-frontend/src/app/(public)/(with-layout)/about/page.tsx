@@ -87,7 +87,7 @@ const milestones = [
     year: "2020",
     title: "Founded",
     description:
-      "TechnoTribe was born from a vision to revolutionize developer recruitment.",
+      "TechnoTribes was born from a vision to revolutionize developer recruitment.",
   },
   {
     year: "2021",
@@ -123,7 +123,7 @@ export default function AboutPage() {
         <div className="relative container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <Badge variant="secondary" className="mb-6 text-primary bg-background">
-              About TechnoTribe
+              About TechnoTribes
             </Badge>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
               Revolutionizing Developer
@@ -147,7 +147,7 @@ export default function AboutPage() {
                 Our Mission
               </h2>
               <p className="text-lg text-muted-foreground mb-6">
-                At TechnoTribe, we believe that the right connection between
+                At TechnoTribes, we believe that the right connection between
                 talent and opportunity can change the world. Our mission is to
                 build the most intelligent, efficient, and human-centered
                 platform for developer recruitment.
@@ -226,7 +226,7 @@ export default function AboutPage() {
               Our Values
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              The principles that guide everything we do at TechnoTribe
+              The principles that guide everything we do at TechnoTribes
             </p>
           </div>
 
@@ -252,7 +252,7 @@ export default function AboutPage() {
               Meet Our Team
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              The passionate individuals behind TechnoTribe&apos;s mission
+              The passionate individuals behind TechnoTribes&apos;s mission
             </p>
           </div>
 
@@ -280,7 +280,7 @@ export default function AboutPage() {
               Our Journey
             </h2>
             <p className="text-xl text-muted-foreground">
-              Key milestones in TechnoTribe's growth
+              Key milestones in TechnoTribes's growth
             </p>
           </div>
 
@@ -306,7 +306,7 @@ export default function AboutPage() {
           </h2>
           <p className="text-xl mb-8 text-primary-foreground/90 max-w-2xl mx-auto">
             Whether you're a developer looking for opportunities or a company
-            seeking talent, TechnoTribe is here to help you succeed.
+            seeking talent, TechnoTribes is here to help you succeed.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

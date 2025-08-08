@@ -577,7 +577,7 @@ export default function RecruiterProfilePage() {
                                       <p className="text-sm text-destructive">{errors.customUrl.message}</p>
                 )}
                 <p className="text-sm text-muted-foreground">
-                  Your company profile will be available at: technotribe.com/company/{watch("customUrl") || "your-company-name"}
+                  Your company profile will be available at: TechnoTribes.com/company/{watch("customUrl") || "your-company-name"}
                 </p>
               </div>
             </CardContent>

@@ -12,11 +12,11 @@ export function PlatformIntro({ children }: PlatformIntroProps) {
   const [hasVisited, setHasVisited] = useState(false);
 
   useEffect(() => {
-    const visited = sessionStorage.getItem("technotribe_visited");
+    const visited = sessionStorage.getItem("TechnoTribes_visited");
     
     if (!visited) {
       setShowIntro(true);
-      sessionStorage.setItem("technotribe_visited", "true");
+      sessionStorage.setItem("TechnoTribes_visited", "true");
       
       const timer = setTimeout(() => {
         setShowIntro(false);
@@ -54,7 +54,7 @@ export function PlatformIntro({ children }: PlatformIntroProps) {
                 className="mb-4"
               >
                 <h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-primary via-primary/90 to-primary/80 bg-clip-text text-transparent">
-                  TechnoTribe
+                  TechnoTribes
                 </h1>
               </motion.div>
               

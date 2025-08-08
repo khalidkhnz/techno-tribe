@@ -197,7 +197,7 @@ const testimonials = [
   {
     name: "Sarah Chen",
     role: "Engineering Director at Meta",
-    content: "TechnoTribe revolutionized our hiring process. We found exceptional talent 3x faster than traditional methods.",
+    content: "TechnoTribes revolutionized our hiring process. We found exceptional talent 3x faster than traditional methods.",
     rating: 5,
     avatar: "SC",
     company: "Meta",
@@ -205,7 +205,7 @@ const testimonials = [
   {
     name: "Alex Rodriguez",
     role: "Senior Full-Stack Developer",
-    content: "Found my dream role at a unicorn startup through TechnoTribe. The AI matching was incredibly accurate!",
+    content: "Found my dream role at a unicorn startup through TechnoTribes. The AI matching was incredibly accurate!",
     rating: 5,
     avatar: "AR",
     company: "Stripe",
@@ -213,7 +213,7 @@ const testimonials = [
   {
     name: "Emily Johnson",
     role: "CTO at TechCorp",
-    content: "The quality of developers on TechnoTribe is unmatched. Every candidate was pre-screened and interview-ready.",
+    content: "The quality of developers on TechnoTribes is unmatched. Every candidate was pre-screened and interview-ready.",
     rating: 5,
     avatar: "EJ",
     company: "TechCorp",
@@ -735,7 +735,7 @@ export default function HomePage() {
               className="text-xl text-muted-foreground max-w-3xl mx-auto"
               variants={fadeInUpVariants}
             >
-              Join thousands of satisfied professionals who transformed their careers with TechnoTribe
+              Join thousands of satisfied professionals who transformed their careers with TechnoTribes
             </motion.p>
           </motion.div>
 
@@ -882,7 +882,7 @@ export default function HomePage() {
                   <Briefcase className="h-6 w-6 text-white" />
                 </motion.div>
                 <span className="text-2xl font-bold text-foreground">
-                  TechnoTribe
+                  TechnoTribes
                 </span>
               </div>
               <p className="text-muted-foreground mb-6 text-lg leading-relaxed max-w-md">
@@ -961,7 +961,7 @@ export default function HomePage() {
             viewport={{ once: true }}
           >
             <p className="text-muted-foreground mb-4 md:mb-0">
-              &copy; 2024 TechnoTribe. All rights reserved. Built with ❤️ for the developer community.
+              &copy; 2024 TechnoTribes. All rights reserved. Built with ❤️ for the developer community.
             </p>
             <div className="flex space-x-6 text-sm text-muted-foreground">
               <Link href="#" className="hover:text-primary transition-colors">Privacy Policy</Link>

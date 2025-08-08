@@ -97,9 +97,9 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 
-# TechnoTribe Backend
+# TechnoTribes Backend
 
-A role-based authentication system for the TechnoTribe developer recruitment platform.
+A role-based authentication system for the TechnoTribes developer recruitment platform.
 
 ## Features
 
@@ -157,7 +157,7 @@ NODE_ENV=development
 PORT=5000
 
 # Database Configuration
-MONGODB_URI=mongodb://localhost:27017/technotribe
+MONGODB_URI=mongodb://localhost:27017/TechnoTribes
 
 # JWT Authentication
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
@@ -242,7 +242,7 @@ For detailed usage instructions, see [SWAGGER_GUIDE.md](./SWAGGER_GUIDE.md).
 
 After running the create-admin script:
 
-- Email: `admin@technotribe.com`
+- Email: `admin@TechnoTribes.com`
 - Password: `admin123456`
 
 ## Security Features

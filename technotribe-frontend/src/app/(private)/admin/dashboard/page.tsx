@@ -165,7 +165,7 @@ export default function AdminDashboard() {
         <div>
           <h1 className="text-3xl font-bold text-foreground">Admin Dashboard</h1>
           <p className="text-muted-foreground mt-2">
-            Monitor and manage the TechnoTribe platform
+            Monitor and manage the TechnoTribes platform
           </p>
         </div>
 

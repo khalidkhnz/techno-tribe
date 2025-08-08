@@ -195,7 +195,7 @@ export function DashboardSidebar({ user, type }: DashboardSidebarProps) {
           {/* Footer */}
           <div className="border-t p-4">
             <div className="text-xs text-muted-foreground text-center">
-              TechnoTribe v1.0.0
+              TechnoTribes v1.0.0
             </div>
           </div>
         </div>

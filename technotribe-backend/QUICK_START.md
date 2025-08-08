@@ -1,6 +1,6 @@
 # 🚀 Quick Start Guide
 
-Get your TechnoTribe backend up and running in minutes!
+Get your TechnoTribes backend up and running in minutes!
 
 ## Prerequisites
 
@@ -12,7 +12,7 @@ Get your TechnoTribe backend up and running in minutes!
 
 ```bash
 # Navigate to the backend directory
-cd technotribe-backend
+cd TechnoTribes-backend
 
 # Install dependencies
 pnpm install
@@ -54,7 +54,7 @@ mongod
 Update your `.env` file:
 
 ```env
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/technotribe
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/TechnoTribes
 ```
 
 ## 4. Create Admin User
@@ -65,7 +65,7 @@ pnpm run create-admin
 
 This creates an admin user with:
 
-- Email: `admin@technotribe.com`
+- Email: `admin@TechnoTribes.com`
 - Password: `admin123456`
 
 ## 5. Start Development Server
@@ -88,7 +88,7 @@ Visit: `http://localhost:5000/api`
 2. Use admin credentials:
    ```json
    {
-     "email": "admin@technotribe.com",
+     "email": "admin@TechnoTribes.com",
      "password": "admin123456"
    }
    ```
@@ -157,7 +157,7 @@ src/
 ```env
 NODE_ENV=development
 PORT=5000
-MONGODB_URI=mongodb://localhost:27017/technotribe
+MONGODB_URI=mongodb://localhost:27017/TechnoTribes
 JWT_SECRET=your-secret-key
 ```
 
@@ -223,4 +223,4 @@ POST /auth/refresh
 
 ---
 
-🎉 **You're all set!** Your TechnoTribe backend is ready for development.
+🎉 **You're all set!** Your TechnoTribes backend is ready for development.

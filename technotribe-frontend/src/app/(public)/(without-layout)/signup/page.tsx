@@ -95,7 +95,7 @@ export default function SignupPage() {
             Back to Home
           </Link>
           <h1 className="text-4xl font-bold text-foreground mb-2">
-            Join TechnoTribe
+            Join TechnoTribes
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Choose your path and start your journey with the best developer
@@ -177,7 +177,7 @@ export default function SignupPage() {
             {/* Benefits Card */}
             <Card>
               <CardHeader>
-                <CardTitle>Why Choose TechnoTribe?</CardTitle>
+                <CardTitle>Why Choose TechnoTribes?</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

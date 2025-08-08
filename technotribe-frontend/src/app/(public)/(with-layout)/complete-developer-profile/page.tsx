@@ -191,7 +191,7 @@ export default function CompleteDeveloperProfilePage() {
                   placeholder="your-name-dev"
                 />
                 <p className="text-sm text-muted-foreground mt-1">
-                  This will be your public profile URL: technotribe.com/profile/your-name-dev
+                  This will be your public profile URL: TechnoTribes.com/profile/your-name-dev
                 </p>
                 {errors.customUrl && (
                   <p className="text-sm text-destructive mt-1">

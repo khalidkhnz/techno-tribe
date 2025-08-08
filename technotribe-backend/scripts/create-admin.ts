@@ -10,7 +10,7 @@ async function createAdmin() {
   try {
     // Check if admin already exists
     const existingAdmin = await usersService.findByEmail(
-      'admin@technotribe.com',
+      'admin@TechnoTribes.com',
     );
 
     if (existingAdmin) {
@@ -20,7 +20,7 @@ async function createAdmin() {
 
     // Create admin user
     const adminUser = await usersService.create({
-      email: 'admin@technotribe.com',
+      email: 'admin@TechnoTribes.com',
       password: 'admin123456',
       firstName: 'Admin',
       lastName: 'User',

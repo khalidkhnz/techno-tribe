@@ -7,7 +7,7 @@ export const config = {
 
   // App Configuration
   app: {
-    name: "TechnoTribe",
+    name: "TechnoTribes",
     description: "Connect talented developers with amazing opportunities",
     version: "1.0.0",
   },

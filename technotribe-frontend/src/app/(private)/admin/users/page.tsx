@@ -126,7 +126,7 @@ export default function AdminUsersPage() {
           _id: "5",
           firstName: "Admin",
           lastName: "User",
-          email: "admin@technotribe.com",
+          email: "admin@TechnoTribes.com",
           role: "admin",
           status: "active",
           createdAt: "2024-01-01",
@@ -258,7 +258,7 @@ export default function AdminUsersPage() {
         <div>
           <h1 className="text-3xl font-bold text-foreground">User Management</h1>
           <p className="text-muted-foreground mt-2">
-            Manage all users on the TechnoTribe platform
+            Manage all users on the TechnoTribes platform
           </p>
         </div>
 

@@ -28,6 +28,7 @@ import {
   Menu,
   Briefcase,
   Loader2,
+  LayoutDashboard,
 } from "lucide-react";
 import { config } from "@/lib/config";
 import FRONTEND_ROUTES from "@/lib/fe-routes";
@@ -148,23 +149,23 @@ export function Header({ onMenuToggle, user: userData }: HeaderProps) {
             <Menu className="h-5 w-5" />
           </Button>
 
-          <Link href="/" className="flex items-center gap-2">
-            <motion.div
-              className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground"
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <Briefcase className="h-4 w-4" />
-            </motion.div>
-            <motion.span
-              className="hidden font-bold sm:inline-block"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              {config.app.name}
-            </motion.span>
-          </Link>
+            <Link href={FRONTEND_ROUTES.HOME} className="flex items-center gap-2">
+              <motion.div
+                className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground"
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Briefcase className="h-4 w-4" />
+              </motion.div>
+              <motion.span
+                className="hidden font-bold sm:inline-block"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                {config.app.name}
+              </motion.span>
+            </Link>
         </div>
 
         {/* Center Section - Search */}
@@ -191,7 +192,7 @@ export function Header({ onMenuToggle, user: userData }: HeaderProps) {
                   <div className="text-xs font-medium text-muted-foreground mb-2 px-2">
                     Found {searchResults.data.length} user{searchResults.data.length !== 1 ? 's' : ''}
                   </div>
-                                     {searchResults.data.map((user: SearchUser) => (
+                    {searchResults.data.map((user: SearchUser) => (
                     <div
                       key={user._id}
                       className="flex items-center gap-3 p-2 rounded-md hover:bg-muted cursor-pointer transition-colors"
@@ -275,14 +276,14 @@ export function Header({ onMenuToggle, user: userData }: HeaderProps) {
           <ThemeToggle />
 
           {/* Notifications */}
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+        {user && <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button variant="ghost" size="icon" className="relative">
               <Bell className="h-5 w-5" />
               <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs">
                 3
               </Badge>
             </Button>
-          </motion.div>
+          </motion.div>}
 
           {/* User Menu */}
           {user ? (
@@ -310,6 +311,13 @@ export function Header({ onMenuToggle, user: userData }: HeaderProps) {
                     <div className="mt-1">{getRoleBadge()}</div>
                   </div>
                 </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <Link className="flex items-center gap-2" href={user?.role === "recruiter" ? FRONTEND_ROUTES.RECRUITER.DASHBOARD : FRONTEND_ROUTES.DEVELOPER.DASHBOARD}>
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                    Dashboard
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={handleLogout}

@@ -7,7 +7,7 @@ async function bootstrap() {
 
   // CORS configuration
   app.enableCors({
-    origin: ["*"],
+    origin: "*",
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
     credentials: true,
@@ -15,8 +15,8 @@ async function bootstrap() {
 
   // Swagger configuration
   const config = new DocumentBuilder()
-    .setTitle('TechnoTribe API')
-    .setDescription('The TechnoTribe developer recruitment platform API')
+    .setTitle('TechnoTribes API')
+    .setDescription('The TechnoTribes developer recruitment platform API')
     .setVersion('1.0')
     .addTag('auth', 'Authentication endpoints')
     .addTag('users', 'User management endpoints')

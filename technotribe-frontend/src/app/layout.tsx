@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TechnoTribe - Developer Recruitment Platform",
+  title: "TechnoTribes - Developer Recruitment Platform",
   description: "Connect talented developers with amazing opportunities",
 };
 

@@ -90,7 +90,7 @@ export default function LoginPage() {
             Welcome Back
           </h1>
           <p className="text-muted-foreground">
-            Sign in to your TechnoTribe account
+            Sign in to your TechnoTribes account
           </p>
         </div>
 

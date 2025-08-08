@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
@@ -21,10 +22,13 @@ import {
   Search,
   Sun,
   Moon,
+  Briefcase,
 } from "lucide-react";
 import { toast } from "sonner";
 import FRONTEND_ROUTES from "@/lib/fe-routes";
+import { motion } from "framer-motion";
 import { UserRole } from "@/types/enums";
+import { config } from "@/lib/config";
 
 interface DashboardHeaderProps {
   user: {
@@ -99,10 +103,23 @@ export function DashboardHeader({ user, type }: DashboardHeaderProps) {
         {/* Left side - Logo and Search */}
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">T</span>
-            </div>
-            <span className="font-bold text-xl">TechnoTribe</span>
+          <Link href={FRONTEND_ROUTES.HOME} className="flex items-center gap-2">
+              <motion.div
+                className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground"
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Briefcase className="h-4 w-4" />
+              </motion.div>
+              <motion.span
+                className="hidden font-bold sm:inline-block"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                {config.app.name}
+              </motion.span>
+            </Link>
           </div>
           
           <div className="hidden md:flex items-center gap-2">

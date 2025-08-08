@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
-import { ProfileFormData, CompleteRecruiterProfileFormData, CompleteDeveloperProfileFormData, RegisterFormData, JobFormData, ApplicationFormData, ApplicationStatusFormData } from "@/lib/schemas";
+import { ProfileFormData, JobFormData } from "@/lib/schemas";
 import { AxiosError } from "axios";
 
 // Auth hooks

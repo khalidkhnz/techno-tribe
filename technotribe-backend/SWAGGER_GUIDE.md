@@ -2,7 +2,7 @@
 
 ## Overview
 
-The TechnoTribe backend API is fully documented using Swagger/OpenAPI 3.0. This provides an interactive API documentation interface where you can explore, test, and understand all available endpoints.
+The TechnoTribes backend API is fully documented using Swagger/OpenAPI 3.0. This provides an interactive API documentation interface where you can explore, test, and understand all available endpoints.
 
 ## Accessing Swagger Documentation
 
@@ -42,7 +42,7 @@ http://localhost:5000/api
 3. Enter your credentials:
    ```json
    {
-     "email": "admin@technotribe.com",
+     "email": "admin@TechnoTribes.com",
      "password": "admin123456"
    }
    ```
@@ -144,7 +144,7 @@ Authorization: Bearer <access_token>
 # 1. Login as admin
 POST /auth/login
 {
-  "email": "admin@technotribe.com",
+  "email": "admin@TechnoTribes.com",
   "password": "admin123456"
 }
 
@@ -182,7 +182,7 @@ The API returns standardized error responses:
 Make sure you have a `.env` file with:
 
 ```env
-MONGODB_URI=mongodb://localhost:27017/technotribe
+MONGODB_URI=mongodb://localhost:27017/TechnoTribes
 JWT_SECRET=your-super-secret-jwt-key
 PORT=3000
 ```
